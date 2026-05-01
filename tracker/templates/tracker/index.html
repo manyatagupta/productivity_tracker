@@ -29,9 +29,15 @@
     <div>
         {% for task in tasks %}
             <div class="task">
-                <span class="{% if task.is_completed %}completed{% endif %}">
-                    {{ task.title }}
-                </span>
+                <div>
+                    <span class="{% if task.is_completed %}completed{% endif %}">
+                        {{ task.title }}
+                    </span>
+                    
+                    <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
+                        Created on: {{ task.created_at|date:"M d, Y H:i" }}
+                    </small>
+                </div>
                 
                 <div class="actions">
                     {% if not task.is_completed %}
