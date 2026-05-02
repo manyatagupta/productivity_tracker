@@ -2,55 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Productivity Tracker</title>
+    
+    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-      body { 
-    font-family: 'Poppins', sans-serif; 
-    max-width: 600px; 
-    margin: 40px auto; 
-    padding: 20px; 
-    background-color: #f4f7f6; 
+       body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #e0eafc, #cfdef3); /* Naya gradient */
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+    padding-top: 50px;
+}
+.main-wrapper {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    margin: 0 auto; /* Center karne ke liye */
 }
     </style>
 </head>
 <body>
+    <div class="main-wrapper"> 
+        
+        <h1>My Daily Tasks 📝</h1>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
+            <button type="submit">Add Task</button>
+        </form>
 
-    <h1>My Daily Tasks</h1>
-    
-    <form method="POST">
-        {% csrf_token %}
-        <input type="text" name="title" placeholder="What do you need to do?" required>
-        <button type="submit">Add Task</button>
-    </form>
+        <br>
 
-    <br>
-
-    <div>
-        {% for task in tasks %}
-            <div class="task">
-                <div>
-                    <span class="{% if task.is_completed %}completed{% endif %}">
-                        {{ task.title }}
-                    </span>
-                    
-                    <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
-                        Created on: {{ task.created_at|date:"M d, Y H:i" }}
-                    </small>
-                </div>
+        <div>
+            {% for task in tasks %}
                 
-                <div class="actions">
-                    {% if not task.is_completed %}
-                        <a href="?complete={{ task.id }}" class="btn-done">Done</a>
-                    {% endif %}
-                    <!-- NAYA DELETE BUTTON -->
-                    <a href="?delete={{ task.id }}" class="btn-delete">Delete</a>
-                </div>
-            </div>
-        {% empty %}
-            <p>No tasks yet. You are all caught up!</p>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
 
+    </div> 
 </body>
 </html>
