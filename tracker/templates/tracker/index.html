@@ -64,8 +64,56 @@
 
         button:hover {
             background-color: #3046c4;
-            transform: translateY(-2px); /* Hover par thoda upar uthega */
+            transform: translateY(-2px); 
         }
+        /* --- Commit 4: Task Card Styles --- */
+       
+.task {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+    border: 1px solid #eee;
+}
+
+.task:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #a0a0a0;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-done, .btn-delete {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btn-done {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.btn-delete {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+/* -------------------------------------- */
+
         /* -------------------------------------- */
 
     </style>
@@ -84,7 +132,23 @@
         <br>
 
         <div>
-            {% for task in tasks %}
+            <div class="task">
+    <div>
+        <span class="{% if task.is_completed %}completed{% endif %}">
+            {{ task.title }}
+        </span>
+        <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
+            Created on: {{ task.created_at|date:"M d, Y H:i" }}
+        </small>
+    </div>
+    
+    <div class="actions">
+        {% if not task.is_completed %}
+            <a href="?complete={{ task.id }}" class="btn-done">Done</a>
+        {% endif %}
+        <a href="?delete={{ task.id }}" class="btn-delete">Delete</a>
+    </div>
+</div>
                 
             {% endfor %}
         </div>
