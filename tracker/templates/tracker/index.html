@@ -5,29 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Productivity Tracker</title>
     
-    
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
-       body {
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #e0eafc, #cfdef3); /* Naya gradient */
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    margin: 0;
-    padding-top: 50px;
-}
-.main-wrapper {
-    background: white;
-    width: 90%;
-    max-width: 500px;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    margin: 0 auto; /* Center karne ke liye */
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0eafc, #cfdef3); 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 0;
+            padding-top: 50px;
+        }
+
+        .main-wrapper {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin: 0 auto; 
+        }
+
+        /* --- Commit 3: Input & Button Styles --- */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] { 
+            flex: 1;
+            padding: 12px 15px; 
+            border: 2px solid #eee; 
+            border-radius: 8px; 
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4361ee; 
+        }
+
+        button { 
+            padding: 12px 20px; 
+            background-color: #4361ee; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #3046c4;
+            transform: translateY(-2px); /* Hover par thoda upar uthega */
+        }
+        /* -------------------------------------- */
+
     </style>
 </head>
 <body>
@@ -35,7 +75,7 @@
         
         <h1>My Daily Tasks 📝</h1>
         
-        <form method="POST">
+        <form method="POST" class="input-group"> 
             {% csrf_token %}
             <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
             <button type="submit">Add Task</button>
