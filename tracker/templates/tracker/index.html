@@ -196,12 +196,14 @@
                         </small>
                     </div>
                     
-                    <div class="actions">
-                        {% if not task.is_completed %}
-                            <a href="?complete={{ task.id }}" class="btn-done">Done</a>
-                        {% endif %}
-                        <a href="?delete={{ task.id }}" class="btn-delete">Delete</a>
-                    </div>
+                   <div class="actions">
+    {% if not task.is_completed %}
+        <a href="?complete={{ task.id }}" class="btn-done">Done</a>
+    {% endif %}
+    
+    <!-- Sahi jagah ye hai! -->
+    <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Kya aap sach mein is task ko hatana chahte hain?')">Delete</a>
+</div>
                 </div>
             {% empty %}
                 <div class="empty-msg">
