@@ -135,55 +135,75 @@
     color: #888;
     font-style: italic;
 }
-/* ------------------------------------------- */
+
+.task {
+    border-left: 5px solid #4361ee; /* Side priority line */
+}
+
+.task:hover {
+    transform: translateX(8px); 
+}
+
+.status-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+.status-pending { background: #fff3cd; color: #856404; }
+.status-completed { background: #d4edda; color: #155724; }
 
     </style>
 </head>
 <body>
     <div class="main-wrapper"> 
         
-<div class="header-info">
-    <h1>My Daily Tasks 📝</h1>
-    <!-- Task count badge -->
-    <span class="task-count">{{ tasks|length }} Tasks</span>
-</div>
-
-<form method="POST" class="input-group">
-    {% csrf_token %}
-    <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
-    <button type="submit">Add Task</button>
-</form>
-
-<br>
-
-<div class="task-list">
-    {% for task in tasks %}
-        <div class="task">
-            <div>
-                <span class="{% if task.is_completed %}completed{% endif %}">
-                    {{ task.title }}
-                </span>
-                <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
-                    Created on: {{ task.created_at|date:"M d, Y H:i" }}
-                </small>
-            </div>
-            
-            <div class="actions">
-                {% if not task.is_completed %}
-                    <a href="?complete={{ task.id }}" class="btn-done">Done</a>
-                {% endif %}
-                <a href="?delete={{ task.id }}" class="btn-delete">Delete</a>
-            </div>
+        <div class="header-info">
+            <h1>My Daily Tasks 📝</h1>
+            <span class="task-count">{{ tasks|length }} Tasks</span>
         </div>
-    {% empty %}
-        <!-- Naya Empty State message -->
-        <div class="empty-msg">
-            <p>Koi pending task nahi hai. Chill karo! ☕</p>
-        </div>
-    {% endfor %}
-</div>
-                
-        
+
+        <form method="POST" class="input-group">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <br>
+
+        <div class="task-list">
+            {% for task in tasks %}
+                <div class="task">
+                    <div>
+                        <span class="{% if task.is_completed %}completed{% endif %}">
+                            {{ task.title }}
+                            {% if task.is_completed %}
+                                <span class="status-badge status-completed">Done</span>
+                            {% else %}
+                                <span class="status-badge status-pending">Pending</span>
+                            {% endif %}
+                        </span>
+                        <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
+                            Created on: {{ task.created_at|date:"M d, Y H:i" }}
+                        </small>
+                    </div>
+                    
+                    <div class="actions">
+                        {% if not task.is_completed %}
+                            <a href="?complete={{ task.id }}" class="btn-done">Done</a>
+                        {% endif %}
+                        <a href="?delete={{ task.id }}" class="btn-delete">Delete</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-msg">
+                    <p>Koi pending task nahi hai. Chill karo! ☕</p>
+                </div>
+            {% endfor %}
         </div>
 
     </div> 
