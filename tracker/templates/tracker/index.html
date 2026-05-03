@@ -138,6 +138,10 @@
 
 .task {
     border-left: 5px solid #4361ee; /* Side priority line */
+    /* Border colors based on priority */
+.task.high { border-left: 5px solid #ef4444; }   /* Red line */
+.task.medium { border-left: 5px solid #f59e0b; } /* Orange line */
+.task.low { border-left: 5px solid #10b981; }    /* Green line */
 }
 
 .task:hover {
@@ -177,7 +181,7 @@
 
         <div class="task-list">
             {% for task in tasks %}
-                <div class="task">
+                <div class="task high"> 
                     <div>
                         <span class="{% if task.is_completed %}completed{% endif %}">
                             {{ task.title }}
