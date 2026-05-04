@@ -1,9 +1,18 @@
+from django.shortcuts import render, redirect
+from .models import Task  
+
 def index(request):
     if request.method == 'POST':
         task_title = request.POST.get('title')
+        
+        task_priority = request.POST.get('priority') 
+        
         if task_title:
-            Task.objects.create(title=task_title)
+             
+            Task.objects.create(title=task_title, priority=task_priority)
             return redirect('index')
+
+    
 
     if request.GET.get('complete'):
         task_id = request.GET.get('complete')

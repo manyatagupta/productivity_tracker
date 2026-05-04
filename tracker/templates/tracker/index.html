@@ -203,10 +203,18 @@
 </div>
 
         <form method="POST" class="input-group">
-            {% csrf_token %}
-            <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
-            <button type="submit">Add Task</button>
-        </form>
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
+    
+    <!-- Naya Priority Dropdown -->
+    <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee; font-family: 'Poppins';">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high" selected>High</option>
+    </select>
+    
+    <button type="submit">Add Task</button>
+</form>
         <!-- Search Bar -->
 <form method="GET" style="margin-bottom: 20px; display: flex; gap: 5px;">
     <input type="text" name="search" placeholder="Purane tasks dhundein..." 
@@ -223,8 +231,8 @@
         <div class="task-list">
             {% for task in tasks %}
                 
-<div class="task high {% if task.is_completed %}completed-style{% endif %}">
-    
+
+<div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">    
                     <div>
                         <span class="{% if task.is_completed %}completed{% endif %}">
                             {{ task.title }}
