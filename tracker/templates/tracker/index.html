@@ -201,7 +201,16 @@
     </div>
     <span class="task-count">{{ tasks|length }} Tasks</span>
 </div>
-
+<!-- Progress Bar Section -->
+<div style="margin-bottom: 25px;">
+    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: #4361ee; font-weight: 600;">
+        <span>Progress</span>
+        <span>{% if tasks %}{{ progress_percent }}%{% else %}0%{% endif %}</span>
+    </div>
+    <div style="width: 100%; height: 10px; background: #e0eafc; border-radius: 10px; overflow: hidden;">
+        <div style="width: {{ progress_percent }}%; height: 100%; background: linear-gradient(90deg, #4361ee, #4cc9f0); transition: 0.5s ease;"></div>
+    </div>
+</div>
 <div style="margin-bottom: 10px; text-align: right;">
     <a href="?clear_completed=true" 
        onclick="return confirm('Did you want to remove all the completed tasks?')"
@@ -225,7 +234,7 @@
 </form>
         <!-- Search Bar -->
 <form method="GET" style="margin-bottom: 20px; display: flex; gap: 5px;">
-    <input type="text" name="search" placeholder="Purane tasks dhundein..." 
+    <input type="text" name="search" placeholder="Search old tasks..." 
            value="{{ request.GET.search }}" 
            style="font-size: 13px; padding: 8px 12px; flex: 1;">
     <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">Search</button>

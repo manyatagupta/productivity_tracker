@@ -39,5 +39,18 @@ def index(request):
         # Agar search khali hai, toh purane tarike se saare tasks dikhenge
         tasks = Task.objects.all().order_by('-created_at')
     # --- SEARCH LOGIC END ---
+    # Progress Calculation
+    total_tasks = tasks.count()
+    completed_tasks = tasks.filter(is_completed=True).count()
+    
+    if total_tasks > 0:
+        progress_percent = int((completed_tasks / total_tasks) * 100)
+    else:
+        progress_percent = 0
+
+    return render(request, 'tracker/index.html', {
+        'tasks': tasks,
+        'progress_percent': progress_percent # new variable added
+    })
 
     return render(request, 'tracker/index.html', {'tasks': tasks})
