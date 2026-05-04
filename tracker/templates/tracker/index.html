@@ -8,6 +8,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
+        /* Dark Mode Variables */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #e2e8f0;
+        }
+
+        .dark-mode .main-wrapper {
+            background: #0f3460;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .dark-mode .task {
+            background: #16213e;
+            border-color: #1a1a2e;
+        }
+
+        .dark-mode input[type="text"], .dark-mode select {
+            background: #1a1a2e;
+            border-color: #0f3460;
+            color: white;
+        }
+
+        .dark-mode h1 { color: #4cc9f0; }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #e0eafc, #cfdef3); 
@@ -66,190 +91,179 @@
             background-color: #3046c4;
             transform: translateY(-2px); 
         }
-        /* --- Commit 4: Task Card Styles --- */
-       
-.task {
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
-    border: 1px solid #eee;
-}
 
-.task:hover {
-    transform: scale(1.02);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-}
+        .task {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            border: 1px solid #eee;
+        }
 
-.completed {
-    text-decoration: line-through;
-    color: #a0a0a0;
-}
+        .task:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
 
-.actions {
-    display: flex;
-    gap: 10px;
-}
+        .completed {
+            text-decoration: line-through;
+            color: #a0a0a0;
+        }
 
-.btn-done, .btn-delete {
-    padding: 6px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-}
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
 
-.btn-done {
-    background-color: #d1fae5;
-    color: #065f46;
-}
+        .btn-done, .btn-delete {
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
 
-.btn-delete {
-    background-color: #fee2e2;
-    color: #991b1b;
-}
-/* --- Commit 5: Empty State & Header Styles --- */
-.header-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
+        .btn-done {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
 
-.task-count {
-    background: linear-gradient(45deg, #4361ee, #4cc9f0);
-    color: white;
-    padding: 5px 15px;
-    border-radius: 50px;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
-}
+        .btn-delete {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
 
-/* Mobile responsive fix */
-@media (max-width: 480px) {
-    .main-wrapper {
-        width: 95%;
-        padding: 20px;
-    }
-    h1 { font-size: 20px; }
-}
-/* Empty State ko aur sundar banayein */
-.empty-msg p {
-    background: #f8f9fa;
-    border: 2px dashed #cbd5e0;
-    padding: 40px 20px;
-    border-radius: 20px;
-    color: #718096;
-    font-size: 16px;
-    text-align: center;
-}
-.task {
-    background: linear-gradient(to right, #ffffff, #fcfcfc);
-    padding: 15px;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
-    border: 1px solid rgba(0,0,0,0.05);
-    border-left: 5px solid #4361ee; /* Default blue line */
-}
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
+        .task-count {
+            background: linear-gradient(45deg, #4361ee, #4cc9f0);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+        }
 
-.task.high { border-left: 5px solid #ef4444; }
-.task.medium { border-left: 5px solid #f59e0b; }
-.task.low { border-left: 5px solid #10b981; }
+        @media (max-width: 480px) {
+            .main-wrapper {
+                width: 95%;
+                padding: 20px;
+            }
+            h1 { font-size: 20px; }
+        }
 
-.task.completed-style {
-    opacity: 0.6;
-    background: #f1f3f5;
-}
+        .empty-msg p {
+            background: #f8f9fa;
+            border: 2px dashed #cbd5e0;
+            padding: 40px 20px;
+            border-radius: 20px;
+            color: #718096;
+            font-size: 16px;
+            text-align: center;
+        }
 
+        .task {
+            background: linear-gradient(to right, #ffffff, #fcfcfc);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+            border-left: 5px solid #4361ee; 
+        }
 
-.task:hover {
-    transform: translateX(8px); 
-}
+        .task.high { border-left: 5px solid #ef4444; }
+        .task.medium { border-left: 5px solid #f59e0b; }
+        .task.low { border-left: 5px solid #10b981; }
 
-.status-badge {
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    text-transform: uppercase;
-    font-weight: bold;
-    margin-left: 8px;
-    vertical-align: middle;
-}
+        .task.completed-style {
+            opacity: 0.6;
+            background: #f1f3f5;
+        }
 
-.status-pending { background: #fff3cd; color: #856404; }
-.status-completed { background: #d4edda; color: #155724; }
+        .task:hover {
+            transform: translateX(8px); 
+        }
 
+        .status-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-completed { background: #d4edda; color: #155724; }
     </style>
 </head>
-<body>
+<body class="{% if dark_mode %}dark-mode{% endif %}"> <!-- Yahan badlav kiya gaya hai -->
     <div class="main-wrapper"> 
         
-       <div class="header-info">
-    <div>
-        <h1>My Daily Tasks 📝</h1>
-        <p style="font-size: 12px; color: #888; margin: 0;">{{ now|date:"l, d F" }}</p>
-    </div>
-    <span class="task-count">{{ tasks|length }} Tasks</span>
-</div>
-<!-- Progress Bar Section -->
-<div style="margin-bottom: 25px;">
-    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 5px; color: #4361ee; font-weight: 600;">
-        <span>Progress</span>
-        <span>{% if tasks %}{{ progress_percent }}%{% else %}0%{% endif %}</span>
-    </div>
-    <div style="width: 100%; height: 10px; background: #e0eafc; border-radius: 10px; overflow: hidden;">
-        <div style="width: {{ progress_percent }}%; height: 100%; background: linear-gradient(90deg, #4361ee, #4cc9f0); transition: 0.5s ease;"></div>
-    </div>
-</div>
-<div style="margin-bottom: 10px; text-align: right;">
-    <a href="?clear_completed=true" 
-       onclick="return confirm('Did you want to remove all the completed tasks?')"
-       style="font-size: 12px; color: #991b1b; text-decoration: none; background: #fee2e2; padding: 5px 10px; border-radius: 5px;">
-       🗑️ Clear All Completed
-    </a>
-</div>
+        <div class="header-info">
+            <div style="text-align: right; margin-bottom: 10px;">
+                <a href="?toggle_dark=1" style="text-decoration: none; background: #333; color: white; padding: 5px 15px; font-size: 12px; border-radius: 20px;">
+                    {% if dark_mode %}☀️ Light Mode{% else %}🌙 Dark Mode{% endif %}
+                </a>
+            </div>
+            <div>
+                <h1>My Daily Tasks 📝</h1>
+                <p style="font-size: 12px; color: #888; margin: 0;">{{ now|date:"l, d F" }}</p>
+            </div>
+            <span class="task-count">{{ tasks|length }} Tasks</span>
+        </div>
+
+        <div style="margin-bottom: 10px; text-align: right;">
+            <a href="?clear_completed=true" 
+               onclick="return confirm('Did you want to remove all the completed tasks?')"
+               style="font-size: 12px; color: #991b1b; text-decoration: none; background: #fee2e2; padding: 5px 10px; border-radius: 5px;">
+               🗑️ Clear All Completed
+            </a>
+        </div>
 
         <form method="POST" class="input-group">
-    {% csrf_token %}
-    <input type="text" name="title" placeholder="Today's tasks?" required>
-    
-    <!-- Naya Priority Dropdown -->
-    <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee; font-family: 'Poppins';">
-        <option value="low">Low</option>
-        <option value="medium">Medium</option>
-        <option value="high" selected>High</option>
-    </select>
-    
-    <button type="submit">Add Task</button>
-</form>
-        <!-- Search Bar -->
-<form method="GET" style="margin-bottom: 20px; display: flex; gap: 5px;">
-    <input type="text" name="search" placeholder="Search old tasks..." 
-           value="{{ request.GET.search }}" 
-           style="font-size: 13px; padding: 8px 12px; flex: 1;">
-    <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">Search</button>
-    {% if request.GET.search %}
-        <a href="/" style="text-decoration: none; padding: 8px 15px; background: #f1f3f5; color: #333; border-radius: 8px; font-size: 13px;">Clear</a>
-    {% endif %}
-</form>
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Today's tasks?" required>
+            
+            <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee; font-family: 'Poppins';">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high" selected>High</option>
+            </select>
+            
+            <button type="submit">Add Task</button>
+        </form>
+
+        <form method="GET" style="margin-bottom: 20px; display: flex; gap: 5px;">
+            <input type="text" name="search" placeholder="Search old..." 
+                   value="{{ request.GET.search }}" 
+                   style="font-size: 13px; padding: 8px 12px; flex: 1;">
+            <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">Search</button>
+            {% if request.GET.search %}
+                <a href="/" style="text-decoration: none; padding: 8px 15px; background: #f1f3f5; color: #333; border-radius: 8px; font-size: 13px;">Clear</a>
+            {% endif %}
+        </form>
 
         <br>
 
         <div class="task-list">
             {% for task in tasks %}
-                
-
-<div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">    
+                <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">    
                     <div>
                         <span class="{% if task.is_completed %}completed{% endif %}">
                             {{ task.title }}
@@ -264,14 +278,12 @@
                         </small>
                     </div>
                     
-                   <div class="actions">
-    {% if not task.is_completed %}
-        <a href="?complete={{ task.id }}" class="btn-done">Done</a>
-    {% endif %}
-    
-    <!-- Sahi jagah ye hai! -->
-    <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Kya aap sach mein is task ko hatana chahte hain?')">Delete</a>
-</div>
+                    <div class="actions">
+                        {% if not task.is_completed %}
+                            <a href="?complete={{ task.id }}" class="btn-done">Done</a>
+                        {% endif %}
+                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Kya aap sach mein is task ko hatana chahte hain?')">Delete</a>
+                    </div>
                 </div>
             {% empty %}
                 <div class="empty-msg">
@@ -279,7 +291,6 @@
                 </div>
             {% endfor %}
         </div>
-
     </div> 
 </body>
 </html>
