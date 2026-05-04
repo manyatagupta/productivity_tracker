@@ -146,19 +146,31 @@
     border-radius: 20px;
     color: #718096;
     font-size: 16px;
+    text-align: center;
 }
-
-
 .task {
     background: linear-gradient(to right, #ffffff, #fcfcfc);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
     border: 1px solid rgba(0,0,0,0.05);
+    border-left: 5px solid #4361ee; /* Default blue line */
 }
 
+
+.task.high { border-left: 5px solid #ef4444; }
+.task.medium { border-left: 5px solid #f59e0b; }
+.task.low { border-left: 5px solid #10b981; }
 
 .task.completed-style {
     opacity: 0.6;
     background: #f1f3f5;
 }
+
 
 .task:hover {
     transform: translateX(8px); 
@@ -195,6 +207,16 @@
             <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
             <button type="submit">Add Task</button>
         </form>
+        <!-- Search Bar -->
+<form method="GET" style="margin-bottom: 20px; display: flex; gap: 5px;">
+    <input type="text" name="search" placeholder="Purane tasks dhundein..." 
+           value="{{ request.GET.search }}" 
+           style="font-size: 13px; padding: 8px 12px; flex: 1;">
+    <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">Search</button>
+    {% if request.GET.search %}
+        <a href="/" style="text-decoration: none; padding: 8px 15px; background: #f1f3f5; color: #333; border-radius: 8px; font-size: 13px;">Clear</a>
+    {% endif %}
+</form>
 
         <br>
 

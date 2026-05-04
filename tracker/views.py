@@ -1,6 +1,3 @@
-from django.shortcuts import render, redirect
-from .models import Task
-
 def index(request):
     if request.method == 'POST':
         task_title = request.POST.get('title')
@@ -15,11 +12,19 @@ def index(request):
         task.save()
         return redirect('index')
 
-    # NAYA DELETE LOGIC
     if request.GET.get('delete'):
         task_id = request.GET.get('delete')
         Task.objects.filter(id=task_id).delete()
         return redirect('index')
 
-    tasks = Task.objects.all().order_by('-created_at')
+    # --- SEARCH LOGIC START ---
+    search_query = request.GET.get('search', '')  # URL se 'search' keyword uthayega
+    if search_query:
+        # Agar search box mein kuch likha hai, toh wahi tasks filter honge
+        tasks = Task.objects.filter(title__icontains=search_query).order_by('-created_at')
+    else:
+        # Agar search khali hai, toh purane tarike se saare tasks dikhenge
+        tasks = Task.objects.all().order_by('-created_at')
+    # --- SEARCH LOGIC END ---
+
     return render(request, 'tracker/index.html', {'tasks': tasks})
