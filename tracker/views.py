@@ -40,10 +40,12 @@ def index(request):
 
     # 6. SEARCH LOGIC
     search_query = request.GET.get('search', '')
+    
     if search_query:
-        tasks = Task.objects.filter(title__icontains=search_query).order_by('-created_at')
+        tasks = Task.objects.filter(title__icontains=search_query).order_by('priority', '-created_at')
     else:
-        tasks = Task.objects.all().order_by('-created_at')
+    
+        tasks = Task.objects.all().order_by('priority', '-created_at')
 
     # 7. PROGRESS CALCULATION
     total_tasks = tasks.count()
