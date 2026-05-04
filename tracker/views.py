@@ -7,11 +7,15 @@ def index(request):
         
         task_priority = request.POST.get('priority') 
         
+        
         if task_title:
              
             Task.objects.create(title=task_title, priority=task_priority)
             return redirect('index')
-
+        # Is line ko delete waale logic ke niche add karein
+        if request.GET.get('clear_completed'):
+            Task.objects.filter(is_completed=True).delete()
+            return redirect('index')
     
 
     if request.GET.get('complete'):

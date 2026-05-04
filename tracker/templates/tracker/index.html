@@ -202,9 +202,17 @@
     <span class="task-count">{{ tasks|length }} Tasks</span>
 </div>
 
+<div style="margin-bottom: 10px; text-align: right;">
+    <a href="?clear_completed=true" 
+       onclick="return confirm('Did you want to remove all the completed tasks?')"
+       style="font-size: 12px; color: #991b1b; text-decoration: none; background: #fee2e2; padding: 5px 10px; border-radius: 5px;">
+       🗑️ Clear All Completed
+    </a>
+</div>
+
         <form method="POST" class="input-group">
     {% csrf_token %}
-    <input type="text" name="title" placeholder="Aaj kya karna hai?" required>
+    <input type="text" name="title" placeholder="Today's tasks?" required>
     
     <!-- Naya Priority Dropdown -->
     <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee; font-family: 'Poppins';">
