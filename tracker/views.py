@@ -44,21 +44,23 @@ def index(request):
     if search_query:
         tasks = Task.objects.filter(title__icontains=search_query).order_by('priority', '-created_at')
     else:
-    
         tasks = Task.objects.all().order_by('priority', '-created_at')
 
-    # 7. PROGRESS CALCULATION
+    # 7. PROGRESS & STATISTICS CALCULATION
     total_tasks = tasks.count()
     completed_tasks = tasks.filter(is_completed=True).count()
+    pending_tasks_count = tasks.filter(is_completed=False).count() # Naya calculation
     
     if total_tasks > 0:
         progress_percent = int((completed_tasks / total_tasks) * 100)
     else:
         progress_percent = 0
 
-    # 8. FINAL RENDER (Sirf ek baar, sabse aakhir mein)
+    # 8. FINAL RENDER
     return render(request, 'tracker/index.html', {
         'tasks': tasks,
         'progress_percent': progress_percent,
-        'dark_mode': dark_mode
+        'dark_mode': dark_mode,
+        'pending_count': pending_tasks_count,      
+        'completed_count': completed_tasks,         
     })

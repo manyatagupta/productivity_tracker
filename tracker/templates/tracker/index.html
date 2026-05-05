@@ -92,7 +92,7 @@
             transform: translateY(-2px); 
         }
 
-        /* --- DAY 4: Priority Badge Styles --- */
+        /* Priority Badge Styles */
         .priority-badge {
             font-size: 10px;
             padding: 2px 8px;
@@ -226,6 +226,18 @@
             <span class="task-count">{{ tasks|length }} Tasks</span>
         </div>
 
+        <!-- Task Stats Row (NEW IN COMMIT 2) -->
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <div style="flex: 1; background: #fff3cd; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #ffeeba;">
+                <span style="display: block; font-size: 10px; color: #856404; font-weight: 600; text-transform: uppercase;">Pending</span>
+                <strong style="font-size: 18px; color: #856404;">{{ pending_count }}</strong>
+            </div>
+            <div style="flex: 1; background: #d1fae5; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #a7f3d0;">
+                <span style="display: block; font-size: 10px; color: #065f46; font-weight: 600; text-transform: uppercase;">Completed</span>
+                <strong style="font-size: 18px; color: #065f46;">{{ completed_count }}</strong>
+            </div>
+        </div>
+
         <div style="margin-bottom: 10px; text-align: right;">
             <a href="?clear_completed=true" 
                onclick="return confirm('Did you want to remove all the completed tasks?')"
@@ -265,7 +277,6 @@
                     <div>
                         <span class="{% if task.is_completed %}completed{% endif %}">
                             {{ task.title }}
-                            <!-- Dynamic Priority Badge -->
                             <span class="priority-badge badge-{{ task.priority }}">
                                 {{ task.priority }}
                             </span>
