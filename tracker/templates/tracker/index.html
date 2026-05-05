@@ -198,14 +198,21 @@
             h1 { font-size: 20px; }
         }
 
-        .empty-msg p {
+        /* --- COMMIT 3: Enhanced Empty State Style --- */
+        .empty-msg {
             background: #f8f9fa;
             border: 2px dashed #cbd5e0;
             padding: 40px 20px;
             border-radius: 20px;
             color: #718096;
-            font-size: 16px;
             text-align: center;
+            transition: 0.3s;
+        }
+
+        .dark-mode .empty-msg {
+            background: #1a1a2e;
+            border-color: #4cc9f0;
+            color: #e2e8f0;
         }
     </style>
 </head>
@@ -226,7 +233,7 @@
             <span class="task-count">{{ tasks|length }} Tasks</span>
         </div>
 
-        <!-- Task Stats Row (NEW IN COMMIT 2) -->
+        <!-- Task Stats Row -->
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
             <div style="flex: 1; background: #fff3cd; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #ffeeba;">
                 <span style="display: block; font-size: 10px; color: #856404; font-weight: 600; text-transform: uppercase;">Pending</span>
@@ -299,8 +306,13 @@
                     </div>
                 </div>
             {% empty %}
+                <!-- --- COMMIT 3: Enhanced Empty State Layout --- -->
                 <div class="empty-msg">
-                    <p>Koi pending task nahi hai. Chill karo! ☕</p>
+                    <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+                    <h3 style="margin: 0; color: #4361ee;">Sab Kaam Ho Gaya!</h3>
+                    <p style="font-size: 14px; margin-top: 5px;">
+                        RIGHTNOW NO PENDING TASKS , ADD NEW TASKS OR RELAX! ☕
+                    </p>
                 </div>
             {% endfor %}
         </div>
