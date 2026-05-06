@@ -17,7 +17,7 @@ def index(request):
         task_priority = request.POST.get('priority') 
         
         if task_title:
-            # --- COMMIT 3: Auto-Emoji Logic ---
+            # --- Auto-Emoji Logic ---
             emoji = ""
             lower_title = task_title.lower()
             if "code" in lower_title or "python" in lower_title or "django" in lower_title: 
@@ -63,21 +63,21 @@ def index(request):
     else:
         tasks = Task.objects.all().order_by('priority', '-created_at')
 
-    # 7. PROGRESS & STATISTICS CALCULATION
+    # 7. --- COMMIT 4: PROGRESS & STATISTICS CALCULATION ---
     total_tasks = tasks.count()
-    completed_tasks = tasks.filter(is_completed=True).count()
+    completed_tasks_count = tasks.filter(is_completed=True).count()
     pending_tasks_count = tasks.filter(is_completed=False).count() 
     
+    # Progress Ribbon ke liye percentage
+    progress_percent = 0
     if total_tasks > 0:
-        progress_percent = int((completed_tasks / total_tasks) * 100)
-    else:
-        progress_percent = 0
+        progress_percent = int((completed_tasks_count / total_tasks) * 100)
 
     # 8. FINAL RENDER
     return render(request, 'tracker/index.html', {
         'tasks': tasks,
-        'progress_percent': progress_percent,
+        'progress_percent': progress_percent, # Naya variable ribbon ke liye
         'dark_mode': dark_mode,
         'pending_count': pending_tasks_count,      
-        'completed_count': completed_tasks,         
+        'completed_count': completed_tasks_count,         
     })
