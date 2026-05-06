@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Task  
+from django.utils import timezone # Naya import
 
 def index(request):
     # 1. DARK MODE LOGIC (Session based)
@@ -29,6 +30,7 @@ def index(request):
         task_id = request.GET.get('complete')
         task = Task.objects.get(id=task_id)
         task.is_completed = True
+        task.completed_at = timezone.now() # Naya: Completion time save hoga
         task.save()
         return redirect('index')
 
@@ -49,7 +51,7 @@ def index(request):
     # 7. PROGRESS & STATISTICS CALCULATION
     total_tasks = tasks.count()
     completed_tasks = tasks.filter(is_completed=True).count()
-    pending_tasks_count = tasks.filter(is_completed=False).count() # Naya calculation
+    pending_tasks_count = tasks.filter(is_completed=False).count() 
     
     if total_tasks > 0:
         progress_percent = int((completed_tasks / total_tasks) * 100)
