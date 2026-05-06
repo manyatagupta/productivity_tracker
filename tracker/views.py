@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Task  
-from django.utils import timezone # Naya import
+from django.utils import timezone 
 
 def index(request):
     # 1. DARK MODE LOGIC (Session based)
@@ -11,13 +11,28 @@ def index(request):
 
     dark_mode = request.session.get('dark_mode', False)
 
-    # 2. POST LOGIC (Add Task)
+    # 2. POST LOGIC (Add Task with Auto-Emoji)
     if request.method == 'POST':
         task_title = request.POST.get('title')
         task_priority = request.POST.get('priority') 
         
         if task_title:
-            Task.objects.create(title=task_title, priority=task_priority)
+            # --- COMMIT 3: Auto-Emoji Logic ---
+            emoji = ""
+            lower_title = task_title.lower()
+            if "code" in lower_title or "python" in lower_title or "django" in lower_title: 
+                emoji = "💻 "
+            elif "study" in lower_title or "exam" in lower_title or "read" in lower_title: 
+                emoji = "📚 "
+            elif "meet" in lower_title or "call" in lower_title: 
+                emoji = "🤝 "
+            elif "food" in lower_title or "eat" in lower_title or "dinner" in lower_title: 
+                emoji = "🍕 "
+            elif "gym" in lower_title or "workout" in lower_title: 
+                emoji = "💪 "
+            
+            final_title = emoji + task_title
+            Task.objects.create(title=final_title, priority=task_priority)
             return redirect('index')
 
     # 3. CLEAR COMPLETED LOGIC (Bulk Delete)
@@ -30,7 +45,7 @@ def index(request):
         task_id = request.GET.get('complete')
         task = Task.objects.get(id=task_id)
         task.is_completed = True
-        task.completed_at = timezone.now() # Naya: Completion time save hoga
+        task.completed_at = timezone.now() 
         task.save()
         return redirect('index')
 

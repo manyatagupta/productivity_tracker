@@ -123,7 +123,6 @@
         .task.medium { border-left: 5px solid #f59e0b; }
         .task.low { border-left: 5px solid #10b981; }
 
-        /* --- COMMIT 2: Fading for Completed Tasks --- */
         .task.completed-style {
             opacity: 0.5;
             background: #f1f3f5;
@@ -134,8 +133,11 @@
             opacity: 0.8;
         }
 
+        /* --- COMMIT 3: Enhanced Hover Effects --- */
         .task:hover {
             transform: translateX(8px); 
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.15); 
+            border-color: #4361ee;
         }
 
         .completed {
@@ -311,7 +313,6 @@
                     </div>
                 </div>
             {% empty %}
-                <!-- --- COMMIT 2: Refined Empty State for Search --- -->
                 <div class="empty-msg">
                     {% if request.GET.search %}
                         <div style="font-size: 50px; margin-bottom: 10px;">🔍</div>
