@@ -225,6 +225,15 @@
 <body class="{% if dark_mode %}dark-mode{% endif %}">
     <div class="main-wrapper"> 
         
+        {% if messages %}
+            {% for message in messages %}
+                <div style="padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; 
+                            background-color: #fff5f5; color: #c53030; border: 1px solid #feb2b2;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
         <div class="header-info">
             <div style="text-align: right; margin-bottom: 10px;">
                 <a href="?toggle_dark=1" style="text-decoration: none; background: #333; color: white; padding: 5px 15px; font-size: 12px; border-radius: 20px;">
@@ -239,7 +248,6 @@
             <span class="task-count">{{ tasks|length }} Tasks</span>
         </div>
 
-        <!-- --- COMMIT 4: Progress Ribbon Section --- -->
         <div style="margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <span style="font-size: 12px; font-weight: 600; color: #4361ee;">Daily Goal Progress</span>
@@ -250,7 +258,6 @@
             </div>
         </div>
 
-        <!-- Task Stats Row -->
         <div style="display: flex; gap: 10px; margin-bottom: 20px;">
             <div style="flex: 1; background: #fff3cd; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #ffeeba;">
                 <span style="display: block; font-size: 10px; color: #856404; font-weight: 600; text-transform: uppercase;">Pending</span>
@@ -314,7 +321,6 @@
                             Created on: {{ task.created_at|date:"M d, Y H:i" }}
                         </small>
                         
-                        <!-- Finished time display logic -->
                         {% if task.is_completed and task.completed_at %}
                         <small style="color: #10b981; display: block; font-size: 11px; font-weight: 600; margin-top: 2px;">
                             ✔️ Finished at: {{ task.completed_at|date:"H:i" }}

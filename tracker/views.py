@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Task  
 from django.utils import timezone 
+from django.contrib import messages # Naya import messages ke liye
 
 def index(request):
     # 1. DARK MODE LOGIC (Session based)
@@ -38,6 +39,7 @@ def index(request):
     # 3. CLEAR COMPLETED LOGIC (Bulk Delete)
     if request.GET.get('clear_completed'):
         Task.objects.filter(is_completed=True).delete()
+        messages.info(request, "All completed tasks cleared!") # Naya message
         return redirect('index')
 
     # 4. COMPLETE TASK LOGIC
@@ -49,10 +51,13 @@ def index(request):
         task.save()
         return redirect('index')
 
-    # 5. DELETE TASK LOGIC
+    # 5. DELETE TASK LOGIC (Updated with Message)
     if request.GET.get('delete'):
         task_id = request.GET.get('delete')
-        Task.objects.filter(id=task_id).delete()
+        task = Task.objects.get(id=task_id)
+        task_title = task.title
+        task.delete()
+        messages.warning(request, f'Task "{task_title}" has been deleted!') # Delete notification
         return redirect('index')
 
     # 6. SEARCH LOGIC
@@ -63,12 +68,11 @@ def index(request):
     else:
         tasks = Task.objects.all().order_by('priority', '-created_at')
 
-    # 7. --- COMMIT 4: PROGRESS & STATISTICS CALCULATION ---
+    # 7. PROGRESS & STATISTICS CALCULATION
     total_tasks = tasks.count()
     completed_tasks_count = tasks.filter(is_completed=True).count()
     pending_tasks_count = tasks.filter(is_completed=False).count() 
     
-    # Progress Ribbon ke liye percentage
     progress_percent = 0
     if total_tasks > 0:
         progress_percent = int((completed_tasks_count / total_tasks) * 100)
@@ -76,7 +80,7 @@ def index(request):
     # 8. FINAL RENDER
     return render(request, 'tracker/index.html', {
         'tasks': tasks,
-        'progress_percent': progress_percent, # Naya variable ribbon ke liye
+        'progress_percent': progress_percent, 
         'dark_mode': dark_mode,
         'pending_count': pending_tasks_count,      
         'completed_count': completed_tasks_count,         
