@@ -212,6 +212,23 @@
             .actions { flex-wrap: wrap; justify-content: flex-end; }
         }
 
+        /* --- COMMIT 4: Progress Ribbon Polish --- */
+        .progress-inner {
+            height: 100%;
+            background: linear-gradient(to right, #4361ee, #4cc9f0);
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
+        }
+
+        .footer-text {
+            text-align: center;
+            font-size: 10px;
+            color: #a0aec0;
+            margin-top: 30px;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
         .empty-msg {
             background: #f8f9fa;
             border: 2px dashed #cbd5e0;
@@ -261,7 +278,7 @@
                 <span style="font-size: 12px; font-weight: 600; color: #4361ee;">{{ progress_percent }}%</span>
             </div>
             <div style="width: 100%; background: #e0e7ff; height: 10px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(67, 97, 238, 0.1);">
-                <div style="width: {{ progress_percent }}%; background: linear-gradient(to right, #4361ee, #4cc9f0); height: 100%; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);"></div>
+                <div class="progress-inner" style="width: {{ progress_percent }}%;"></div>
             </div>
         </div>
 
@@ -355,6 +372,8 @@
                 </div>
             {% endfor %}
         </div>
+        
+        <p class="footer-text">PRODUCED BY MANYA &bull; 2026</p>
     </div> 
 
     <script>
