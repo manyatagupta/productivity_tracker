@@ -31,12 +31,14 @@ def index(request):
                 emoji = "🍕 "
             elif "gym" in lower_title or "workout" in lower_title: 
                 emoji = "💪 "
+            elif "money" in lower_title or "pay" in lower_title: # Naya category
+                emoji = "💸 "
             
             final_title = emoji + task_title
             Task.objects.create(title=final_title, priority=task_priority)
             return redirect('index')
 
-    # 3. CLEAR COMPLETED LOGIC (Enhanced)
+    # 3. CLEAR COMPLETED LOGIC
     if request.GET.get('clear_completed'):
         completed_tasks_to_delete = Task.objects.filter(is_completed=True)
         count = completed_tasks_to_delete.count()
@@ -66,16 +68,15 @@ def index(request):
         messages.warning(request, f'Task "{task_title}" has been deleted!') 
         return redirect('index')
 
-    # --- COMMIT 3: EDIT TASK LOGIC (NEW) ---
+    # --- COMMIT 5: Polished Edit Logic ---
     if request.GET.get('edit_id') and request.GET.get('new_title'):
         t_id = request.GET.get('edit_id')
         new_text = request.GET.get('new_title')
         try:
             task = Task.objects.get(id=t_id)
-            old_title = task.title
             task.title = new_text
             task.save()
-            messages.success(request, f'Updated: "{old_title}" to "{new_text}" ✅')
+            messages.success(request, f'Task updated successfully! ✨')
         except Task.DoesNotExist:
             pass
         return redirect('index')

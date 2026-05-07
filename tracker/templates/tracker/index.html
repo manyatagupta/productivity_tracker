@@ -96,7 +96,7 @@
             transform: translateY(-2px); 
         }
 
-        /* Priority Badge Styles */
+        /* Priority Badge & Dot Styles */
         .priority-badge {
             font-size: 10px;
             padding: 2px 8px;
@@ -109,6 +109,19 @@
         .badge-high { background: #fee2e2; color: #b91c1c; }
         .badge-medium { background: #fef3c7; color: #92400e; }
         .badge-low { background: #d1fae5; color: #065f46; }
+
+        /* --- COMMIT 5: Priority Dot Indicators --- */
+        .priority-dot {
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .dot-high { background-color: #ef4444; box-shadow: 0 0 5px #ef4444; }
+        .dot-medium { background-color: #f59e0b; box-shadow: 0 0 5px #f59e0b; }
+        .dot-low { background-color: #10b981; box-shadow: 0 0 5px #10b981; }
 
         .task {
             background: linear-gradient(to right, #ffffff, #fcfcfc);
@@ -133,9 +146,7 @@
             filter: grayscale(0.5);
         }
 
-        .task.completed-style:hover {
-            opacity: 0.8;
-        }
+        .task.completed-style:hover { opacity: 0.8; }
 
         .task:hover {
             transform: translateX(8px); 
@@ -212,7 +223,6 @@
             .actions { flex-wrap: wrap; justify-content: flex-end; }
         }
 
-        /* --- COMMIT 4: Progress Ribbon Polish --- */
         .progress-inner {
             height: 100%;
             background: linear-gradient(to right, #4361ee, #4cc9f0);
@@ -329,6 +339,8 @@
                 <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">    
                     <div>
                         <span class="{% if task.is_completed %}completed{% endif %}">
+                            <span class="priority-dot dot-{{ task.priority }}"></span>
+                            
                             {{ task.title }}
                             <span class="priority-badge badge-{{ task.priority }}">
                                 {{ task.priority }}
