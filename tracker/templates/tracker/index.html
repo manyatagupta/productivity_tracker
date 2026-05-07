@@ -33,7 +33,6 @@
 
         .dark-mode h1 { color: #4cc9f0; }
         
-        /* --- COMMIT 2: Dark Mode Empty Msg Fix --- */
         .dark-mode .empty-msg h3 {
             color: #4cc9f0 !important;
         }
@@ -151,26 +150,24 @@
 
         .actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            align-items: center;
         }
 
-        .btn-done, .btn-delete {
+        .btn-done, .btn-delete, .btn-edit {
             padding: 6px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
+            transition: 0.2s;
         }
 
-        .btn-done {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        .btn-delete {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
+        .btn-done { background-color: #d1fae5; color: #065f46; }
+        .btn-delete { background-color: #fee2e2; color: #991b1b; }
+        .btn-edit { background-color: #e0e7ff; color: #4361ee; }
+        
+        .btn-edit:hover { background-color: #4361ee; color: white; }
 
         .header-info {
             display: flex;
@@ -179,7 +176,6 @@
             margin-bottom: 20px;
         }
 
-        /* --- COMMIT 2: Badge Pulse Animation --- */
         @keyframes pulse-animation {
             0% { transform: scale(1); }
             50% { transform: scale(1.08); }
@@ -194,7 +190,7 @@
             font-size: 14px;
             font-weight: 600;
             box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
-            animation: pulse-animation 2s infinite ease-in-out; /* Pulsing effect */
+            animation: pulse-animation 2s infinite ease-in-out;
         }
 
         .status-badge {
@@ -211,11 +207,9 @@
         .status-completed { background: #d4edda; color: #155724; }
 
         @media (max-width: 480px) {
-            .main-wrapper {
-                width: 95%;
-                padding: 20px;
-            }
+            .main-wrapper { width: 95%; padding: 20px; }
             h1 { font-size: 20px; }
+            .actions { flex-wrap: wrap; justify-content: flex-end; }
         }
 
         .empty-msg {
@@ -241,7 +235,7 @@
         {% if messages %}
             {% for message in messages %}
                 <div style="padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; 
-                            background-color: #fff5f5; color: #c53030; border: 1px solid #feb2b2;">
+                            background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -293,13 +287,11 @@
         <form method="POST" class="input-group">
             {% csrf_token %}
             <input type="text" name="title" placeholder="Today's tasks?" required>
-            
             <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee; font-family: 'Poppins';">
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high" selected>High</option>
             </select>
-            
             <button type="submit">Add Task</button>
         </form>
 
@@ -343,6 +335,7 @@
                     
                     <div class="actions">
                         {% if not task.is_completed %}
+                            <a href="#" onclick="editTask('{{ task.id }}', '{{ task.title }}')" class="btn-edit">Edit</a>
                             <a href="?complete={{ task.id }}" class="btn-done">Done</a>
                         {% endif %}
                         <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Kya aap sach mein is task ko hatana chahte hain?')">Delete</a>
@@ -353,19 +346,24 @@
                     {% if request.GET.search %}
                         <div style="font-size: 50px; margin-bottom: 10px;">🔍</div>
                         <h3 style="margin: 0; color: #4361ee;">No Tasks Found</h3>
-                        <p style="font-size: 14px; margin-top: 5px;">
-                            Hume is naam ka koi task nahi mila. Kuch aur search karein!
-                        </p>
+                        <p style="font-size: 14px; margin-top: 5px;">Hume is naam ka koi task nahi mila.</p>
                     {% else %}
                         <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
                         <h3 style="margin: 0; color: #4361ee;">Sab Kaam Ho Gaya!</h3>
-                        <p style="font-size: 14px; margin-top: 5px;">
-                            RIGHTNOW NO PENDING TASKS, ADD NEW TASKS OR RELAX! ☕
-                        </p>
+                        <p style="font-size: 14px; margin-top: 5px;">RIGHTNOW NO PENDING TASKS!</p>
                     {% endif %}
                 </div>
             {% endfor %}
         </div>
     </div> 
+
+    <script>
+        function editTask(id, currentTitle) {
+            let newTitle = prompt("Update your task title:", currentTitle);
+            if (newTitle != null && newTitle.trim() !== "") {
+                window.location.href = `?edit_id=${id}&new_title=${encodeURIComponent(newTitle)}`;
+            }
+        }
+    </script>
 </body>
 </html>
