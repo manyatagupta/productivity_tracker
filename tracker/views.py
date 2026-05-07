@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Task  
 from django.utils import timezone 
-from django.contrib import messages # Naya import messages ke liye
+from django.contrib import messages 
 
 def index(request):
     # 1. DARK MODE LOGIC (Session based)
@@ -36,10 +36,16 @@ def index(request):
             Task.objects.create(title=final_title, priority=task_priority)
             return redirect('index')
 
-    # 3. CLEAR COMPLETED LOGIC (Bulk Delete)
+    # 3. --- COMMIT 2: CLEAR COMPLETED LOGIC (Enhanced) ---
     if request.GET.get('clear_completed'):
-        Task.objects.filter(is_completed=True).delete()
-        messages.info(request, "All completed tasks cleared!") # Naya message
+        completed_tasks_to_delete = Task.objects.filter(is_completed=True)
+        count = completed_tasks_to_delete.count()
+        
+        if count > 0:
+            completed_tasks_to_delete.delete()
+            messages.success(request, f"Successfully cleared {count} completed tasks! 🧹")
+        else:
+            messages.info(request, "No completed tasks to clear.")
         return redirect('index')
 
     # 4. COMPLETE TASK LOGIC
@@ -51,13 +57,13 @@ def index(request):
         task.save()
         return redirect('index')
 
-    # 5. DELETE TASK LOGIC (Updated with Message)
+    # 5. DELETE TASK LOGIC
     if request.GET.get('delete'):
         task_id = request.GET.get('delete')
         task = Task.objects.get(id=task_id)
         task_title = task.title
         task.delete()
-        messages.warning(request, f'Task "{task_title}" has been deleted!') # Delete notification
+        messages.warning(request, f'Task "{task_title}" has been deleted!') 
         return redirect('index')
 
     # 6. SEARCH LOGIC

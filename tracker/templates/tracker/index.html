@@ -32,6 +32,11 @@
         }
 
         .dark-mode h1 { color: #4cc9f0; }
+        
+        /* --- COMMIT 2: Dark Mode Empty Msg Fix --- */
+        .dark-mode .empty-msg h3 {
+            color: #4cc9f0 !important;
+        }
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -174,6 +179,13 @@
             margin-bottom: 20px;
         }
 
+        /* --- COMMIT 2: Badge Pulse Animation --- */
+        @keyframes pulse-animation {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
         .task-count {
             background: linear-gradient(45deg, #4361ee, #4cc9f0);
             color: white;
@@ -182,6 +194,7 @@
             font-size: 14px;
             font-weight: 600;
             box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
+            animation: pulse-animation 2s infinite ease-in-out; /* Pulsing effect */
         }
 
         .status-badge {
