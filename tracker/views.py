@@ -12,33 +12,54 @@ def index(request):
 
     dark_mode = request.session.get('dark_mode', False)
 
-    # 2. POST LOGIC (Add Task with Auto-Emoji)
+    # 2. POST LOGIC (Add Task with Auto-Emoji & Tags)
     if request.method == 'POST':
         task_title = request.POST.get('title')
         task_priority = request.POST.get('priority') 
         
         if task_title:
-            # --- Auto-Emoji Logic ---
+            # --- Auto-Emoji & Tag Logic ---
             emoji = ""
+            tag = "General" # Default tag
             lower_title = task_title.lower()
-            if "code" in lower_title or "python" in lower_title or "django" in lower_title: 
+
+            # Work Category
+            if any(word in lower_title for word in ["code", "python", "django", "bug", "work"]): 
                 emoji = "💻 "
-            elif "study" in lower_title or "exam" in lower_title or "read" in lower_title: 
+                tag = "Work"
+            # Study Category
+            elif any(word in lower_title for word in ["study", "exam", "read", "learn"]): 
                 emoji = "📚 "
-            elif "meet" in lower_title or "call" in lower_title: 
+                tag = "Study"
+            # Meeting Category
+            elif any(word in lower_title for word in ["meet", "call", "zoom"]): 
                 emoji = "🤝 "
-            elif "food" in lower_title or "eat" in lower_title or "dinner" in lower_title: 
+                tag = "Meet"
+            # Food Category
+            elif any(word in lower_title for word in ["food", "eat", "dinner", "pizza"]): 
                 emoji = "🍕 "
-            elif "gym" in lower_title or "workout" in lower_title: 
+                tag = "Food"
+            # Health Category
+            elif any(word in lower_title for word in ["gym", "workout", "health", "run"]): 
                 emoji = "💪 "
-            elif "money" in lower_title or "pay" in lower_title: # Naya category
+                tag = "Health"
+            # Shopping Category
+            elif any(word in lower_title for word in ["buy", "shop", "amazon", "price"]): 
+                emoji = "🛒 "
+                tag = "Shop"
+            # Finance Category
+            elif "money" in lower_title or "pay" in lower_title:
                 emoji = "💸 "
+                tag = "Finance"
             
-            final_title = emoji + task_title
+            # Final Title formatting with Tag
+            final_title = f"[{tag}] {emoji}{task_title}"
+            
             Task.objects.create(title=final_title, priority=task_priority)
+            messages.success(request, f"New {tag} task added! 🚀")
             return redirect('index')
 
-    # 3. CLEAR COMPLETED LOGIC
+    # 3. CLEAR COMPLETED LOGIC (Enhanced)
     if request.GET.get('clear_completed'):
         completed_tasks_to_delete = Task.objects.filter(is_completed=True)
         count = completed_tasks_to_delete.count()
@@ -68,7 +89,7 @@ def index(request):
         messages.warning(request, f'Task "{task_title}" has been deleted!') 
         return redirect('index')
 
-    # --- COMMIT 5: Polished Edit Logic ---
+    # 5.5 EDIT TASK LOGIC 
     if request.GET.get('edit_id') and request.GET.get('new_title'):
         t_id = request.GET.get('edit_id')
         new_text = request.GET.get('new_title')

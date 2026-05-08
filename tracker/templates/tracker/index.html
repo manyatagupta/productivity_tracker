@@ -96,7 +96,7 @@
             transform: translateY(-2px); 
         }
 
-        /* Priority Badge & Dot Styles */
+        /* Priority & Tag Styles */
         .priority-badge {
             font-size: 10px;
             padding: 2px 8px;
@@ -110,7 +110,26 @@
         .badge-medium { background: #fef3c7; color: #92400e; }
         .badge-low { background: #d1fae5; color: #065f46; }
 
-        /* --- COMMIT 5: Priority Dot Indicators --- */
+        /* --- COMMIT 1 (Day 7): Task Tag Styles --- */
+        .task-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: #475569;
+            margin-right: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            border: 1px solid #e2e8f0;
+            vertical-align: middle;
+        }
+
+        .dark-mode .task-tag {
+            background: #1e293b;
+            color: #94a3b8;
+            border-color: #334155;
+        }
+
         .priority-dot {
             height: 8px;
             width: 8px;
@@ -341,7 +360,16 @@
                         <span class="{% if task.is_completed %}completed{% endif %}">
                             <span class="priority-dot dot-{{ task.priority }}"></span>
                             
-                            {{ task.title }}
+                            <!-- Logic to display Tag if exists in title -->
+                            {% if "[" in task.title and "]" in task.title %}
+                                <span class="task-tag">
+                                    {{ task.title|slice:"1:10"|cut:"]" }}
+                                </span>
+                                {{ task.title|slice:"11:" }}
+                            {% else %}
+                                {{ task.title }}
+                            {% endif %}
+
                             <span class="priority-badge badge-{{ task.priority }}">
                                 {{ task.priority }}
                             </span>
