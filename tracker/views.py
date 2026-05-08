@@ -20,50 +20,40 @@ def index(request):
         if task_title:
             # --- Auto-Emoji & Tag Logic ---
             emoji = ""
-            tag = "General" # Default tag
+            tag = "General"
             lower_title = task_title.lower()
 
-            # Work Category
             if any(word in lower_title for word in ["code", "python", "django", "bug", "work"]): 
                 emoji = "💻 "
                 tag = "Work"
-            # Study Category
             elif any(word in lower_title for word in ["study", "exam", "read", "learn"]): 
                 emoji = "📚 "
                 tag = "Study"
-            # Meeting Category
             elif any(word in lower_title for word in ["meet", "call", "zoom"]): 
                 emoji = "🤝 "
                 tag = "Meet"
-            # Food Category
             elif any(word in lower_title for word in ["food", "eat", "dinner", "pizza"]): 
                 emoji = "🍕 "
                 tag = "Food"
-            # Health Category
             elif any(word in lower_title for word in ["gym", "workout", "health", "run"]): 
                 emoji = "💪 "
                 tag = "Health"
-            # Shopping Category
             elif any(word in lower_title for word in ["buy", "shop", "amazon", "price"]): 
                 emoji = "🛒 "
                 tag = "Shop"
-            # Finance Category
             elif "money" in lower_title or "pay" in lower_title:
                 emoji = "💸 "
                 tag = "Finance"
             
-            # Final Title formatting with Tag
             final_title = f"[{tag}] {emoji}{task_title}"
-            
             Task.objects.create(title=final_title, priority=task_priority)
             messages.success(request, f"New {tag} task added! 🚀")
             return redirect('index')
 
-    # 3. CLEAR COMPLETED LOGIC (Enhanced)
+    # 3. CLEAR COMPLETED LOGIC
     if request.GET.get('clear_completed'):
         completed_tasks_to_delete = Task.objects.filter(is_completed=True)
         count = completed_tasks_to_delete.count()
-        
         if count > 0:
             completed_tasks_to_delete.delete()
             messages.success(request, f"Successfully cleared {count} completed tasks! 🧹")
@@ -102,18 +92,30 @@ def index(request):
             pass
         return redirect('index')
 
-    # 6. SEARCH LOGIC
+    # --- COMMIT 2: SEARCH & SMART FILTER LOGIC ---
     search_query = request.GET.get('search', '')
+    filter_type = request.GET.get('filter', 'all')
     
+    tasks = Task.objects.all()
+
+    # Search filter apply karein
     if search_query:
-        tasks = Task.objects.filter(title__icontains=search_query).order_by('priority', '-created_at')
-    else:
-        tasks = Task.objects.all().order_by('priority', '-created_at')
+        tasks = tasks.filter(title__icontains=search_query)
+    
+    # Category/Status filter apply karein
+    if filter_type == 'high':
+        tasks = tasks.filter(priority='high', is_completed=False)
+    elif filter_type == 'pending':
+        tasks = tasks.filter(is_completed=False)
+    elif filter_type == 'completed':
+        tasks = tasks.filter(is_completed=True)
+
+    tasks = tasks.order_by('priority', '-created_at')
 
     # 7. PROGRESS & STATISTICS CALCULATION
-    total_tasks = tasks.count()
-    completed_tasks_count = tasks.filter(is_completed=True).count()
-    pending_tasks_count = tasks.filter(is_completed=False).count() 
+    total_tasks = Task.objects.all().count() # Base stats on all tasks
+    completed_tasks_count = Task.objects.filter(is_completed=True).count()
+    pending_tasks_count = Task.objects.filter(is_completed=False).count() 
     
     progress_percent = 0
     if total_tasks > 0:

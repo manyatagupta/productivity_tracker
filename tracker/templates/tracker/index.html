@@ -110,7 +110,6 @@
         .badge-medium { background: #fef3c7; color: #92400e; }
         .badge-low { background: #d1fae5; color: #065f46; }
 
-        /* --- COMMIT 1 (Day 7): Task Tag Styles --- */
         .task-tag {
             font-size: 9px;
             padding: 2px 6px;
@@ -198,6 +197,21 @@
         .btn-edit { background-color: #e0e7ff; color: #4361ee; }
         
         .btn-edit:hover { background-color: #4361ee; color: white; }
+
+        /* --- COMMIT 2: Filter Button Styles --- */
+        .filter-btn {
+            text-decoration: none;
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: white;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+        .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
+        .filter-active { background: #4361ee !important; color: white !important; border-color: #4361ee !important; }
 
         .header-info {
             display: flex;
@@ -341,7 +355,7 @@
             <button type="submit">Add Task</button>
         </form>
 
-        <form method="GET" style="margin-bottom: 20px; display: flex; gap: 5px;">
+        <form method="GET" style="margin-bottom: 10px; display: flex; gap: 5px;">
             <input type="text" name="search" placeholder="Search old..." 
                    value="{{ request.GET.search }}" 
                    style="font-size: 13px; padding: 8px 12px; flex: 1;">
@@ -350,6 +364,14 @@
                 <a href="/" style="text-decoration: none; padding: 8px 15px; background: #f1f3f5; color: #333; border-radius: 8px; font-size: 13px;">Clear</a>
             {% endif %}
         </form>
+
+        <!-- --- COMMIT 2: Filter Pills --- -->
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+            <a href="/" class="filter-btn {% if not request.GET.filter %}filter-active{% endif %}">All</a>
+            <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
+            <a href="?filter=pending" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">⏳ Pending</a>
+            <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
+        </div>
 
         <br>
 
@@ -360,7 +382,6 @@
                         <span class="{% if task.is_completed %}completed{% endif %}">
                             <span class="priority-dot dot-{{ task.priority }}"></span>
                             
-                            <!-- Logic to display Tag if exists in title -->
                             {% if "[" in task.title and "]" in task.title %}
                                 <span class="task-tag">
                                     {{ task.title|slice:"1:10"|cut:"]" }}
@@ -400,10 +421,10 @@
                 </div>
             {% empty %}
                 <div class="empty-msg">
-                    {% if request.GET.search %}
+                    {% if request.GET.search or request.GET.filter %}
                         <div style="font-size: 50px; margin-bottom: 10px;">🔍</div>
                         <h3 style="margin: 0; color: #4361ee;">No Tasks Found</h3>
-                        <p style="font-size: 14px; margin-top: 5px;">Hume is naam ka koi task nahi mila.</p>
+                        <p style="font-size: 14px; margin-top: 5px;">Hume is filter ke saath koi task nahi mila.</p>
                     {% else %}
                         <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
                         <h3 style="margin: 0; color: #4361ee;">Sab Kaam Ho Gaya!</h3>
