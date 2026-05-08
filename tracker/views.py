@@ -61,13 +61,18 @@ def index(request):
             messages.info(request, "No completed tasks to clear.")
         return redirect('index')
 
-    # 4. COMPLETE TASK LOGIC
+    # --- COMMIT 3: COMPLETE TASK LOGIC (Pure Python/Energetic Message) ---
     if request.GET.get('complete'):
         task_id = request.GET.get('complete')
-        task = Task.objects.get(id=task_id)
-        task.is_completed = True
-        task.completed_at = timezone.now() 
-        task.save()
+        try:
+            task = Task.objects.get(id=task_id)
+            task.is_completed = True
+            task.completed_at = timezone.now() 
+            task.save()
+            # "BOOM" keyword HTML mein animation trigger karega
+            messages.success(request, "BOOM! Task Completed Successfully! 🎉") 
+        except Task.DoesNotExist:
+            pass
         return redirect('index')
 
     # 5. DELETE TASK LOGIC
@@ -92,17 +97,15 @@ def index(request):
             pass
         return redirect('index')
 
-    # --- COMMIT 2: SEARCH & SMART FILTER LOGIC ---
+    # 6. SEARCH & SMART FILTER LOGIC
     search_query = request.GET.get('search', '')
     filter_type = request.GET.get('filter', 'all')
     
     tasks = Task.objects.all()
 
-    # Search filter apply karein
     if search_query:
         tasks = tasks.filter(title__icontains=search_query)
     
-    # Category/Status filter apply karein
     if filter_type == 'high':
         tasks = tasks.filter(priority='high', is_completed=False)
     elif filter_type == 'pending':
@@ -113,7 +116,7 @@ def index(request):
     tasks = tasks.order_by('priority', '-created_at')
 
     # 7. PROGRESS & STATISTICS CALCULATION
-    total_tasks = Task.objects.all().count() # Base stats on all tasks
+    total_tasks = Task.objects.all().count() 
     completed_tasks_count = Task.objects.filter(is_completed=True).count()
     pending_tasks_count = Task.objects.filter(is_completed=False).count() 
     

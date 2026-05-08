@@ -58,6 +58,23 @@
             margin: 0 auto; 
         }
 
+        /* --- COMMIT 3 (Day 7): Python/CSS Celebration Styles --- */
+        .celebrate-msg {
+            animation: bounceIn 0.8s ease;
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
+            color: #065f46 !important;
+            border: 2px solid #34d399 !important;
+            font-size: 16px !important;
+            box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
         /* Input & Button Styles */
         .input-group {
             display: flex;
@@ -198,7 +215,6 @@
         
         .btn-edit:hover { background-color: #4361ee; color: white; }
 
-        /* --- COMMIT 2: Filter Button Styles --- */
         .filter-btn {
             text-decoration: none;
             font-size: 11px;
@@ -294,7 +310,9 @@
         
         {% if messages %}
             {% for message in messages %}
-                <div style="padding: 12px; margin-bottom: 20px; border-radius: 8px; font-size: 13px; font-weight: 600; text-align: center; 
+                <!-- --- COMMIT 3 (Day 7): Dynamic Celebrate Class --- -->
+                <div class="{% if 'Finished' in message or 'BOOM' in message %}celebrate-msg{% endif %}" 
+                     style="padding: 12px; margin-bottom: 20px; border-radius: 12px; font-size: 13px; font-weight: 600; text-align: center; 
                             background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;">
                     {{ message }}
                 </div>
@@ -365,7 +383,6 @@
             {% endif %}
         </form>
 
-        <!-- --- COMMIT 2: Filter Pills --- -->
         <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
             <a href="/" class="filter-btn {% if not request.GET.filter %}filter-active{% endif %}">All</a>
             <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
