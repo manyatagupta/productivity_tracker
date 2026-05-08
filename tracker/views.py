@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Task  
 from django.utils import timezone 
 from django.contrib import messages 
+from datetime import timedelta # Naya import urgency logic ke liye
 
 def index(request):
     # 1. DARK MODE LOGIC (Session based)
@@ -61,7 +62,7 @@ def index(request):
             messages.info(request, "No completed tasks to clear.")
         return redirect('index')
 
-    # --- COMMIT 3: COMPLETE TASK LOGIC (Pure Python/Energetic Message) ---
+    # 4. COMPLETE TASK LOGIC
     if request.GET.get('complete'):
         task_id = request.GET.get('complete')
         try:
@@ -69,7 +70,6 @@ def index(request):
             task.is_completed = True
             task.completed_at = timezone.now() 
             task.save()
-            # "BOOM" keyword HTML mein animation trigger karega
             messages.success(request, "BOOM! Task Completed Successfully! 🎉") 
         except Task.DoesNotExist:
             pass
@@ -97,7 +97,7 @@ def index(request):
             pass
         return redirect('index')
 
-    # 6. SEARCH & SMART FILTER LOGIC
+    # --- COMMIT 1 (Day 8): SEARCH, FILTER & URGENCY LOGIC ---
     search_query = request.GET.get('search', '')
     filter_type = request.GET.get('filter', 'all')
     
@@ -115,6 +115,15 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
+    # Har task ke liye urgency detect karna (Pure Python logic)
+    for task in tasks:
+        if not task.is_completed:
+            # Agar task ko bane hue 24 ghante se zyada ho gaye hain
+            if timezone.now() - task.created_at > timedelta(hours=24):
+                task.is_overdue = True
+            else:
+                task.is_overdue = False
+
     # 7. PROGRESS & STATISTICS CALCULATION
     total_tasks = Task.objects.all().count() 
     completed_tasks_count = Task.objects.filter(is_completed=True).count()
@@ -130,5 +139,6 @@ def index(request):
         'progress_percent': progress_percent, 
         'dark_mode': dark_mode,
         'pending_count': pending_tasks_count,      
-        'completed_count': completed_tasks_count,         
+        'completed_count': completed_tasks_count,
+        'now': timezone.now(),         
     })
