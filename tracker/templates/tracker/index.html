@@ -74,7 +74,24 @@
             100% { transform: scale(1); }
         }
 
-        /* --- COMMIT 1 (Day 8): Urgency Alert Animation --- */
+        /* --- COMMIT 1 (Day 9): Performance Score Card --- */
+        .score-card {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        }
+
+        .score-info span { display: block; }
+        .score-label { font-size: 10px; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
+        .score-sub { font-size: 12px; opacity: 0.8; }
+        .score-value { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+
         .urgent-flash {
             font-size: 9px;
             background: #fff1f2;
@@ -351,6 +368,14 @@
             <span class="task-count">{{ tasks|length }} Tasks</span>
         </div>
 
+        <div class="score-card">
+            <div class="score-info">
+                <span class="score-label">Today's Performance</span>
+                <span class="score-sub">Keep the momentum going! 🚀</span>
+            </div>
+            <div class="score-value">{{ today_score }}</div>
+        </div>
+
         <div style="margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                 <span style="font-size: 12px; font-weight: 600; color: #4361ee;">Daily Goal Progress</span>
@@ -430,7 +455,6 @@
                                 {{ task.priority }}
                             </span>
 
-                            <!-- --- COMMIT 1 (Day 8): Overdue Alert --- -->
                             {% if not task.is_completed and task.is_overdue %}
                                 <span class="urgent-flash">⚠️ OVERDUE</span>
                             {% endif %}

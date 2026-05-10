@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Task  
 from django.utils import timezone 
 from django.contrib import messages 
-from datetime import timedelta # Naya import urgency logic ke liye
+from datetime import timedelta 
 
 def index(request):
     # 1. DARK MODE LOGIC (Session based)
@@ -97,7 +97,7 @@ def index(request):
             pass
         return redirect('index')
 
-    # --- COMMIT 1 (Day 8): SEARCH, FILTER & URGENCY LOGIC ---
+    # 6. SEARCH, FILTER & URGENCY LOGIC
     search_query = request.GET.get('search', '')
     filter_type = request.GET.get('filter', 'all')
     
@@ -115,14 +115,20 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
-    # Har task ke liye urgency detect karna (Pure Python logic)
     for task in tasks:
         if not task.is_completed:
-            # Agar task ko bane hue 24 ghante se zyada ho gaye hain
             if timezone.now() - task.created_at > timedelta(hours=24):
                 task.is_overdue = True
             else:
                 task.is_overdue = False
+
+    # --- COMMIT 1 (Day 9): TODAY'S PERFORMANCE LOGIC ---
+    today = timezone.now().date()
+    tasks_created_today = Task.objects.filter(created_at__date=today).count()
+    tasks_done_today = Task.objects.filter(completed_at__date=today, is_completed=True).count()
+    
+    # Simple score formatting
+    today_score = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
 
     # 7. PROGRESS & STATISTICS CALCULATION
     total_tasks = Task.objects.all().count() 
@@ -140,5 +146,6 @@ def index(request):
         'dark_mode': dark_mode,
         'pending_count': pending_tasks_count,      
         'completed_count': completed_tasks_count,
+        'today_score': today_score, # Naya data
         'now': timezone.now(),         
     })
