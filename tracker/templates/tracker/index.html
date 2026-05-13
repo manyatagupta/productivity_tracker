@@ -58,6 +58,26 @@
             margin: 0 auto; 
         }
 
+        /* --- FIXED: Match Badge --- */
+        .match-badge {
+            background: #fde047;
+            color: #000;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        /* --- FIXED: Active Filter Button --- */
+        .filter-active {
+            background: #4361ee !important;
+            color: white !important;
+            border-color: #4361ee !important;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4);
+        }
+
         .celebrate-msg {
             animation: bounceIn 0.8s ease;
             background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
@@ -72,15 +92,6 @@
             50% { transform: scale(1.05); opacity: 1; }
             70% { transform: scale(0.9); }
             100% { transform: scale(1); }
-        }
-
-        /* --- COMMIT 1 (Day 11): Search Highlight & Footer Styles --- */
-        mark {
-            background: #fde047;
-            color: #000;
-            padding: 0 2px;
-            border-radius: 2px;
-            font-weight: 600;
         }
 
         .sync-text {
@@ -101,17 +112,14 @@
             font-weight: bold;
             animation: flash-red 1.5s infinite;
             margin-left: 8px;
-            vertical-align: middle;
             display: inline-block;
         }
 
         @keyframes flash-red {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        /* Input & Button Styles */
         .input-group {
             display: flex;
             gap: 10px;
@@ -125,11 +133,6 @@
             border-radius: 8px; 
             outline: none;
             font-family: 'Poppins', sans-serif;
-            transition: 0.3s;
-        }
-
-        input[type="text"]:focus {
-            border-color: #4361ee; 
         }
 
         button { 
@@ -139,130 +142,58 @@
             border: none; 
             border-radius: 8px; 
             cursor: pointer; 
-            font-family: 'Poppins', sans-serif;
             font-weight: 600;
-            transition: 0.3s;
-        }
-
-        button:hover {
-            background-color: #3046c4;
-            transform: translateY(-2px); 
-        }
-
-        .priority-badge {
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-left: 5px;
-            vertical-align: middle;
-        }
-        .badge-high { background: #fee2e2; color: #b91c1c; }
-        .badge-medium { background: #fef3c7; color: #92400e; }
-        .badge-low { background: #d1fae5; color: #065f46; }
-
-        .task-tag {
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: #f1f5f9;
-            color: #475569;
-            margin-right: 5px;
-            text-transform: uppercase;
-            font-weight: bold;
-            border: 1px solid #e2e8f0;
-            vertical-align: middle;
-        }
-
-        .dark-mode .task-tag {
-            background: #1e293b;
-            color: #94a3b8;
-            border-color: #334155;
         }
 
         .priority-dot {
-            height: 8px;
-            width: 8px;
+            height: 10px;
+            width: 10px;
             border-radius: 50%;
             display: inline-block;
             margin-right: 8px;
-            vertical-align: middle;
+            flex-shrink: 0;
         }
-        .dot-high { background-color: #ef4444; box-shadow: 0 0 5px #ef4444; }
-        .dot-medium { background-color: #f59e0b; box-shadow: 0 0 5px #f59e0b; }
-        .dot-low { background-color: #10b981; box-shadow: 0 0 5px #10b981; }
+        .dot-high { background-color: #ef4444; }
+        .dot-medium { background-color: #f59e0b; }
+        .dot-low { background-color: #10b981; }
 
         .task {
-            background: linear-gradient(to right, #ffffff, #fcfcfc);
+            background: #ffffff;
             padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: 0.3s;
-            border: 1px solid rgba(0,0,0,0.05);
-            border-left: 5px solid #4361ee; 
+            border: 1px solid #eee;
+            border-left: 5px solid #4361ee;
         }
 
-        .task.high { border-left: 5px solid #ef4444; }
-        .task.medium { border-left: 5px solid #f59e0b; }
-        .task.low { border-left: 5px solid #10b981; }
+        .task.completed-style { opacity: 0.6; filter: grayscale(0.4); }
 
-        .task.completed-style {
-            opacity: 0.5;
-            background: #f1f3f5;
-            filter: grayscale(0.5);
-        }
+        .completed { text-decoration: line-through; color: #a0a0a0; }
 
-        .task.completed-style:hover { opacity: 0.8; }
-
-        .task:hover {
-            transform: translateX(8px); 
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.15); 
-            border-color: #4361ee;
-        }
-
-        .completed {
-            text-decoration: line-through;
-            color: #a0a0a0;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .btn-done, .btn-delete, .btn-edit {
+        .btn-done, .btn-delete {
             padding: 6px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-size: 13px;
             font-weight: 600;
-            transition: 0.2s;
         }
 
-        .btn-done { background-color: #d1fae5; color: #065f46; }
+        .btn-done { background-color: #d1fae5; color: #065f46; margin-right: 5px; }
         .btn-delete { background-color: #fee2e2; color: #991b1b; }
-        .btn-edit { background-color: #e0e7ff; color: #4361ee; }
-        
-        .btn-edit:hover { background-color: #4361ee; color: white; }
 
         .filter-btn {
             text-decoration: none;
             font-size: 11px;
-            padding: 5px 12px;
+            padding: 6px 15px;
             border-radius: 20px;
             background: white;
             color: #64748b;
             border: 1px solid #e2e8f0;
-            transition: 0.3s;
             white-space: nowrap;
         }
-        .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
-        .filter-active { background: #4361ee !important; color: white !important; border-color: #4361ee !important; }
 
         .score-card {
             background: linear-gradient(135deg, #6366f1, #a855f7);
@@ -273,43 +204,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
         }
 
-        .score-label { font-size: 10px; font-weight: 600; text-transform: uppercase; opacity: 0.9; display: block; }
-        .score-sub { font-size: 12px; opacity: 0.8; }
-        .score-value { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
-
-        @media (max-width: 480px) {
-            .main-wrapper { width: 95%; padding: 20px; }
-            h1 { font-size: 20px; }
-            .actions { flex-wrap: wrap; justify-content: flex-end; }
-        }
-
-        .progress-inner {
-            height: 100%;
-            background: linear-gradient(to right, #4361ee, #4cc9f0);
-            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 10px rgba(76, 201, 240, 0.5);
-        }
-
-        .footer-text {
-            text-align: center;
-            font-size: 10px;
-            color: #a0aec0;
-            margin-top: 30px;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
-
-        .empty-msg {
-            background: #f8f9fa;
-            border: 2px dashed #cbd5e0;
-            padding: 40px 20px;
-            border-radius: 20px;
-            color: #718096;
-            text-align: center;
-            transition: 0.3s;
+        .task-tag {
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: #f1f5f9;
+            color: #475569;
+            margin-right: 5px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -319,8 +223,7 @@
         {% if messages %}
             {% for message in messages %}
                 <div class="{% if 'BOOM' in message.message %}celebrate-msg{% endif %}" 
-                     style="padding: 12px; margin-bottom: 20px; border-radius: 12px; font-size: 13px; font-weight: 600; text-align: center; 
-                            background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd;">
+                     style="padding: 12px; margin-bottom: 20px; border-radius: 12px; font-size: 13px; font-weight: 600; text-align: center; background-color: #e0f2fe; color: #0369a1;">
                     {{ message }}
                 </div>
             {% endfor %}
@@ -328,7 +231,7 @@
 
         <div class="header-info" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
-                <h1>My Daily Tasks 📝</h1>
+                <h1 style="margin:0; font-size: 24px;">My Tasks 📝</h1>
                 <p style="font-size: 12px; color: #888; margin: 0;">{{ now|date:"l, d F" }}</p>
             </div>
             <a href="?toggle_dark=1" style="text-decoration: none; background: #333; color: white; padding: 5px 15px; font-size: 12px; border-radius: 20px;">
@@ -338,56 +241,51 @@
 
         <div class="score-card">
             <div>
-                <span class="score-label">Today's Performance</span>
-                <span class="score-sub">Keep the momentum going! 🔥</span>
+                <span style="font-size: 10px; font-weight: 600; text-transform: uppercase;">Today's Score</span>
+                <span style="display: block; font-size: 12px; opacity: 0.8;">Keep pushing! 🚀</span>
             </div>
-            <div class="score-value">{{ today_score }}</div>
-        </div>
-
-        <div style="margin-bottom: 20px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <span style="font-size: 12px; font-weight: 600; color: #4361ee;">Goal Progress</span>
-                <span style="font-size: 12px; font-weight: 600; color: #4361ee;">{{ progress_percent }}%</span>
-            </div>
-            <div style="width: 100%; background: #e0e7ff; height: 10px; border-radius: 10px; overflow: hidden;">
-                <div class="progress-inner" style="width: {{ progress_percent }}%;"></div>
-            </div>
+            <div style="font-size: 24px; font-weight: 800;">{{ today_score }}</div>
         </div>
 
         <form method="POST" class="input-group">
             {% csrf_token %}
-            <input type="text" name="title" placeholder="What's next?" required>
-            <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee;">
+            <input type="text" name="title" placeholder="Add task..." required>
+            <select name="priority" style="padding: 10px; border-radius: 8px; border: 1px solid #eee;">
                 <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high" selected>High</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
             </select>
             <button type="submit">Add</button>
         </form>
 
-        <form method="GET" style="margin-bottom: 10px; display: flex; gap: 5px;">
-            <input type="text" name="search" placeholder="Search tasks..." value="{{ search_query }}" style="font-size: 13px; padding: 8px 12px; flex: 1; border-radius: 8px; border: 2px solid #eee;">
-            <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">🔍</button>
+        <form method="GET" style="margin-bottom: 15px; display: flex; gap: 5px;">
+            <input type="text" name="search" placeholder="Search..." value="{{ search_query }}" style="padding: 8px 12px; flex: 1; border-radius: 8px; border: 1px solid #eee;">
+            <button type="submit" style="background: #6c757d; padding: 8px 15px;">🔍</button>
         </form>
 
-        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto;">
-            <a href="/" class="filter-btn {% if not request.GET.filter %}filter-active{% endif %}">All</a>
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+            <a href="/" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
             <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
             <a href="?filter=pending" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">⏳ Pending</a>
+            <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
         </div>
 
         <div class="task-list">
             {% for task in tasks %}
                 <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">    
-                    <div>
-                        <span class="{% if task.is_completed %}completed{% endif %}">
+                    <div style="flex: 1;">
+                        <span class="{% if task.is_completed %}completed{% endif %}" style="display: flex; align-items: center; flex-wrap: wrap;">
                             <span class="priority-dot dot-{{ task.priority }}"></span>
                             
                             {% if "[" in task.title and "]" in task.title %}
                                 <span class="task-tag">{{ task.title|slice:"1:10"|cut:"]" }}</span>
-                                {{ task.title|slice:"11:" }}
+                                <span style="font-size: 15px;">{{ task.title|slice:"11:" }}</span>
                             {% else %}
-                                {{ task.title }}
+                                <span style="font-size: 15px;">{{ task.title }}</span>
+                            {% endif %}
+
+                            {% if search_query and search_query.lower in task.title.lower %}
+                                <span class="match-badge">Matched 🔍</span>
                             {% endif %}
 
                             {% if not task.is_completed and task.is_overdue %}
@@ -403,11 +301,13 @@
                         {% if not task.is_completed %}
                             <a href="?complete={{ task.id }}" class="btn-done">Done</a>
                         {% endif %}
-                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Delete this?')">🗑️</a>
+                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Delete?')">🗑️</a>
                     </div>
                 </div>
             {% empty %}
-                <div class="empty-msg"><h3>No tasks here! ✨</h3></div>
+                <div class="empty-msg" style="text-align: center; padding: 20px;">
+                    <h3>No tasks found! ✨</h3>
+                </div>
             {% endfor %}
         </div>
         
