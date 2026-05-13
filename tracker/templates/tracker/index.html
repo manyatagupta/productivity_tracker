@@ -57,7 +57,6 @@
             transition: background var(--transition), color var(--transition);
         }
 
-        /* ─── Background texture ─────────────────────────────── */
         body::before {
             content: '';
             position: fixed;
@@ -69,7 +68,6 @@
             z-index: 0;
         }
 
-        /* ─── Main Wrapper ───────────────────────────────────── */
         .main-wrapper {
             background: var(--surface);
             width: 100%;
@@ -83,7 +81,6 @@
             transition: background var(--transition), box-shadow var(--transition);
         }
 
-        /* ─── Flash Messages ─────────────────────────────────── */
         .flash-msg {
             padding: 13px 16px;
             margin-bottom: 20px;
@@ -104,381 +101,100 @@
             animation: bounceIn 0.6s ease;
         }
 
-        @keyframes slideDown {
-            from { transform: translateY(-10px); opacity: 0; }
-            to   { transform: translateY(0);     opacity: 1; }
-        }
-        @keyframes bounceIn {
-            0%   { transform: scale(0.85); opacity: 0; }
-            60%  { transform: scale(1.03); opacity: 1; }
-            100% { transform: scale(1); }
-        }
+        @keyframes slideDown { from { transform: translateY(-10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes bounceIn { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.03); opacity: 1; } 100% { transform: scale(1); } }
 
-        /* ─── Header ─────────────────────────────────────────── */
-        .header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .header-info h1 {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: var(--text);
-        }
-
-        .header-info p {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 2px;
-            font-family: 'DM Mono', monospace;
-        }
+        .header-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .header-info h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
+        .header-info p { font-size: 12px; color: var(--text-muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
 
         .dark-toggle {
-            text-decoration: none;
-            background: var(--surface2);
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
-            border-radius: 20px;
-            transition: background var(--transition), box-shadow var(--transition);
+            text-decoration: none; background: var(--surface2); color: var(--text);
+            border: 1px solid var(--border); padding: 6px 14px; font-size: 12px;
+            font-weight: 600; border-radius: 20px; transition: background var(--transition), box-shadow var(--transition);
             white-space: nowrap;
         }
-        .dark-toggle:hover {
-            box-shadow: 0 2px 8px rgba(79,70,229,0.15);
-        }
+        .dark-toggle:hover { box-shadow: 0 2px 8px rgba(79,70,229,0.15); }
 
-        /* ─── Score Card ─────────────────────────────────────── */
         .score-card {
             background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
-            color: white;
-            padding: 16px 20px;
-            border-radius: var(--radius);
-            margin-bottom: 22px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 6px 20px rgba(79,70,229,0.3);
-            position: relative;
-            overflow: hidden;
+            color: white; padding: 16px 20px; border-radius: var(--radius);
+            margin-bottom: 22px; display: flex; justify-content: space-between;
+            align-items: center; box-shadow: 0 6px 20px rgba(79,70,229,0.3);
+            position: relative; overflow: hidden;
         }
-        .score-card::after {
-            content: '';
-            position: absolute;
-            right: -20px; top: -20px;
-            width: 100px; height: 100px;
-            background: rgba(255,255,255,0.06);
-            border-radius: 50%;
-        }
+        .score-card::after { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.06); border-radius: 50%; }
 
-        .score-label {
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.85;
-        }
-        .score-sub {
-            font-size: 12px;
-            opacity: 0.7;
-            margin-top: 3px;
-        }
-        .score-value {
-            font-size: 32px;
-            font-weight: 800;
-            font-family: 'DM Mono', monospace;
-            letter-spacing: -1px;
-        }
+        .score-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+        .score-sub { font-size: 12px; opacity: 0.7; margin-top: 3px; }
+        .score-value { font-size: 32px; font-weight: 800; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
 
-        /* ─── Forms ──────────────────────────────────────────── */
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
+        .input-group { display: flex; gap: 8px; margin-bottom: 14px; }
         input[type="text"] {
-            flex: 1;
-            padding: 11px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: var(--radius-sm);
-            outline: none;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            background: var(--surface2);
-            color: var(--text);
+            flex: 1; padding: 11px 14px; border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm); outline: none; font-family: 'DM Sans', sans-serif;
+            font-size: 14px; background: var(--surface2); color: var(--text);
             transition: border-color var(--transition), box-shadow var(--transition);
         }
-        input[type="text"]:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
-        }
+        input[type="text"]:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,70,229,0.1); }
         input[type="text"]::placeholder { color: var(--text-muted); }
 
-        select {
-            padding: 11px 10px;
-            border-radius: var(--radius-sm);
-            border: 1.5px solid var(--border);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 13px;
-            background: var(--surface2);
-            color: var(--text);
-            outline: none;
-            cursor: pointer;
-            transition: border-color var(--transition);
-        }
-        select:focus { border-color: var(--accent); }
+        select { padding: 11px 10px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); font-family: 'DM Sans', sans-serif; font-size: 13px; background: var(--surface2); color: var(--text); outline: none; cursor: pointer; transition: border-color var(--transition); }
 
-        button {
-            padding: 11px 18px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            font-weight: 600;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
-        }
-        button:hover {
-            background: var(--accent-2);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(79,70,229,0.25);
-        }
-        button:active { transform: translateY(0); }
+        button { padding: 11px 18px; background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-weight: 600; font-family: 'DM Sans', sans-serif; font-size: 14px; transition: background var(--transition), transform var(--transition), box-shadow var(--transition); }
+        button:hover { background: var(--accent-2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,0.25); }
 
-        .search-btn {
-            background: #6b7280;
-        }
-        .search-btn:hover {
-            background: #4b5563;
-        }
-
-        /* ─── Filter Buttons ─────────────────────────────────── */
-        .filter-row {
-            display: flex;
-            gap: 7px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-        }
+        .search-btn { background: #6b7280; }
+        .filter-row { display: flex; gap: 7px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .filter-row::-webkit-scrollbar { display: none; }
 
-        .filter-btn {
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 7px 15px;
-            border-radius: 20px;
-            background: var(--surface2);
-            color: var(--text-muted);
-            border: 1.5px solid var(--border);
-            white-space: nowrap;
-            transition: all var(--transition);
-        }
-        .filter-btn:hover {
-            color: var(--accent);
-            border-color: var(--accent);
-        }
-        .filter-active {
-            background: var(--accent) !important;
-            color: white !important;
-            border-color: var(--accent) !important;
-            box-shadow: 0 3px 10px rgba(79,70,229,0.3);
-        }
+        .filter-btn { text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 15px; border-radius: 20px; background: var(--surface2); color: var(--text-muted); border: 1.5px solid var(--border); white-space: nowrap; transition: all var(--transition); }
+        .filter-btn:hover { color: var(--accent); border-color: var(--accent); }
+        .filter-active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; box-shadow: 0 3px 10px rgba(79,70,229,0.3); }
 
-        /* ─── Task Card ──────────────────────────────────────── */
-        .task {
-            background: var(--surface);
-            padding: 14px 16px;
-            border-radius: var(--radius);
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1.5px solid var(--border);
-            border-left: 4px solid var(--accent);
-            transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
-            animation: fadeUp 0.3s ease both;
-        }
-        .task:hover {
-            box-shadow: var(--shadow);
-            transform: translateY(-1px);
-        }
-        .task.high   { border-left-color: var(--high); }
+        .task { background: var(--surface); padding: 14px 16px; border-radius: var(--radius); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1.5px solid var(--border); border-left: 4px solid var(--accent); transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition); animation: fadeUp 0.3s ease both; }
+        .task:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+        .task.high { border-left-color: var(--high); }
         .task.medium { border-left-color: var(--medium); }
-        .task.low    { border-left-color: var(--low); }
+        .task.low { border-left-color: var(--low); }
+        .task.completed-style { opacity: 0.55; filter: grayscale(0.3); }
 
-        .task.completed-style {
-            opacity: 0.55;
-            filter: grayscale(0.3);
-        }
+        @keyframes fadeUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        @keyframes fadeUp {
-            from { transform: translateY(8px); opacity: 0; }
-            to   { transform: translateY(0);   opacity: 1; }
-        }
-
-        /* ─── Task Content ───────────────────────────────────── */
-        .task-content {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 4px;
-            min-width: 0;
-        }
-
-        .priority-dot {
-            height: 9px; width: 9px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .dot-high   { background: var(--high); }
+        .task-content { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-width: 0; flex: 1; }
+        .priority-dot { height: 9px; width: 9px; border-radius: 50%; flex-shrink: 0; }
+        .dot-high { background: var(--high); }
         .dot-medium { background: var(--medium); }
-        .dot-low    { background: var(--low); }
+        .dot-low { background: var(--low); }
 
-        .task-tag {
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 5px;
-            background: var(--surface2);
-            color: var(--text-muted);
-            font-weight: 700;
-            border: 1px solid var(--border);
-            white-space: nowrap;
-            font-family: 'DM Mono', monospace;
-        }
+        .task-tag { font-size: 10px; padding: 2px 8px; border-radius: 5px; background: var(--surface2); color: var(--text-muted); font-weight: 700; border: 1px solid var(--border); white-space: nowrap; font-family: 'DM Mono', monospace; }
 
-        .task-title {
-            font-size: 14px;
-            font-weight: 500;
-            word-break: break-word;
-            color: var(--text);
-        }
+        .task-title { font-size: 14px; font-weight: 500; word-break: break-word; color: var(--text); flex: 1; }
         .task-title.completed { text-decoration: line-through; color: var(--text-muted); }
 
-        .match-badge {
-            background: #fef08a;
-            color: #713f12;
-            font-size: 10px;
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-weight: 700;
-            font-family: 'DM Mono', monospace;
-        }
+        .match-badge { background: #fef08a; color: #713f12; font-size: 10px; padding: 2px 7px; border-radius: 5px; font-weight: 700; font-family: 'DM Mono', monospace; }
+        .urgent-flash { font-size: 9px; background: #fff1f2; color: var(--danger); border: 1px solid #fca5a5; padding: 2px 7px; border-radius: 5px; font-weight: 700; animation: flashRed 1.5s infinite; font-family: 'DM Mono', monospace; }
+        @keyframes flashRed { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
 
-        .urgent-flash {
-            font-size: 9px;
-            background: #fff1f2;
-            color: var(--danger);
-            border: 1px solid #fca5a5;
-            padding: 2px 7px;
-            border-radius: 5px;
-            font-weight: 700;
-            animation: flashRed 1.5s infinite;
-            font-family: 'DM Mono', monospace;
-        }
-        @keyframes flashRed {
-            0%, 100% { opacity: 1; }
-            50%       { opacity: 0.45; }
-        }
+        .task-meta { font-size: 11px; color: var(--text-muted); margin-top: 5px; font-family: 'DM Mono', monospace; }
 
-        .task-meta {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 5px;
-            font-family: 'DM Mono', monospace;
-        }
+        .actions { display: flex; gap: 6px; margin-left: 12px; flex-shrink: 0; }
+        .btn-done, .btn-delete { padding: 6px 12px; border-radius: var(--radius-sm); text-decoration: none; font-size: 12px; font-weight: 700; transition: all var(--transition); }
+        .btn-done { background: #d1fae5; color: #065f46; }
+        .btn-done:hover { background: #a7f3d0; transform: scale(1.04); }
+        .btn-delete { background: #fee2e2; color: #991b1b; }
+        .btn-delete:hover { background: #fca5a5; transform: scale(1.04); }
 
-        /* ─── Action Buttons ─────────────────────────────────── */
-        .actions {
-            display: flex;
-            gap: 6px;
-            margin-left: 12px;
-            flex-shrink: 0;
-        }
-
-        .btn-done, .btn-delete {
-            padding: 6px 12px;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 700;
-            transition: all var(--transition);
-        }
-        .btn-done {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .btn-done:hover {
-            background: #a7f3d0;
-            transform: scale(1.04);
-        }
-        .btn-delete {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .btn-delete:hover {
-            background: #fca5a5;
-            transform: scale(1.04);
-        }
-
-        /* ─── Empty State ────────────────────────────────────── */
-        .empty-msg {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-        }
+        .empty-msg { text-align: center; padding: 40px 20px; color: var(--text-muted); }
         .empty-msg .empty-icon { font-size: 40px; margin-bottom: 10px; }
-        .empty-msg h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--accent);
-        }
+        .empty-msg h3 { font-size: 16px; font-weight: 600; color: var(--accent); }
         .empty-msg p { font-size: 13px; margin-top: 5px; }
 
-        /* ─── Footer ─────────────────────────────────────────── */
-        .sync-text {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 18px;
-            font-family: 'DM Mono', monospace;
-        }
-        .footer-text {
-            font-size: 10px;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: 6px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-weight: 600;
-        }
+        .sync-text { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 18px; font-family: 'DM Mono', monospace; }
+        .footer-text { font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 6px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600; }
 
-        /* ─── Divider ────────────────────────────────────────── */
-        .section-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .section-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
+        .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
     </style>
 </head>
 <body class="{% if dark_mode %}dark-mode{% endif %}">
@@ -492,7 +208,6 @@
             {% endfor %}
         {% endif %}
 
-        <!-- Header -->
         <div class="header-info">
             <div>
                 <h1>My Tasks 📝</h1>
@@ -503,7 +218,6 @@
             </a>
         </div>
 
-        <!-- Score Card -->
         <div class="score-card">
             <div>
                 <div class="score-label">Today's Score</div>
@@ -512,7 +226,6 @@
             <div class="score-value">{{ today_score }}</div>
         </div>
 
-        <!-- Add Task Form -->
         <form method="POST" class="input-group">
             {% csrf_token %}
             <input type="text" name="title" placeholder="Add a new task…" required>
@@ -524,13 +237,11 @@
             <button type="submit">Add</button>
         </form>
 
-        <!-- Search Form -->
         <form method="GET" class="input-group" style="margin-bottom: 16px;">
             <input type="text" name="search" placeholder="Search tasks…" value="{{ search_query }}">
             <button type="submit" class="search-btn">🔍</button>
         </form>
 
-        <!-- Filter Buttons -->
         <div class="filter-row">
             <a href="/" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
             <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
@@ -538,7 +249,6 @@
             <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
         </div>
 
-        <!-- Task List -->
         <div class="section-label">Tasks</div>
         <div class="task-list">
             {% for task in tasks %}
