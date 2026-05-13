@@ -74,23 +74,22 @@
             100% { transform: scale(1); }
         }
 
-        /* --- COMMIT 1 (Day 9): Performance Score Card --- */
-        .score-card {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+        /* --- COMMIT 1 (Day 11): Search Highlight & Footer Styles --- */
+        mark {
+            background: #fde047;
+            color: #000;
+            padding: 0 2px;
+            border-radius: 2px;
+            font-weight: 600;
         }
 
-        .score-info span { display: block; }
-        .score-label { font-size: 10px; font-weight: 600; text-transform: uppercase; opacity: 0.9; }
-        .score-sub { font-size: 12px; opacity: 0.8; }
-        .score-value { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
+        .sync-text {
+            font-size: 10px;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 10px;
+            font-style: italic;
+        }
 
         .urgent-flash {
             font-size: 9px;
@@ -265,42 +264,21 @@
         .filter-btn:hover { background: #f8fafc; border-color: #cbd5e1; }
         .filter-active { background: #4361ee !important; color: white !important; border-color: #4361ee !important; }
 
-        .header-info {
+        .score-card {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
         }
 
-        @keyframes pulse-animation {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
-
-        .task-count {
-            background: linear-gradient(45deg, #4361ee, #4cc9f0);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            box-shadow: 0 4px 10px rgba(67, 97, 238, 0.3);
-            animation: pulse-animation 2s infinite ease-in-out;
-        }
-
-        .status-badge {
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            text-transform: uppercase;
-            font-weight: bold;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
-
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-completed { background: #d4edda; color: #155724; }
+        .score-label { font-size: 10px; font-weight: 600; text-transform: uppercase; opacity: 0.9; display: block; }
+        .score-sub { font-size: 12px; opacity: 0.8; }
+        .score-value { font-size: 24px; font-weight: 800; letter-spacing: 1px; }
 
         @media (max-width: 480px) {
             .main-wrapper { width: 95%; padding: 20px; }
@@ -333,12 +311,6 @@
             text-align: center;
             transition: 0.3s;
         }
-
-        .dark-mode .empty-msg {
-            background: #1a1a2e;
-            border-color: #4cc9f0;
-            color: #e2e8f0;
-        }
     </style>
 </head>
 <body class="{% if dark_mode %}dark-mode{% endif %}">
@@ -354,86 +326,55 @@
             {% endfor %}
         {% endif %}
 
-        <div class="header-info">
-            <div style="text-align: right; margin-bottom: 10px;">
-                <a href="?toggle_dark=1" style="text-decoration: none; background: #333; color: white; padding: 5px 15px; font-size: 12px; border-radius: 20px;">
-                    {% if dark_mode %}☀️ Light Mode{% else %}🌙 Dark Mode{% endif %}
-                </a>
-            </div>
+        <div class="header-info" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <div>
                 <h1>My Daily Tasks 📝</h1>
                 <p style="font-size: 12px; color: #888; margin: 0;">{{ now|date:"l, d F" }}</p>
-                <p style="font-size: 11px; color: #6366f1; margin-top: 5px; font-weight: 600;">⭐ Sorted by Priority</p>
             </div>
-            <span class="task-count">{{ tasks|length }} Tasks</span>
+            <a href="?toggle_dark=1" style="text-decoration: none; background: #333; color: white; padding: 5px 15px; font-size: 12px; border-radius: 20px;">
+                {% if dark_mode %}☀️ Light{% else %}🌙 Dark{% endif %}
+            </a>
         </div>
 
         <div class="score-card">
-            <div class="score-info">
+            <div>
                 <span class="score-label">Today's Performance</span>
-                <span class="score-sub">Keep the momentum going! 🚀</span>
+                <span class="score-sub">Keep the momentum going! 🔥</span>
             </div>
             <div class="score-value">{{ today_score }}</div>
         </div>
 
         <div style="margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-                <span style="font-size: 12px; font-weight: 600; color: #4361ee;">Daily Goal Progress</span>
+                <span style="font-size: 12px; font-weight: 600; color: #4361ee;">Goal Progress</span>
                 <span style="font-size: 12px; font-weight: 600; color: #4361ee;">{{ progress_percent }}%</span>
             </div>
-            <div style="width: 100%; background: #e0e7ff; height: 10px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(67, 97, 238, 0.1);">
+            <div style="width: 100%; background: #e0e7ff; height: 10px; border-radius: 10px; overflow: hidden;">
                 <div class="progress-inner" style="width: {{ progress_percent }}%;"></div>
             </div>
         </div>
 
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <div style="flex: 1; background: #fff3cd; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #ffeeba;">
-                <span style="display: block; font-size: 10px; color: #856404; font-weight: 600; text-transform: uppercase;">Pending</span>
-                <strong style="font-size: 18px; color: #856404;">{{ pending_count }}</strong>
-            </div>
-            <div style="flex: 1; background: #d1fae5; padding: 10px; border-radius: 10px; text-align: center; border: 1px solid #a7f3d0;">
-                <span style="display: block; font-size: 10px; color: #065f46; font-weight: 600; text-transform: uppercase;">Completed</span>
-                <strong style="font-size: 18px; color: #065f46;">{{ completed_count }}</strong>
-            </div>
-        </div>
-
-        <div style="margin-bottom: 10px; text-align: right;">
-            <a href="?clear_completed=true" 
-               onclick="return confirm('Did you want to remove all the completed tasks?')"
-               style="font-size: 12px; color: #991b1b; text-decoration: none; background: #fee2e2; padding: 5px 10px; border-radius: 5px;">
-               🗑️ Clear All Completed
-            </a>
-        </div>
-
         <form method="POST" class="input-group">
             {% csrf_token %}
-            <input type="text" name="title" placeholder="Today's tasks?" required>
-            <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee; font-family: 'Poppins';">
+            <input type="text" name="title" placeholder="What's next?" required>
+            <select name="priority" style="padding: 10px; border-radius: 8px; border: 2px solid #eee;">
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
                 <option value="high" selected>High</option>
             </select>
-            <button type="submit">Add Task</button>
+            <button type="submit">Add</button>
         </form>
 
         <form method="GET" style="margin-bottom: 10px; display: flex; gap: 5px;">
-            <input type="text" name="search" placeholder="Search old..." 
-                   value="{{ request.GET.search }}" 
-                   style="font-size: 13px; padding: 8px 12px; flex: 1;">
-            <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">Search</button>
-            {% if request.GET.search %}
-                <a href="/" style="text-decoration: none; padding: 8px 15px; background: #f1f3f5; color: #333; border-radius: 8px; font-size: 13px;">Clear</a>
-            {% endif %}
+            <input type="text" name="search" placeholder="Search tasks..." value="{{ search_query }}" style="font-size: 13px; padding: 8px 12px; flex: 1; border-radius: 8px; border: 2px solid #eee;">
+            <button type="submit" style="padding: 8px 15px; background: #6c757d; font-size: 13px;">🔍</button>
         </form>
 
-        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto;">
             <a href="/" class="filter-btn {% if not request.GET.filter %}filter-active{% endif %}">All</a>
             <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
             <a href="?filter=pending" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">⏳ Pending</a>
-            <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
         </div>
-
-        <br>
 
         <div class="task-list">
             {% for task in tasks %}
@@ -443,72 +384,35 @@
                             <span class="priority-dot dot-{{ task.priority }}"></span>
                             
                             {% if "[" in task.title and "]" in task.title %}
-                                <span class="task-tag">
-                                    {{ task.title|slice:"1:10"|cut:"]" }}
-                                </span>
+                                <span class="task-tag">{{ task.title|slice:"1:10"|cut:"]" }}</span>
                                 {{ task.title|slice:"11:" }}
                             {% else %}
                                 {{ task.title }}
                             {% endif %}
 
-                            <span class="priority-badge badge-{{ task.priority }}">
-                                {{ task.priority }}
-                            </span>
-
                             {% if not task.is_completed and task.is_overdue %}
                                 <span class="urgent-flash">⚠️ OVERDUE</span>
                             {% endif %}
-
-                            {% if task.is_completed %}
-                                <span class="status-badge status-completed">Done</span>
-                            {% else %}
-                                <span class="status-badge status-pending">Pending</span>
-                            {% endif %}
                         </span>
                         <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
-                            Created on: {{ task.created_at|date:"M d, Y H:i" }}
+                            Age: {{ task.created_at|timesince }} ago
                         </small>
-                        
-                        {% if task.is_completed and task.completed_at %}
-                        <small style="color: #10b981; display: block; font-size: 11px; font-weight: 600; margin-top: 2px;">
-                            ✔️ Finished at: {{ task.completed_at|date:"H:i" }}
-                        </small>
-                        {% endif %}
                     </div>
                     
                     <div class="actions">
                         {% if not task.is_completed %}
-                            <a href="#" onclick="editTask('{{ task.id }}', '{{ task.title }}')" class="btn-edit">Edit</a>
                             <a href="?complete={{ task.id }}" class="btn-done">Done</a>
                         {% endif %}
-                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Kya aap sach mein is task ko hatana chahte hain?')">Delete</a>
+                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Delete this?')">🗑️</a>
                     </div>
                 </div>
             {% empty %}
-                <div class="empty-msg">
-                    {% if request.GET.search or request.GET.filter %}
-                        <div style="font-size: 50px; margin-bottom: 10px;">🔍</div>
-                        <h3 style="margin: 0; color: #4361ee;">No Tasks Found</h3>
-                        <p style="font-size: 14px; margin-top: 5px;">Hume is filter ke saath koi task nahi mila.</p>
-                    {% else %}
-                        <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
-                        <h3 style="margin: 0; color: #4361ee;">Sab Kaam Ho Gaya!</h3>
-                        <p style="font-size: 14px; margin-top: 5px;">RIGHTNOW NO PENDING TASKS!</p>
-                    {% endif %}
-                </div>
+                <div class="empty-msg"><h3>No tasks here! ✨</h3></div>
             {% endfor %}
         </div>
         
+        <p class="sync-text">Last Synced: {{ now|date:"H:i:s" }}</p>
         <p class="footer-text">PRODUCED BY MANYA &bull; 2026</p>
     </div> 
-
-    <script>
-        function editTask(id, currentTitle) {
-            let newTitle = prompt("Update your task title:", currentTitle);
-            if (newTitle != null && newTitle.trim() !== "") {
-                window.location.href = `?edit_id=${id}&new_title=${encodeURIComponent(newTitle)}`;
-            }
-        }
-    </script>
 </body>
 </html>

@@ -97,7 +97,7 @@ def index(request):
             pass
         return redirect('index')
 
-    # 6. SEARCH, FILTER & URGENCY LOGIC
+    # --- COMMIT 1 (Day 11): SEARCH & FILTER ENHANCEMENT ---
     search_query = request.GET.get('search', '')
     filter_type = request.GET.get('filter', 'all')
     
@@ -115,6 +115,7 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
+    # Urgency logic check
     for task in tasks:
         if not task.is_completed:
             if timezone.now() - task.created_at > timedelta(hours=24):
@@ -122,12 +123,10 @@ def index(request):
             else:
                 task.is_overdue = False
 
-    # --- COMMIT 1 (Day 9): TODAY'S PERFORMANCE LOGIC ---
+    # Today's score stats
     today = timezone.now().date()
     tasks_created_today = Task.objects.filter(created_at__date=today).count()
     tasks_done_today = Task.objects.filter(completed_at__date=today, is_completed=True).count()
-    
-    # Simple score formatting
     today_score = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
 
     # 7. PROGRESS & STATISTICS CALCULATION
@@ -146,6 +145,7 @@ def index(request):
         'dark_mode': dark_mode,
         'pending_count': pending_tasks_count,      
         'completed_count': completed_tasks_count,
-        'today_score': today_score, # Naya data
-        'now': timezone.now(),         
+        'today_score': today_score,
+        'search_query': search_query, # Important for highlight logic
+        'now': timezone.now(), # For Last Synced footer        
     })
