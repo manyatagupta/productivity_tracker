@@ -5,7 +5,7 @@ from django.contrib import messages
 from datetime import timedelta 
 
 def index(request):
-    # 1. DARK MODE LOGIC (Session based)
+    # 1. DARK MODE LOGIC
     if request.GET.get('toggle_dark'):
         current_mode = request.session.get('dark_mode', False)
         request.session['dark_mode'] = not current_mode
@@ -19,85 +19,53 @@ def index(request):
         task_priority = request.POST.get('priority') 
         
         if task_title:
-            # --- Auto-Emoji & Tag Logic ---
             emoji = ""
             tag = "General"
             lower_title = task_title.lower()
 
-            if any(word in lower_title for word in ["code", "python", "django", "bug", "work"]): 
-                emoji = "💻 "
-                tag = "Work"
-            elif any(word in lower_title for word in ["study", "exam", "read", "learn"]): 
-                emoji = "📚 "
-                tag = "Study"
-            elif any(word in lower_title for word in ["meet", "call", "zoom"]): 
-                emoji = "🤝 "
-                tag = "Meet"
-            elif any(word in lower_title for word in ["food", "eat", "dinner", "pizza"]): 
-                emoji = "🍕 "
-                tag = "Food"
-            elif any(word in lower_title for word in ["gym", "workout", "health", "run"]): 
-                emoji = "💪 "
-                tag = "Health"
-            elif any(word in lower_title for word in ["buy", "shop", "amazon", "price"]): 
-                emoji = "🛒 "
-                tag = "Shop"
-            elif "money" in lower_title or "pay" in lower_title:
-                emoji = "💸 "
-                tag = "Finance"
+            # Smart Tagging Logic
+            mapping = {
+                "Work": ["code", "python", "django", "bug", "work", "assign"],
+                "Study": ["study", "exam", "read", "learn"],
+                "Meet": ["meet", "call", "zoom", "meeting"],
+                "Food": ["food", "eat", "dinner", "pizza"],
+                "Health": ["gym", "workout", "health", "run"],
+                "Shop": ["buy", "shop", "amazon", "price"],
+                "Finance": ["money", "pay", "bank"]
+            }
+            emojis = {"Work": "💻 ", "Study": "📚 ", "Meet": "🤝 ", "Food": "🍕 ", "Health": "💪 ", "Shop": "🛒 ", "Finance": "💸 "}
+
+            for t, keywords in mapping.items():
+                if any(word in lower_title for word in keywords):
+                    tag = t
+                    emoji = emojis.get(t, "")
+                    break
             
             final_title = f"[{tag}] {emoji}{task_title}"
             Task.objects.create(title=final_title, priority=task_priority)
             messages.success(request, f"New {tag} task added! 🚀")
             return redirect('index')
 
-    # 3. CLEAR COMPLETED LOGIC
-    if request.GET.get('clear_completed'):
-        completed_tasks_to_delete = Task.objects.filter(is_completed=True)
-        count = completed_tasks_to_delete.count()
-        if count > 0:
-            completed_tasks_to_delete.delete()
-            messages.success(request, f"Successfully cleared {count} completed tasks! 🧹")
-        else:
-            messages.info(request, "No completed tasks to clear.")
-        return redirect('index')
-
-    # 4. COMPLETE TASK LOGIC
+    # 3. COMPLETE/DELETE/EDIT LOGIC (Sab ek saath)
     if request.GET.get('complete'):
-        task_id = request.GET.get('complete')
-        try:
-            task = Task.objects.get(id=task_id)
+        task = Task.objects.filter(id=request.GET.get('complete')).first()
+        if task:
             task.is_completed = True
-            task.completed_at = timezone.now() 
+            task.completed_at = timezone.now()
             task.save()
-            messages.success(request, "BOOM! Task Completed Successfully! 🎉") 
-        except Task.DoesNotExist:
-            pass
+            messages.success(request, "BOOM! Task Completed! 🎉")
         return redirect('index')
 
-    # 5. DELETE TASK LOGIC
     if request.GET.get('delete'):
-        task_id = request.GET.get('delete')
-        task = Task.objects.get(id=task_id)
-        task_title = task.title
-        task.delete()
-        messages.warning(request, f'Task "{task_title}" has been deleted!') 
+        Task.objects.filter(id=request.GET.get('delete')).delete()
+        messages.warning(request, "Task deleted!")
         return redirect('index')
 
-    # 5.5 EDIT TASK LOGIC 
-    if request.GET.get('edit_id') and request.GET.get('new_title'):
-        t_id = request.GET.get('edit_id')
-        new_text = request.GET.get('new_title')
-        try:
-            task = Task.objects.get(id=t_id)
-            task.title = new_text
-            task.save()
-            messages.success(request, f'Task updated successfully! ✨')
-        except Task.DoesNotExist:
-            pass
+    if request.GET.get('clear_completed'):
+        Task.objects.filter(is_completed=True).delete()
         return redirect('index')
 
-    # --- COMMIT 1 (Day 11): SEARCH & FILTER ENHANCEMENT ---
+    # --- COMMIT 3: SEARCH, FILTER & STATS ---
     search_query = request.GET.get('search', '')
     filter_type = request.GET.get('filter', 'all')
     
@@ -115,37 +83,22 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
-    # Urgency logic check
-    for task in tasks:
-        if not task.is_completed:
-            if timezone.now() - task.created_at > timedelta(hours=24):
-                task.is_overdue = True
-            else:
-                task.is_overdue = False
-
-    # Today's score stats
-    today = timezone.now().date()
-    tasks_created_today = Task.objects.filter(created_at__date=today).count()
-    tasks_done_today = Task.objects.filter(completed_at__date=today, is_completed=True).count()
-    today_score = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
-
-    # 7. PROGRESS & STATISTICS CALCULATION
-    total_tasks = Task.objects.all().count() 
+    # Statistics Calculation
+    total_tasks = Task.objects.count()
     completed_tasks_count = Task.objects.filter(is_completed=True).count()
-    pending_tasks_count = Task.objects.filter(is_completed=False).count() 
+    today = timezone.now().date()
+    tasks_done_today = Task.objects.filter(completed_at__date=today, is_completed=True).count()
+    tasks_created_today = Task.objects.filter(created_at__date=today).count()
     
-    progress_percent = 0
-    if total_tasks > 0:
-        progress_percent = int((completed_tasks_count / total_tasks) * 100)
+    today_score = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
+    progress_percent = int((completed_tasks_count / total_tasks * 100)) if total_tasks > 0 else 0
 
-    # 8. FINAL RENDER
     return render(request, 'tracker/index.html', {
         'tasks': tasks,
         'progress_percent': progress_percent, 
         'dark_mode': dark_mode,
-        'pending_count': pending_tasks_count,      
-        'completed_count': completed_tasks_count,
         'today_score': today_score,
-        'search_query': search_query, # Important for highlight logic
-        'now': timezone.now(), # For Last Synced footer        
+        'search_query': search_query,
+        'filter_type': filter_type, # <-- FIXED: For active button styling
+        'now': timezone.now(),        
     })
