@@ -4,253 +4,519 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Productivity Tracker</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
-        /* Dark Mode Variables */
+        /* ─── CSS Variables ─────────────────────────────────── */
+        :root {
+            --bg:        #f0f2f8;
+            --surface:   #ffffff;
+            --surface2:  #f8f9fc;
+            --border:    #e8eaf2;
+            --text:      #1a1d2e;
+            --text-muted:#6b7280;
+            --accent:    #4f46e5;
+            --accent-2:  #7c3aed;
+            --success:   #059669;
+            --danger:    #dc2626;
+            --warn:      #d97706;
+            --low:       #10b981;
+            --medium:    #f59e0b;
+            --high:      #ef4444;
+            --radius:    14px;
+            --radius-sm: 8px;
+            --shadow:    0 4px 24px rgba(79,70,229,0.08);
+            --shadow-lg: 0 12px 40px rgba(79,70,229,0.14);
+            --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
+        }
+
         body.dark-mode {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: #e2e8f0;
+            --bg:        #0d0f1a;
+            --surface:   #151827;
+            --surface2:  #1c1f32;
+            --border:    #252840;
+            --text:      #e2e4f0;
+            --text-muted:#6b7a9e;
+            --shadow:    0 4px 24px rgba(0,0,0,0.4);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
         }
 
-        .dark-mode .main-wrapper {
-            background: #0f3460;
-            color: white;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .dark-mode .task {
-            background: #16213e;
-            border-color: #1a1a2e;
-        }
-
-        .dark-mode input[type="text"], .dark-mode select {
-            background: #1a1a2e;
-            border-color: #0f3460;
-            color: white;
-        }
-
-        .dark-mode h1 { color: #4cc9f0; }
-        
-        .dark-mode .empty-msg h3 {
-            color: #4cc9f0 !important;
-        }
+        /* ─── Reset & Base ──────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e0eafc, #cfdef3); 
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            margin: 0;
-            padding-top: 50px;
+            padding: 40px 16px 60px;
+            color: var(--text);
+            transition: background var(--transition), color var(--transition);
         }
 
+        /* ─── Background texture ─────────────────────────────── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 10%, rgba(79,70,229,0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 90%, rgba(124,58,237,0.05) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ─── Main Wrapper ───────────────────────────────────── */
         .main-wrapper {
-            background: white;
-            width: 90%;
-            max-width: 500px;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            margin: 0 auto; 
+            background: var(--surface);
+            width: 100%;
+            max-width: 520px;
+            padding: 32px 28px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+            position: relative;
+            z-index: 1;
+            transition: background var(--transition), box-shadow var(--transition);
         }
 
-        /* --- FIXED: Match Badge --- */
-        .match-badge {
-            background: #fde047;
-            color: #000;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-            display: inline-block;
-            margin-left: 5px;
+        /* ─── Flash Messages ─────────────────────────────────── */
+        .flash-msg {
+            padding: 13px 16px;
+            margin-bottom: 20px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            animation: slideDown 0.4s ease;
         }
 
-        /* --- FIXED: Active Filter Button --- */
-        .filter-active {
-            background: #4361ee !important;
-            color: white !important;
-            border-color: #4361ee !important;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.4);
+        .flash-msg.celebrate-msg {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+            animation: bounceIn 0.6s ease;
         }
 
-        .celebrate-msg {
-            animation: bounceIn 0.8s ease;
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0) !important;
-            color: #065f46 !important;
-            border: 2px solid #34d399 !important;
-            font-size: 16px !important;
-            box-shadow: 0 10px 20px rgba(52, 211, 153, 0.2);
+        @keyframes slideDown {
+            from { transform: translateY(-10px); opacity: 0; }
+            to   { transform: translateY(0);     opacity: 1; }
         }
-
         @keyframes bounceIn {
-            0% { transform: scale(0.3); opacity: 0; }
-            50% { transform: scale(1.05); opacity: 1; }
-            70% { transform: scale(0.9); }
+            0%   { transform: scale(0.85); opacity: 0; }
+            60%  { transform: scale(1.03); opacity: 1; }
             100% { transform: scale(1); }
         }
 
-        .sync-text {
+        /* ─── Header ─────────────────────────────────────────── */
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .header-info h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text);
+        }
+
+        .header-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .dark-toggle {
+            text-decoration: none;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 20px;
+            transition: background var(--transition), box-shadow var(--transition);
+            white-space: nowrap;
+        }
+        .dark-toggle:hover {
+            box-shadow: 0 2px 8px rgba(79,70,229,0.15);
+        }
+
+        /* ─── Score Card ─────────────────────────────────────── */
+        .score-card {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+            color: white;
+            padding: 16px 20px;
+            border-radius: var(--radius);
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 20px rgba(79,70,229,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .score-card::after {
+            content: '';
+            position: absolute;
+            right: -20px; top: -20px;
+            width: 100px; height: 100px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+        }
+
+        .score-label {
             font-size: 10px;
-            color: #94a3b8;
-            text-align: center;
-            margin-top: 10px;
-            font-style: italic;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.85;
+        }
+        .score-sub {
+            font-size: 12px;
+            opacity: 0.7;
+            margin-top: 3px;
+        }
+        .score-value {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: 'DM Mono', monospace;
+            letter-spacing: -1px;
+        }
+
+        /* ─── Forms ──────────────────────────────────────────── */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            background: var(--surface2);
+            color: var(--text);
+            transition: border-color var(--transition), box-shadow var(--transition);
+        }
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.1);
+        }
+        input[type="text"]::placeholder { color: var(--text-muted); }
+
+        select {
+            padding: 11px 10px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid var(--border);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            background: var(--surface2);
+            color: var(--text);
+            outline: none;
+            cursor: pointer;
+            transition: border-color var(--transition);
+        }
+        select:focus { border-color: var(--accent); }
+
+        button {
+            padding: 11px 18px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+        }
+        button:hover {
+            background: var(--accent-2);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79,70,229,0.25);
+        }
+        button:active { transform: translateY(0); }
+
+        .search-btn {
+            background: #6b7280;
+        }
+        .search-btn:hover {
+            background: #4b5563;
+        }
+
+        /* ─── Filter Buttons ─────────────────────────────────── */
+        .filter-row {
+            display: flex;
+            gap: 7px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+        }
+        .filter-row::-webkit-scrollbar { display: none; }
+
+        .filter-btn {
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 15px;
+            border-radius: 20px;
+            background: var(--surface2);
+            color: var(--text-muted);
+            border: 1.5px solid var(--border);
+            white-space: nowrap;
+            transition: all var(--transition);
+        }
+        .filter-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+        .filter-active {
+            background: var(--accent) !important;
+            color: white !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 3px 10px rgba(79,70,229,0.3);
+        }
+
+        /* ─── Task Card ──────────────────────────────────────── */
+        .task {
+            background: var(--surface);
+            padding: 14px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1.5px solid var(--border);
+            border-left: 4px solid var(--accent);
+            transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+            animation: fadeUp 0.3s ease both;
+        }
+        .task:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-1px);
+        }
+        .task.high   { border-left-color: var(--high); }
+        .task.medium { border-left-color: var(--medium); }
+        .task.low    { border-left-color: var(--low); }
+
+        .task.completed-style {
+            opacity: 0.55;
+            filter: grayscale(0.3);
+        }
+
+        @keyframes fadeUp {
+            from { transform: translateY(8px); opacity: 0; }
+            to   { transform: translateY(0);   opacity: 1; }
+        }
+
+        /* ─── Task Content ───────────────────────────────────── */
+        .task-content {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .priority-dot {
+            height: 9px; width: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .dot-high   { background: var(--high); }
+        .dot-medium { background: var(--medium); }
+        .dot-low    { background: var(--low); }
+
+        .task-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 5px;
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-weight: 700;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .task-title {
+            font-size: 14px;
+            font-weight: 500;
+            word-break: break-word;
+            color: var(--text);
+        }
+        .task-title.completed { text-decoration: line-through; color: var(--text-muted); }
+
+        .match-badge {
+            background: #fef08a;
+            color: #713f12;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-family: 'DM Mono', monospace;
         }
 
         .urgent-flash {
             font-size: 9px;
             background: #fff1f2;
-            color: #e11d48;
-            border: 1px solid #fda4af;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            animation: flash-red 1.5s infinite;
-            margin-left: 8px;
-            display: inline-block;
+            color: var(--danger);
+            border: 1px solid #fca5a5;
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-weight: 700;
+            animation: flashRed 1.5s infinite;
+            font-family: 'DM Mono', monospace;
         }
-
-        @keyframes flash-red {
+        @keyframes flashRed {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50%       { opacity: 0.45; }
         }
 
-        .input-group {
+        .task-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        /* ─── Action Buttons ─────────────────────────────────── */
+        .actions {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] { 
-            flex: 1;
-            padding: 12px 15px; 
-            border: 2px solid #eee; 
-            border-radius: 8px; 
-            outline: none;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        button { 
-            padding: 12px 20px; 
-            background-color: #4361ee; 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-weight: 600;
-        }
-
-        .priority-dot {
-            height: 10px;
-            width: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
+            gap: 6px;
+            margin-left: 12px;
             flex-shrink: 0;
         }
-        .dot-high { background-color: #ef4444; }
-        .dot-medium { background-color: #f59e0b; }
-        .dot-low { background-color: #10b981; }
-
-        .task {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid #eee;
-            border-left: 5px solid #4361ee;
-        }
-
-        .task.completed-style { opacity: 0.6; filter: grayscale(0.4); }
-
-        .completed { text-decoration: line-through; color: #a0a0a0; }
 
         .btn-done, .btn-delete {
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: var(--radius-sm);
             text-decoration: none;
-            font-size: 13px;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all var(--transition);
+        }
+        .btn-done {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .btn-done:hover {
+            background: #a7f3d0;
+            transform: scale(1.04);
+        }
+        .btn-delete {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .btn-delete:hover {
+            background: #fca5a5;
+            transform: scale(1.04);
+        }
+
+        /* ─── Empty State ────────────────────────────────────── */
+        .empty-msg {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .empty-msg .empty-icon { font-size: 40px; margin-bottom: 10px; }
+        .empty-msg h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        .empty-msg p { font-size: 13px; margin-top: 5px; }
+
+        /* ─── Footer ─────────────────────────────────────────── */
+        .sync-text {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 18px;
+            font-family: 'DM Mono', monospace;
+        }
+        .footer-text {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 6px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
             font-weight: 600;
         }
 
-        .btn-done { background-color: #d1fae5; color: #065f46; margin-right: 5px; }
-        .btn-delete { background-color: #fee2e2; color: #991b1b; }
-
-        .filter-btn {
-            text-decoration: none;
+        /* ─── Divider ────────────────────────────────────────── */
+        .section-label {
             font-size: 11px;
-            padding: 6px 15px;
-            border-radius: 20px;
-            background: white;
-            color: #64748b;
-            border: 1px solid #e2e8f0;
-            white-space: nowrap;
-        }
-
-        .score-card {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
-
-        .task-tag {
-            font-size: 9px;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background: #f1f5f9;
-            color: #475569;
-            margin-right: 5px;
-            font-weight: bold;
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
         }
     </style>
 </head>
 <body class="{% if dark_mode %}dark-mode{% endif %}">
-    <div class="main-wrapper"> 
-        
+    <div class="main-wrapper">
+
         {% if messages %}
             {% for message in messages %}
-                <div class="{% if 'BOOM' in message.message %}celebrate-msg{% endif %}" 
-                     style="padding: 12px; margin-bottom: 20px; border-radius: 12px; font-size: 13px; font-weight: 600; text-align: center; background-color: #e0f2fe; color: #0369a1;">
+                <div class="flash-msg {% if 'BOOM' in message.message %}celebrate-msg{% endif %}">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
 
-        <div class="header-info" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <!-- Header -->
+        <div class="header-info">
             <div>
-                <h1 style="margin:0; font-size: 24px;">My Tasks 📝</h1>
-                <p style="font-size: 12px; color: #888; margin: 0;">{{ now|date:"l, d F" }}</p>
+                <h1>My Tasks 📝</h1>
+                <p>{{ now|date:"l, d F Y" }}</p>
             </div>
-            <a href="?toggle_dark=1" style="text-decoration: none; background: #333; color: white; padding: 5px 15px; font-size: 12px; border-radius: 20px;">
+            <a href="?toggle_dark=1" class="dark-toggle">
                 {% if dark_mode %}☀️ Light{% else %}🌙 Dark{% endif %}
             </a>
         </div>
 
+        <!-- Score Card -->
         <div class="score-card">
             <div>
-                <span style="font-size: 10px; font-weight: 600; text-transform: uppercase;">Today's Score</span>
-                <span style="display: block; font-size: 12px; opacity: 0.8;">Keep pushing! 🚀</span>
+                <div class="score-label">Today's Score</div>
+                <div class="score-sub">Keep pushing! 🚀</div>
             </div>
-            <div style="font-size: 24px; font-weight: 800;">{{ today_score }}</div>
+            <div class="score-value">{{ today_score }}</div>
         </div>
 
+        <!-- Add Task Form -->
         <form method="POST" class="input-group">
             {% csrf_token %}
-            <input type="text" name="title" placeholder="Add task..." required>
-            <select name="priority" style="padding: 10px; border-radius: 8px; border: 1px solid #eee;">
+            <input type="text" name="title" placeholder="Add a new task…" required>
+            <select name="priority">
                 <option value="low">Low</option>
                 <option value="medium" selected>Medium</option>
                 <option value="high">High</option>
@@ -258,30 +524,38 @@
             <button type="submit">Add</button>
         </form>
 
-        <form method="GET" style="margin-bottom: 15px; display: flex; gap: 5px;">
-            <input type="text" name="search" placeholder="Search..." value="{{ search_query }}" style="padding: 8px 12px; flex: 1; border-radius: 8px; border: 1px solid #eee;">
-            <button type="submit" style="background: #6c757d; padding: 8px 15px;">🔍</button>
+        <!-- Search Form -->
+        <form method="GET" class="input-group" style="margin-bottom: 16px;">
+            <input type="text" name="search" placeholder="Search tasks…" value="{{ search_query }}">
+            <button type="submit" class="search-btn">🔍</button>
         </form>
 
-        <div style="display: flex; gap: 8px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px;">
+        <!-- Filter Buttons -->
+        <div class="filter-row">
             <a href="/" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
             <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
             <a href="?filter=pending" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">⏳ Pending</a>
             <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
         </div>
 
+        <!-- Task List -->
+        <div class="section-label">Tasks</div>
         <div class="task-list">
             {% for task in tasks %}
-                <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">    
-                    <div style="flex: 1;">
-                        <span class="{% if task.is_completed %}completed{% endif %}" style="display: flex; align-items: center; flex-wrap: wrap;">
+                <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %}">
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="task-content">
                             <span class="priority-dot dot-{{ task.priority }}"></span>
-                            
+
                             {% if "[" in task.title and "]" in task.title %}
-                                <span class="task-tag">{{ task.title|slice:"1:10"|cut:"]" }}</span>
-                                <span style="font-size: 15px;">{{ task.title|slice:"11:" }}</span>
+                                <span class="task-tag">{{ task.title|slice:"1:"|cut:"]" }}</span>
+                                <span class="task-title {% if task.is_completed %}completed{% endif %}">
+                                    {{ task.title|add:""|cut:"[Work 💻] "|cut:"[Study 📚] "|cut:"[Meet 🤝] "|cut:"[Food 🍕] "|cut:"[Health 💪] "|cut:"[Shop 🛒] "|cut:"[Finance 💸] "|cut:"[General] " }}
+                                </span>
                             {% else %}
-                                <span style="font-size: 15px;">{{ task.title }}</span>
+                                <span class="task-title {% if task.is_completed %}completed{% endif %}">
+                                    {{ task.title }}
+                                </span>
                             {% endif %}
 
                             {% if search_query and search_query.lower in task.title.lower %}
@@ -291,28 +565,29 @@
                             {% if not task.is_completed and task.is_overdue %}
                                 <span class="urgent-flash">⚠️ OVERDUE</span>
                             {% endif %}
-                        </span>
-                        <small style="color: #888; display: block; font-size: 11px; margin-top: 5px;">
-                            Age: {{ task.created_at|timesince }} ago
-                        </small>
+                        </div>
+                        <div class="task-meta">{{ task.created_at|timesince }} ago</div>
                     </div>
-                    
+
                     <div class="actions">
                         {% if not task.is_completed %}
                             <a href="?complete={{ task.id }}" class="btn-done">Done</a>
                         {% endif %}
-                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Delete?')">🗑️</a>
+                        <a href="?delete={{ task.id }}" class="btn-delete" onclick="return confirm('Delete this task?')">🗑️</a>
                     </div>
                 </div>
             {% empty %}
-                <div class="empty-msg" style="text-align: center; padding: 20px;">
-                    <h3>No tasks found! ✨</h3>
+                <div class="empty-msg">
+                    <div class="empty-icon">✨</div>
+                    <h3>No tasks found!</h3>
+                    <p>Add something above to get started.</p>
                 </div>
             {% endfor %}
         </div>
-        
-        <p class="sync-text">Last Synced: {{ now|date:"H:i:s" }}</p>
-        <p class="footer-text">PRODUCED BY MANYA &bull; 2026</p>
-    </div> 
+
+        <p class="sync-text">Last synced: {{ now|date:"H:i:s" }}</p>
+        <p class="footer-text">Produced by Manya &bull; 2026</p>
+
+    </div>
 </body>
 </html>
