@@ -22,6 +22,11 @@ This project was developed as a hands-on learning experience for:
 - **State Management:** Handling dark mode and task status through query parameters.
 - **Data Integrity:** Basic CRUD operations with a focus on clean logic.
 
+## 📝 Future Scope
+- User Authentication for multiple accounts.
+- Integration of a Data Science dashboard to track productivity trends over time.
+- Adding deadlines and push notifications.
+
 ## 🚀 How to Run Locally
 If you want to run this project on your computer, follow these steps:
 
