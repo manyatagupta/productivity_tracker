@@ -2,11 +2,13 @@
 
 A simple and easy-to-use Daily Productivity Tracker built with Python and Django. This is my first Django project where I learned about basic CRUD operations!
 
-## 🌟 Features
+## 🌟 Features (Updated)
 - **Add Tasks:** Quickly add new tasks to your daily to-do list.
+- **Priority Management:** Assign High, Medium, or Low priority to stay focused.
+- **Smart Search:** Find specific tasks instantly with the built-in search bar.
 - **Mark as Done:** Easily mark tasks as completed once finished.
 - **Delete Tasks:** Remove unwanted or completed tasks permanently.
-- **Simple UI:** Clean and minimal user interface.
+- **Dark Mode:** Eye-friendly interface for late-night study sessions.
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Django
