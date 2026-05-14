@@ -15,6 +15,13 @@ A simple and easy-to-use Daily Productivity Tracker built with Python and Django
 - **Frontend:** HTML, CSS
 - **Database:** SQLite (Default Django DB)
 
+## 📊 Development Process
+This project was developed as a hands-on learning experience for:
+- **Django Framework:** Implementing models, views, and URL routing.
+- **Frontend Integration:** Using Jinja2 templates for dynamic content.
+- **State Management:** Handling dark mode and task status through query parameters.
+- **Data Integrity:** Basic CRUD operations with a focus on clean logic.
+
 ## 🚀 How to Run Locally
 If you want to run this project on your computer, follow these steps:
 
