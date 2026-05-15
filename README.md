@@ -23,6 +23,26 @@ This project was developed as a hands-on learning experience for:
 - **State Management:** Handling dark mode and task status through query parameters.
 - **Data Integrity:** Basic CRUD operations with a focus on clean logic.
 
+## 📂 Project Structure
+Here is a quick look at the core structure of this Django application:
+```text
+productivity_tracker/
+│
+├── healthcare_dashboard/     # Project configuration directory
+│   ├── __init__.py
+│   ├── settings.py           # Core settings (Dark Mode & Apps setup)
+│   ├── urls.py               # Main URL routing
+│   └── wsgi.py
+│
+├── tracker/                  # Main Application directory
+│   ├── migrations/           # Database migration files
+│   ├── models.py             # Task model (Title, Priority, Status)
+│   ├── views.py              # Main logic for CRUD, Search, and Filters
+│   └── templates/            # HTML files (Premium template)
+│
+├── manage.py                 # Django command-line utility
+└── README.md                 # Project documentation
+
 ## 📝 Future Scope
 - User Authentication for multiple accounts.
 - Integration of a Data Science dashboard to track productivity trends over time.
@@ -34,7 +54,7 @@ If you want to run this project on your computer, follow these steps:
 1. Clone this repository:
    ```bash
    git clone [https://github.com/Manyatagupta/productivity_tracker.git](https://github.com/Manyatagupta/productivity_tracker.git)
-   
+
 2. Open the folder and create a virtual environment.
 
 3. Install Django: 
