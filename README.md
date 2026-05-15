@@ -4,6 +4,7 @@ A simple and easy-to-use Daily Productivity Tracker built with Python and Django
 
 ## 🌟 Features (Updated)
 - **Add Tasks:** Quickly add new tasks to your daily to-do list.
+- **Smart Auto-Tagging:** Automatically detects keywords (like 'code', 'study', 'meet', 'gym') to assign appropriate emojis and category tags instantly.
 - **Priority Management:** Assign High, Medium, or Low priority to stay focused.
 - **Smart Search:** Find specific tasks instantly with the built-in search bar.
 - **Mark as Done:** Easily mark tasks as completed once finished.
@@ -12,7 +13,7 @@ A simple and easy-to-use Daily Productivity Tracker built with Python and Django
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Django
-- **Frontend:** HTML, CSS
+- **Frontend:** HTML, CSS (Premium SaaS-style UI with DM Sans)
 - **Database:** SQLite (Default Django DB)
 
 ## 📊 Development Process
@@ -31,8 +32,9 @@ This project was developed as a hands-on learning experience for:
 If you want to run this project on your computer, follow these steps:
 
 1. Clone this repository:
-   git clone https://github.com/Manyatagupta/productivity_tracker.git
-
+   ```bash
+   git clone [https://github.com/Manyatagupta/productivity_tracker.git](https://github.com/Manyatagupta/productivity_tracker.git)
+   
 2. Open the folder and create a virtual environment.
 
 3. Install Django: 
