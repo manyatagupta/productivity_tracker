@@ -1,6 +1,7 @@
-# Daily Productivity Tracker 🚀
 
-A simple and easy-to-use Daily Productivity Tracker built with Python and Django. This is my first Django project where I learned about basic CRUD operations!
+A# Daily Productivity Tracker 🚀
+
+A simple and easy-to-use Daily Productivity Tracker built with Python and Django. This is my first Django project where I learned about basic CRUD operations, state management, and building clean web applications!
 
 ## 🌟 Features (Updated)
 - **Add Tasks:** Quickly add new tasks to your daily to-do list.
@@ -13,15 +14,21 @@ A simple and easy-to-use Daily Productivity Tracker built with Python and Django
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Django
-- **Frontend:** HTML, CSS (Premium SaaS-style UI with DM Sans)
+- **Frontend:** HTML5, CSS3 (Premium SaaS-style UI with DM Sans)
 - **Database:** SQLite (Default Django DB)
 
 ## 📊 Development Process
 This project was developed as a hands-on learning experience for:
-- **Django Framework:** Implementing models, views, and URL routing.
-- **Frontend Integration:** Using Jinja2 templates for dynamic content.
-- **State Management:** Handling dark mode and task status through query parameters.
-- **Data Integrity:** Basic CRUD operations with a focus on clean logic.
+- **Django Framework:** Implementing models, views, templates (MVT), and URL routing.
+- **Frontend Integration:** Using Jinja2 syntax in templates for dynamic context rendering.
+- **State Management:** Handling dark mode preferences and task filters dynamically through query parameters.
+- **Data Integrity:** Constructing structural backend queries to carry out robust CRUD operations safely.
+
+## ⚙️ How It Works (MVT Architecture)
+This app strictly follows Django's Model-View-Template architecture:
+1. **Model (`tracker/models.py`):** Defines the task schema (Title, Priority, Status, and Created Timestamp).
+2. **View (`tracker/views.py`):** Processes incoming user requests, manages filtration (High, Pending, Completed), queries backend data, and injects context into templates.
+3. **Template (`tracker/templates/`):** A responsive, premium frontend dashboard built to display state-driven dynamic elements natively.
 
 ## 📂 Project Structure
 Here is a quick look at the core structure of this Django application:
@@ -30,18 +37,18 @@ productivity_tracker/
 │
 ├── healthcare_dashboard/     # Project configuration directory
 │   ├── __init__.py
-│   ├── settings.py           # Core settings (Dark Mode & Apps setup)
-│   ├── urls.py               # Main URL routing
-│   └── wsgi.py
+│   ├── settings.py           # Core configurations (Dark Mode & Apps setup)
+│   ├── urls.py               # Main project URL routing
+│   └── wsgi.py               # WSGI server configuration
 │
 ├── tracker/                  # Main Application directory
-│   ├── migrations/           # Database migration files
-│   ├── models.py             # Task model (Title, Priority, Status)
-│   ├── views.py              # Main logic for CRUD, Search, and Filters
-│   └── templates/            # HTML files (Premium template)
+│   ├── migrations/           # Database migration tracker history
+│   ├── models.py             # Task database model structure
+│   ├── views.py              # Application controller logic (CRUD, Search, Filters)
+│   └── templates/            # Frontend layout template files
 │
-├── manage.py                 # Django command-line utility
-└── README.md                 # Project documentation
+├── manage.py                 # Django command-line execution manager
+└── README.md                 # System project documentation
 
 ## 📝 Future Scope
 - User Authentication for multiple accounts.
