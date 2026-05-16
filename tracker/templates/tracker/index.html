@@ -126,7 +126,7 @@
         .score-card::after { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.06); border-radius: 50%; }
 
         .score-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
-        .score-sub { font-size: 12px; opacity: 0.7; margin-top: 3px; }
+        .score-sub { font-size: 12px; opacity: 0.85; margin-top: 3px; font-style: italic; }
         .score-value { font-size: 32px; font-weight: 800; font-family: 'DM Mono', monospace; letter-spacing: -1px; }
 
         .input-group { display: flex; gap: 8px; margin-bottom: 14px; }
@@ -152,7 +152,6 @@
         .filter-btn:hover { color: var(--accent); border-color: var(--accent); }
         .filter-active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; box-shadow: 0 3px 10px rgba(79,70,229,0.3); }
 
-        /* FEATURE: Smart Analytics Load Banner CSS */
         .analytics-alert { padding: 10px 14px; background: rgba(239, 68, 68, 0.08); border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--high); margin-bottom: 18px; display: flex; align-items: center; gap: 6px; animation: slideDown 0.3s ease; }
 
         .task { background: var(--surface); padding: 14px 16px; border-radius: var(--radius); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1.5px solid var(--border); border-left: 4px solid var(--accent); transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition); animation: fadeUp 0.3s ease both; }
@@ -224,7 +223,7 @@
         <div class="score-card">
             <div>
                 <div class="score-label">Today's Score</div>
-                <div class="score-sub">Keep pushing! 🚀</div>
+                <div class="score-sub">{{ motivation_quote }}</div>
             </div>
             <div class="score-value">{{ today_score }}</div>
         </div>
