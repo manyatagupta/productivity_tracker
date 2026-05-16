@@ -1,5 +1,5 @@
 
-A# Daily Productivity Tracker 🚀
+# Daily Productivity Tracker 🚀
 
 A simple and easy-to-use Daily Productivity Tracker built with Python and Django. This is my first Django project where I learned about basic CRUD operations, state management, and building clean web applications!
 
@@ -11,6 +11,8 @@ A simple and easy-to-use Daily Productivity Tracker built with Python and Django
 - **Mark as Done:** Easily mark tasks as completed once finished.
 - **Delete Tasks:** Remove unwanted or completed tasks permanently.
 - **Dark Mode:** Eye-friendly interface for late-night study sessions.
+- **Real-time Data Metrics:** Processes runtime string length calculation directly from the backend to map analytical character/word counts onto user tasks.
+- **Critical Workload Insights:** Features an integrated system workload monitor that triggers real-time optimization and safety warnings when task density spikes.
 
 ## 🛠️ Tech Stack
 - **Backend:** Python, Django
