@@ -152,6 +152,9 @@
         .filter-btn:hover { color: var(--accent); border-color: var(--accent); }
         .filter-active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; box-shadow: 0 3px 10px rgba(79,70,229,0.3); }
 
+        /* FEATURE: Smart Analytics Load Banner CSS */
+        .analytics-alert { padding: 10px 14px; background: rgba(239, 68, 68, 0.08); border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--high); margin-bottom: 18px; display: flex; align-items: center; gap: 6px; animation: slideDown 0.3s ease; }
+
         .task { background: var(--surface); padding: 14px 16px; border-radius: var(--radius); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1.5px solid var(--border); border-left: 4px solid var(--accent); transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition); animation: fadeUp 0.3s ease both; }
         .task:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
         .task.high { border-left-color: var(--high); }
@@ -249,6 +252,12 @@
             <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
         </div>
 
+        {% if critical_load %}
+            <div class="analytics-alert">
+                ⚡ <span><strong>High Load Warning:</strong> You have {{ high_pending_count }} critical tasks pending. Prioritize execution!</span>
+            </div>
+        {% endif %}
+
         <div class="section-label">Tasks</div>
         <div class="task-list">
             {% for task in tasks %}
@@ -297,6 +306,6 @@
 
         <p class="sync-text">Last synced: {{ now|date:"H:i:s" }}</p>
         <p class="footer-text">Produced by Manya &bull; 2026</p>
-        </div>
+    </div>
 </body>
 </html>
