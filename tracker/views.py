@@ -98,8 +98,22 @@ def index(request):
     tasks_done_today = Task.objects.filter(completed_at__date=today, is_completed=True).count()
     tasks_created_today = Task.objects.filter(created_at__date=today).count()
     
+    # NEW INSIGHT METRICS: High priority load tracking
+    high_pending_count = Task.objects.filter(priority='high', is_completed=False).count()
+    critical_load = True if high_pending_count >= 3 else False
+
     today_score = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
     progress_percent = int((completed_tasks_count / total_tasks * 100)) if total_tasks > 0 else 0
+
+    # FEATURE: Dynamic Productivity Quote System based on runtime state
+    if tasks_created_today == 0:
+        motivation_quote = "No tasks tracked today. Clean slate, endless possibilities! ✨"
+    elif tasks_done_today == tasks_created_today:
+        motivation_quote = "Absolute champion status! 100% completion achieved. 👑"
+    elif progress_percent >= 50:
+        motivation_quote = "More than halfway there! Momentum is on your side. ⚡"
+    else:
+        motivation_quote = "Small progress is still progress. Brick by brick, keep moving! 🏗️"
 
     return render(request, 'tracker/index.html', {
         'tasks': tasks,
@@ -109,4 +123,7 @@ def index(request):
         'search_query': search_query,
         'filter_type': filter_type, # <-- FIXED: For active button styling
         'now': timezone.now(),        
+        'high_pending_count': high_pending_count,
+        'critical_load': critical_load,
+        'motivation_quote': motivation_quote,
     })
