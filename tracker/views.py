@@ -4,6 +4,8 @@ from django.utils import timezone
 from django.contrib import messages 
 from datetime import timedelta 
 
+# Day 15 Maintenance log check
+
 def index(request):
     # 1. DARK MODE LOGIC
     if request.GET.get('toggle_dark'):
