@@ -85,6 +85,12 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
+    # FEATURE: Live text metrics calculator loop before rendering
+    for task in tasks:
+        clean_title = task.title.split('] ')[-1] if ']' in task.title else task.title
+        task.char_count = len(clean_title)
+        task.word_count = len(clean_title.split())
+
     # Statistics Calculation
     total_tasks = Task.objects.count()
     completed_tasks_count = Task.objects.filter(is_completed=True).count()
