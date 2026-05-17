@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib import messages 
 from datetime import timedelta 
 
-# Day 18 Interface check
+# Day 19 Data health check
 
 def index(request):
     # 1. DARK MODE LOGIC
@@ -85,7 +85,7 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
-    # FEATURE: Live text metrics, Time Age & Search Highlights Calculation
+    # FEATURE: Live text metrics, Time Age, Search Highlights & Stale Check
     now_time = timezone.now()
     for task in tasks:
         clean_title = task.title.split('] ')[-1] if ']' in task.title else task.title
@@ -95,8 +95,11 @@ def index(request):
         # Check if task was created in the last 15 minutes
         task.is_recent = (now_time - task.created_at) < timedelta(minutes=15)
         
-        # New Feature: Check if task title actively matches search query for UI highlight toggle
+        # Check if task title actively matches search query
         task.is_search_match = True if search_query and search_query.lower() in task.title.lower() else False
+        
+        # New Feature: Check if a pending task is older than 12 hours (Stale Task)
+        task.is_stale = (now_time - task.created_at) > timedelta(hours=12) and not task.is_completed
 
     # Statistics Calculation
     total_tasks = Task.objects.count()
