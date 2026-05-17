@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib import messages 
 from datetime import timedelta 
 
-# Day 17 Sync check
+# Day 18 Interface check
 
 def index(request):
     # 1. DARK MODE LOGIC
@@ -85,15 +85,18 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
-    # FEATURE: Live text metrics & Time Age Calculation
+    # FEATURE: Live text metrics, Time Age & Search Highlights Calculation
     now_time = timezone.now()
     for task in tasks:
         clean_title = task.title.split('] ')[-1] if ']' in task.title else task.title
         task.char_count = len(clean_title)
         task.word_count = len(clean_title.split())
         
-        # New Feature: Check if task was created in the last 15 minutes
+        # Check if task was created in the last 15 minutes
         task.is_recent = (now_time - task.created_at) < timedelta(minutes=15)
+        
+        # New Feature: Check if task title actively matches search query for UI highlight toggle
+        task.is_search_match = True if search_query and search_query.lower() in task.title.lower() else False
 
     # Statistics Calculation
     total_tasks = Task.objects.count()
