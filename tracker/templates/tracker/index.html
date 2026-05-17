@@ -29,9 +29,10 @@
             --shadow:    0 4px 24 rgba(79,70,229,0.08);
             --shadow-lg: 0 12px 40px rgba(79,70,229,0.14);
             --transition: 0.2s cubic-bezier(0.4,0,0.2,1);
-            
-            /* Highlight box indicator style */
             --search-highlight: rgba(254, 240, 138, 0.25);
+            
+            /* FEATURE: Stale Task visual border indicator variable */
+            --stale-border: rgba(217, 119, 6, 0.35);
         }
 
         body.dark-mode {
@@ -44,6 +45,7 @@
             --shadow:    0 4px 24px rgba(0,0,0,0.4);
             --shadow-lg: 0 12px 40px rgba(0,0,0,0.5);
             --search-highlight: rgba(234, 179, 8, 0.15);
+            --stale-border: rgba(217, 119, 6, 0.25);
         }
 
         /* ─── Reset & Base ──────────────────────────────────── */
@@ -164,9 +166,10 @@
         .task.medium { border-left-color: var(--medium); }
         .task.low { border-left-color: var(--low); }
         .task.completed-style { opacity: 0.55; filter: grayscale(0.3); }
-
-        /* FEATURE: Search Highlight Active Class CSS */
         .task.search-highlight-active { background: var(--search-highlight); border-color: rgba(234, 179, 8, 0.3); }
+
+        /* FEATURE: Stale Task Alert outline component class */
+        .task.stale-warning-active { border-color: var(--warn); box-shadow: 0 2px 12px rgba(217, 119, 6, 0.08); }
 
         @keyframes fadeUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
@@ -178,6 +181,9 @@
 
         .task-tag { font-size: 10px; padding: 2px 8px; border-radius: 5px; background: var(--surface2); color: var(--text-muted); font-weight: 700; border: 1px solid var(--border); white-space: nowrap; font-family: 'DM Mono', monospace; }
         .recent-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; background: rgba(79, 70, 229, 0.12); color: var(--accent); border-radius: 4px; font-family: 'DM Mono', monospace; }
+
+        /* FEATURE: Stale text indicator style template */
+        .stale-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; background: rgba(217, 119, 6, 0.12); color: var(--warn); border-radius: 4px; font-family: 'DM Mono', monospace; }
 
         .task-title { font-size: 14px; font-weight: 500; word-break: break-word; color: var(--text); flex: 1; }
         .task-title.completed { text-decoration: line-through; color: var(--text-muted); }
@@ -268,7 +274,7 @@
         <div class="section-label">Tasks</div>
         <div class="task-list">
             {% for task in tasks %}
-                <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %} {% if task.is_search_match %}search-highlight-active{% endif %}">
+                <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %} {% if task.is_search_match %}search-highlight-active{% endif %} {% if task.is_stale %}stale-warning-active{% endif %}">
                     <div style="flex: 1; min-width: 0;">
                         <div class="task-content">
                             <span class="priority-dot dot-{{ task.priority }}"></span>
@@ -286,6 +292,10 @@
 
                             {% if task.is_recent and not task.is_completed %}
                                 <span class="recent-badge">New ✨</span>
+                            {% endif %}
+
+                            {% if task.is_stale %}
+                                <span class="stale-badge">Old ⏳</span>
                             {% endif %}
 
                             {% if task.is_search_match %}
