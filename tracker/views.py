@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib import messages 
 from datetime import timedelta 
 
-# Day 15 Maintenance log check
+# Day 17 Sync check
 
 def index(request):
     # 1. DARK MODE LOGIC
@@ -85,11 +85,15 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
-    # FEATURE: Live text metrics calculator loop before rendering
+    # FEATURE: Live text metrics & Time Age Calculation
+    now_time = timezone.now()
     for task in tasks:
         clean_title = task.title.split('] ')[-1] if ']' in task.title else task.title
         task.char_count = len(clean_title)
         task.word_count = len(clean_title.split())
+        
+        # New Feature: Check if task was created in the last 15 minutes
+        task.is_recent = (now_time - task.created_at) < timedelta(minutes=15)
 
     # Statistics Calculation
     total_tasks = Task.objects.count()
@@ -105,7 +109,7 @@ def index(request):
     today_score = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
     progress_percent = int((completed_tasks_count / total_tasks * 100)) if total_tasks > 0 else 0
 
-    # FEATURE: Dynamic Productivity Quote System based on runtime state
+    # FEATURE: Dynamic Productivity Quote System
     if tasks_created_today == 0:
         motivation_quote = "No tasks tracked today. Clean slate, endless possibilities! ✨"
     elif tasks_done_today == tasks_created_today:
@@ -121,7 +125,7 @@ def index(request):
         'dark_mode': dark_mode,
         'today_score': today_score,
         'search_query': search_query,
-        'filter_type': filter_type, # <-- FIXED: For active button styling
+        'filter_type': filter_type, 
         'now': timezone.now(),        
         'high_pending_count': high_pending_count,
         'critical_load': critical_load,
