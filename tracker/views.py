@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib import messages 
 from datetime import timedelta 
 
-# Day 19 Data health check
+# Day 20 Core Density check
 
 def index(request):
     # 1. DARK MODE LOGIC
@@ -85,12 +85,15 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
-    # FEATURE: Live text metrics, Time Age, Search Highlights & Stale Check
+    # FEATURE: Live text metrics, Time Age, Search Highlights & Density Meter
     now_time = timezone.now()
     for task in tasks:
         clean_title = task.title.split('] ')[-1] if ']' in task.title else task.title
         task.char_count = len(clean_title)
         task.word_count = len(clean_title.split())
+        
+        # New Feature: Flag if task has more than 6 words (Detailed Density)
+        task.is_detailed = True if task.word_count > 6 else False
         
         # Check if task was created in the last 15 minutes
         task.is_recent = (now_time - task.created_at) < timedelta(minutes=15)
@@ -98,7 +101,7 @@ def index(request):
         # Check if task title actively matches search query
         task.is_search_match = True if search_query and search_query.lower() in task.title.lower() else False
         
-        # New Feature: Check if a pending task is older than 12 hours (Stale Task)
+        # Check if a pending task is older than 12 hours (Stale Task)
         task.is_stale = (now_time - task.created_at) > timedelta(hours=12) and not task.is_completed
 
     # Statistics Calculation
