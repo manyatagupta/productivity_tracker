@@ -149,12 +149,19 @@
         button:hover { background: var(--accent-2); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79,70,229,0.25); }
 
         .search-btn { background: #6b7280; }
-        .filter-row { display: flex; gap: 7px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .filter-row { display: flex; gap: 7px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; align-items: center; }
         .filter-row::-webkit-scrollbar { display: none; }
 
         .filter-btn { text-decoration: none; font-size: 12px; font-weight: 600; padding: 7px 15px; border-radius: 20px; background: var(--surface2); color: var(--text-muted); border: 1.5px solid var(--border); white-space: nowrap; transition: all var(--transition); }
         .filter-btn:hover { color: var(--accent); border-color: var(--accent); }
         .filter-active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; box-shadow: 0 3px 10px rgba(79,70,229,0.3); }
+
+        /* FEATURE: Live Counter Alert & Wipe Box Style */
+        .utility-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 12px; font-weight: 500; }
+        .pending-count-tag { color: var(--text-muted); font-family: 'DM Mono', monospace; }
+        .pending-count-tag strong { color: var(--accent); }
+        .master-clear-link { color: var(--danger); text-decoration: none; font-weight: 600; transition: opacity var(--transition); }
+        .master-clear-link:hover { opacity: 0.7; text-decoration: underline; }
 
         .analytics-alert { padding: 10px 14px; background: rgba(239, 68, 68, 0.08); border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--high); margin-bottom: 18px; display: flex; align-items: center; gap: 6px; animation: slideDown 0.3s ease; }
 
@@ -178,8 +185,6 @@
         .task-tag { font-size: 10px; padding: 2px 8px; border-radius: 5px; background: var(--surface2); color: var(--text-muted); font-weight: 700; border: 1px solid var(--border); white-space: nowrap; font-family: 'DM Mono', monospace; }
         .recent-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; background: rgba(79, 70, 229, 0.12); color: var(--accent); border-radius: 4px; font-family: 'DM Mono', monospace; }
         .stale-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; background: rgba(217, 119, 6, 0.12); color: var(--warn); border-radius: 4px; font-family: 'DM Mono', monospace; }
-
-        /* FEATURE: Text Density design component tag */
         .density-badge { font-size: 9px; font-weight: 700; padding: 2px 6px; background: rgba(107, 114, 128, 0.12); color: var(--text-muted); border-radius: 4px; font-family: 'DM Mono', monospace; }
 
         .task-title { font-size: 14px; font-weight: 500; word-break: break-word; color: var(--text); flex: 1; }
@@ -260,6 +265,15 @@
             <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">🔥 High</a>
             <a href="?filter=pending" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">⏳ Pending</a>
             <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">✅ Done</a>
+        </div>
+
+        <div class="utility-meta-row">
+            <div class="pending-count-tag">
+                Incomplete tasks remaining: <strong>{{ total_pending_left }}</strong>
+            </div>
+            <a href="?clear_all_tasks_master=1" class="master-clear-link" onclick="return confirm('⚠️ ALERT: This will permanently delete ALL tasks in the database. Proceed?')">
+                Clear All Tasks 🗑️
+            </a>
         </div>
 
         {% if critical_load %}
