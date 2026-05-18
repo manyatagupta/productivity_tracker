@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib import messages 
 from datetime import timedelta 
 
-# Day 21 Master Wipe & Counter Update
+# Day 22 Filter Label Stats Sync Check
 
 def index(request):
     # 1. DARK MODE LOGIC
@@ -67,7 +67,7 @@ def index(request):
         Task.objects.filter(is_completed=True).delete()
         return redirect('index')
 
-    # FEATURE FEATURE: Delete All Tasks Wipe Engine
+    # Delete All Tasks Wipe Engine
     if request.GET.get('clear_all_tasks_master'):
         Task.objects.all().delete()
         messages.error(request, "All tasks cleared successfully! 🧹")
@@ -91,6 +91,9 @@ def index(request):
 
     tasks = tasks.order_by('priority', '-created_at')
 
+    # FEATURE: Calculate active list count dynamically for the UI label
+    current_list_count = tasks.count()
+
     # Live text metrics, Time Age, Search Highlights & Density Meter
     now_time = timezone.now()
     for task in tasks:
@@ -110,7 +113,7 @@ def index(request):
     tasks_done_today = Task.objects.filter(completed_at__date=today, is_completed=True).count()
     tasks_created_today = Task.objects.filter(created_at__date=today).count()
     
-    # NEW FEATURE: Dynamic pending tasks live count tracking
+    # Dynamic pending tasks live count tracking
     total_pending_left = Task.objects.filter(is_completed=False).count()
     
     # High priority load tracking
@@ -141,5 +144,6 @@ def index(request):
         'high_pending_count': high_pending_count,
         'critical_load': critical_load,
         'motivation_quote': motivation_quote,
-        'total_pending_left': total_pending_left, # Injected context variable
+        'total_pending_left': total_pending_left,
+        'current_list_count': current_list_count, # Injected list counter
     })
