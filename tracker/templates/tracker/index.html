@@ -156,12 +156,14 @@
         .filter-btn:hover { color: var(--accent); border-color: var(--accent); }
         .filter-active { background: var(--accent) !important; color: white !important; border-color: var(--accent) !important; box-shadow: 0 3px 10px rgba(79,70,229,0.3); }
 
-        /* FEATURE: Live Counter Alert & Wipe Box Style */
-        .utility-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; font-size: 12px; font-weight: 500; }
+        .utility-meta-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 12px; font-weight: 500; }
         .pending-count-tag { color: var(--text-muted); font-family: 'DM Mono', monospace; }
         .pending-count-tag strong { color: var(--accent); }
         .master-clear-link { color: var(--danger); text-decoration: none; font-weight: 600; transition: opacity var(--transition); }
         .master-clear-link:hover { opacity: 0.7; text-decoration: underline; }
+
+        /* FEATURE: Filter list counter styling text */
+        .filter-stats-badge { font-size: 11px; color: var(--text-muted); font-style: italic; margin-bottom: 14px; font-family: 'DM Mono', monospace; display: block; text-align: left; }
 
         .analytics-alert { padding: 10px 14px; background: rgba(239, 68, 68, 0.08); border: 1px dashed rgba(239, 68, 68, 0.3); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--high); margin-bottom: 18px; display: flex; align-items: center; gap: 6px; animation: slideDown 0.3s ease; }
 
@@ -239,7 +241,7 @@
         <div class="score-card">
             <div>
                 <div class="score-label">Today's Score</div>
-                <div class="score-sub">{{ motivation_quote }}</div>
+                <div class="score-sub{{ motivation_quote }}</div>
             </div>
             <div class="score-value">{{ today_score }}</div>
         </div>
@@ -275,6 +277,10 @@
                 Clear All Tasks 🗑️
             </a>
         </div>
+
+        <span class="filter-stats-badge">
+            📌 Currently showing {{ current_list_count }} items in this section.
+        </span>
 
         {% if critical_load %}
             <div class="analytics-alert">
@@ -315,6 +321,7 @@
 
                             {% if task.is_search_match %}
                                 <span class="match-badge">Matched 🔍</span>
+                            ```html
                             {% endif %}
 
                             {% if not task.is_completed and task.is_overdue %}
