@@ -161,6 +161,13 @@ def index(request):
     today_score    = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
     critical_load  = high_pending_count >= 3
 
+    # FEATURE: Milestone badge celebration trigger logic
+    milestone_celebration = ""
+    if total_tasks > 0 and completion_pct == 100:
+        milestone_celebration = "Perfect Day! All tasks are fully unlocked and closed. 🌟"
+    elif total_tasks > 0 and completion_pct == 50:
+        milestone_celebration = "Halfway point crossed! Great workflow consistency. 🎯"
+
     motivation_quote = get_motivation_quote(tasks_created_today, tasks_done_today, completion_pct)
 
     return render(request, 'tracker/index.html', {
@@ -177,4 +184,5 @@ def index(request):
         'motivation_quote':    motivation_quote,
         'total_pending_left':  total_pending_left,
         'current_list_count':  len(tasks),
+        'milestone_celebration': milestone_celebration, # Sent parameter to UI
     })
