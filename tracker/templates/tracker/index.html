@@ -83,7 +83,7 @@
             animation: wrapperIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
-        @pragma wrapperIn {
+        @keyframes wrapperIn {
             from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -202,7 +202,6 @@
             z-index: 1;
         }
 
-        /* FEATURE: Custom Celebration Box styling */
         .celebrate-milestone-banner {
             padding: 10px 14px;
             background: rgba(21, 128, 61, 0.06);
@@ -314,6 +313,27 @@
             background: var(--accent) !important;
             color: white !important;
             border-color: var(--accent) !important;
+        }
+
+        /* FEATURE: Custom subtle design for sort toggle controller */
+        .sorting-meta-wrapper {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .sorting-meta-wrapper a {
+            text-decoration: none;
+            color: var(--text-muted);
+            border-bottom: 1px dashed var(--border);
+            transition: color var(--transition);
+        }
+        .sorting-meta-wrapper a.sort-active {
+            color: var(--accent);
+            font-weight: 700;
+            border-bottom-style: solid;
         }
 
         .utility-meta-row {
@@ -668,6 +688,14 @@
                 <div class="pending-count-tag">
                     <strong>{{ total_pending_left }}</strong> tasks remaining
                 </div>
+                
+                <div class="sorting-meta-wrapper">
+                    <span>Sort:</span>
+                    <a href="?filter={{ filter_type }}&sort=default" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
+                    <span>|</span>
+                    <a href="?filter={{ filter_type }}&sort=latest" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
+                </div>
+
                 <a href="?clear_all_tasks_master=1" class="master-clear-link"
                    onclick="return confirm('This will permanently delete ALL tasks. Continue?')">
                     Clear all
