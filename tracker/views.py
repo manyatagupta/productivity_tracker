@@ -3,6 +3,7 @@ from .models import Task
 from django.utils import timezone
 from django.contrib import messages
 from datetime import timedelta
+import re
 
 
 # ─── Smart Tag + Emoji Mapping ───────────────────────────────────────────────
@@ -74,7 +75,7 @@ def index(request):
             emoji = TAG_EMOJIS.get(tag, "📌")
             final_title = f"[{tag} {emoji}] {title}"
             Task.objects.create(title=final_title, priority=priority)
-            messages.success(request, f"New {tag} task added! 🚀")
+            messages.success(request, f"✅ New {tag} task added!")
             return redirect('index')
 
     # 3. ACTIONS (GET params)
@@ -105,10 +106,11 @@ def index(request):
         messages.error(request, "All tasks cleared! 🧹")
         return redirect('index')
 
-    # 4. SEARCH + FILTER + SORTING SELECTION
+    # 4. SEARCH + FILTER + SORTING
     search_query = request.GET.get('search', '').strip()
     filter_type  = request.GET.get('filter', 'all')
-    sort_by      = request.GET.get('sort', 'default') # New sort handler param
+    sort_by      = request.GET.get('sort', 'default')
+    selected_tag = request.GET.get('tag', 'all') # New tag parameter capture
 
     tasks = Task.objects.all()
 
@@ -122,11 +124,14 @@ def index(request):
     elif filter_type == 'completed':
         tasks = tasks.filter(is_completed=True)
 
-    # FEATURE: Smart Conditional Sorting Engine
+    # FEATURE: Category Tag query sorting wrapper
+    if selected_tag and selected_tag != 'all':
+        tasks = tasks.filter(title__startswith=f"[{selected_tag}")
+
+    # Smart Conditional Sorting Engine
     if sort_by == 'latest':
         tasks = tasks.order_by('-created_at')
     else:
-        # Default smart sort logic: incomplete first → priority order → newest first
         tasks = sorted(
             tasks,
             key=lambda t: (
@@ -151,6 +156,9 @@ def index(request):
         task.is_stale     = (now_time - task.created_at) > stale_threshold and not task.is_completed
         task.is_overdue   = (now_time - task.created_at) > overdue_threshold and not task.is_completed
         task.is_search_match = bool(search_query and search_query.lower() in task.title.lower())
+        
+        duration_match = re.search(r'(\d+)m\b', clean.lower())
+        task.estimated_minutes = duration_match.group(1) if duration_match else None
 
     # 6. STATISTICS
     total_tasks         = Task.objects.count()
@@ -182,7 +190,8 @@ def index(request):
         'total_tasks':         total_tasks,
         'search_query':        search_query,
         'filter_type':         filter_type,
-        'sort_by':             sort_by, # Passed parameter to check button state
+        'sort_by':             sort_by,
+        'selected_tag':        selected_tag, # Sent active tag layout tracker
         'now':                 timezone.now(),
         'high_pending_count':  high_pending_count,
         'critical_load':       critical_load,
@@ -190,4 +199,5 @@ def index(request):
         'total_pending_left':  total_pending_left,
         'current_list_count':  len(tasks),
         'milestone_celebration': milestone_celebration,
+        'tag_emojis':          TAG_EMOJIS, # Passed map dictionary to frontend loop
     })
