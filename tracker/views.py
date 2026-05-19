@@ -74,7 +74,7 @@ def index(request):
             emoji = TAG_EMOJIS.get(tag, "📌")
             final_title = f"[{tag} {emoji}] {title}"
             Task.objects.create(title=final_title, priority=priority)
-            messages.success(request, f"✅ New {tag} task added!")
+            messages.success(request, f"New {tag} task added! 🚀")
             return redirect('index')
 
     # 3. ACTIONS (GET params)
@@ -105,9 +105,10 @@ def index(request):
         messages.error(request, "All tasks cleared! 🧹")
         return redirect('index')
 
-    # 4. SEARCH + FILTER
+    # 4. SEARCH + FILTER + SORTING SELECTION
     search_query = request.GET.get('search', '').strip()
     filter_type  = request.GET.get('filter', 'all')
+    sort_by      = request.GET.get('sort', 'default') # New sort handler param
 
     tasks = Task.objects.all()
 
@@ -121,15 +122,19 @@ def index(request):
     elif filter_type == 'completed':
         tasks = tasks.filter(is_completed=True)
 
-    # Sort: incomplete first → by priority → newest first
-    tasks = sorted(
-        tasks,
-        key=lambda t: (
-            t.is_completed,
-            PRIORITY_ORDER.get(t.priority, 2),
-            -t.created_at.timestamp()
+    # FEATURE: Smart Conditional Sorting Engine
+    if sort_by == 'latest':
+        tasks = tasks.order_by('-created_at')
+    else:
+        # Default smart sort logic: incomplete first → priority order → newest first
+        tasks = sorted(
+            tasks,
+            key=lambda t: (
+                t.is_completed,
+                PRIORITY_ORDER.get(t.priority, 2),
+                -t.created_at.timestamp()
+            )
         )
-    )
 
     # 5. ANNOTATE TASKS WITH COMPUTED PROPERTIES
     now_time = timezone.now()
@@ -161,7 +166,6 @@ def index(request):
     today_score    = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
     critical_load  = high_pending_count >= 3
 
-    # FEATURE: Milestone badge celebration trigger logic
     milestone_celebration = ""
     if total_tasks > 0 and completion_pct == 100:
         milestone_celebration = "Perfect Day! All tasks are fully unlocked and closed. 🌟"
@@ -178,11 +182,12 @@ def index(request):
         'total_tasks':         total_tasks,
         'search_query':        search_query,
         'filter_type':         filter_type,
+        'sort_by':             sort_by, # Passed parameter to check button state
         'now':                 timezone.now(),
         'high_pending_count':  high_pending_count,
         'critical_load':       critical_load,
         'motivation_quote':    motivation_quote,
         'total_pending_left':  total_pending_left,
         'current_list_count':  len(tasks),
-        'milestone_celebration': milestone_celebration, # Sent parameter to UI
+        'milestone_celebration': milestone_celebration,
     })
