@@ -315,7 +315,7 @@
         .filter-row {
             display: flex;
             gap: 6px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             overflow-x: auto;
             padding-bottom: 2px;
             scrollbar-width: none;
@@ -342,6 +342,13 @@
             color: white !important;
             border-color: transparent !important;
         }
+
+        /* FEATURE: Custom Tag Shortcut Toolbar Layout CSS */
+        .tag-shortcut-toolbar { display: flex; gap: 5px; margin-bottom: 18px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+        .tag-shortcut-toolbar::-webkit-scrollbar { display: none; }
+        .tag-badge-btn { text-decoration: none; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--surface2); color: var(--text-muted); border: 1.5px dashed var(--border); font-family: 'JetBrains Mono', monospace; white-space: nowrap; transition: all var(--transition); }
+        .tag-badge-btn:hover { border-color: var(--accent); color: var(--accent-2); }
+        .tag-badge-active { background: var(--accent-soft) !important; color: var(--accent-deep) !important; border: 1.5px solid var(--accent) !important; }
 
         .sorting-meta-wrapper {
             display: flex;
@@ -481,6 +488,7 @@
         .stale-badge   { background: rgba(251,191,36,0.12);  color: #92400e; }
         .density-badge { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
         .match-badge   { background: rgba(96,165,250,0.15);  color: #1e40af; }
+        .estimation-badge { background: rgba(192, 132, 252, 0.06); color: var(--accent-deep); border: 1.5px dotted rgba(192, 132, 252, 0.25); }
 
         .task-title {
             font-size: 14px;
@@ -518,7 +526,7 @@
             transition: all var(--transition);
             letter-spacing: 0.3px;
         }
-        .btn-done   { background: rgba(52,211,153,0.12); color: #065f46; }
+        .btn-done   { background: rgba(52,211,153,0.12); color: #065f46; }
         .btn-done:hover { background: rgba(52,211,153,0.22); transform: scale(1.04); }
         .btn-delete { background: rgba(248,113,113,0.1); color: #991b1b; }
         .btn-delete:hover { background: rgba(248,113,113,0.2); transform: scale(1.04); }
@@ -536,7 +544,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .sync-text  { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+        .sync-text  { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
         .footer-text { font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; font-family: 'Syne', sans-serif; }
 
         @media (max-width: 480px) {
@@ -606,10 +614,21 @@
             </form>
 
             <div class="filter-row">
-                <a href="/" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
-                <a href="?filter=high" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">High</a>
-                <a href="?filter=pending" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">Pending</a>
-                <a href="?filter=completed" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">Done</a>
+                <a href="?filter=all&tag={{ selected_tag }}" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
+                <a href="?filter=high&tag={{ selected_tag }}" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">High</a>
+                <a href="?filter=pending&tag={{ selected_tag }}" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">Pending</a>
+                <a href="?filter=completed&tag={{ selected_tag }}" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">Done</a>
+            </div>
+
+            <div class="tag-shortcut-toolbar">
+                <a href="?filter={{ filter_type }}&tag=all" class="tag-badge-btn {% if selected_tag == 'all' or not selected_tag %}tag-badge-active{% endif %}">🏷️ All Tags</a>
+                {% for tag, emoji in tag_emojis.items %}
+                    {% if tag != 'General' %}
+                        <a href="?filter={{ filter_type }}&tag={{ tag }}" class="tag-badge-btn {% if selected_tag == tag %}tag-badge-active{% endif %}">
+                            {{ emoji }} {{ tag }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
             </div>
 
             <div class="utility-meta-row">
@@ -619,9 +638,9 @@
 
                 <div class="sorting-meta-wrapper">
                     <span>Sort:</span>
-                    <a href="?filter={{ filter_type }}&sort=default" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
+                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=default" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
                     <span>|</span>
-                    <a href="?filter={{ filter_type }}&sort=latest" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
+                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=latest" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
                 </div>
 
                 <a href="?clear_all_tasks_master=1" class="master-clear-link"
@@ -665,6 +684,10 @@
                                     </span>
                                 {% endif %}
 
+                                {% if task.estimated_minutes and not task.is_completed %}
+                                    <span class="badge estimation-badge">⏳ {{ task.estimated_minutes }}m focus</span>
+                                {% endif %}
+
                                 {% if task.is_recent and not task.is_completed %}
                                     <span class="badge recent-badge">NEW</span>
                                 {% endif %}
@@ -686,9 +709,9 @@
 
                         <div class="actions">
                             {% if not task.is_completed %}
-                                <a href="?complete={{ task.id }}" class="btn-done">Done</a>
+                                <a href="?complete={{ task.id }}&filter={{ filter_type }}&tag={{ selected_tag }}&sort={{ sort_by }}" class="btn-done">Done</a>
                             {% endif %}
-                            <a href="?delete={{ task.id }}" class="btn-delete"
+                            <a href="?delete={{ task.id }}&filter={{ filter_type }}&tag={{ selected_tag }}&sort={{ sort_by }}" class="btn-delete"
                                onclick="return confirm('Delete this task?')">Del</a>
                         </div>
                     </div>
