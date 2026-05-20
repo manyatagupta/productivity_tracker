@@ -343,7 +343,6 @@
             border-color: transparent !important;
         }
 
-        /* FEATURE: Custom Tag Shortcut Toolbar Layout CSS */
         .tag-shortcut-toolbar { display: flex; gap: 5px; margin-bottom: 18px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
         .tag-shortcut-toolbar::-webkit-scrollbar { display: none; }
         .tag-badge-btn { text-decoration: none; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 6px; background: var(--surface2); color: var(--text-muted); border: 1.5px dashed var(--border); font-family: 'JetBrains Mono', monospace; white-space: nowrap; transition: all var(--transition); }
@@ -454,6 +453,9 @@
         .task.completed-style { opacity: 0.38; background: var(--surface2); }
         .task.search-highlight-active { background: rgba(192,132,252,0.05); border-color: rgba(192,132,252,0.25); }
         .task.stale-warning-active { border-color: rgba(251,191,36,0.3); }
+
+        /* FEATURE: Warning timestamp indicator color text toggle */
+        .task-meta.warning-color-text { color: var(--high); font-weight: 500; }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -704,7 +706,7 @@
                                     <span class="urgent-flash">OVERDUE</span>
                                 {% endif %}
                             </div>
-                            <div class="task-meta">{{ task.created_at|timesince }} ago</div>
+                            <div class="task-meta {% if task.has_age_warning %}warning-color-text{% endif %}">{{ task.created_at|timesince }} ago</div>
                         </div>
 
                         <div class="actions">
