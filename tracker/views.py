@@ -144,7 +144,7 @@ def index(request):
     now_time = timezone.now()
     overdue_threshold  = timedelta(hours=24)
     stale_threshold    = timedelta(hours=12)
-    warning_age_limit  = timedelta(hours=6) # FEATURE: 6-hour visual warning mark
+    warning_age_limit  = timedelta(hours=6)
     recent_threshold   = timedelta(minutes=15)
     detail_word_limit  = 6
 
@@ -156,9 +156,10 @@ def index(request):
         task.is_stale     = (now_time - task.created_at) > stale_threshold and not task.is_completed
         task.is_overdue   = (now_time - task.created_at) > overdue_threshold and not task.is_completed
         task.is_search_match = bool(search_query and search_query.lower() in task.title.lower())
-        
-        # FEATURE CONFIG: Flag task age alert for style injection
         task.has_age_warning = (now_time - task.created_at) > warning_age_limit and not task.is_completed
+        
+        # FEATURE CONFIG: Dynamic Uppercase Priority Text Tag for layout injection
+        task.display_priority = task.priority.upper() if task.priority else "MED"
         
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
