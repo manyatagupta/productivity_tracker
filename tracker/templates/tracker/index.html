@@ -27,6 +27,7 @@
             --medium:      #fbbf24;
             --high:        #f87171;
             --radius:      8px;
+            --radius-sm:   4px;
             --radius-lg:   14px;
             --transition:  0.18s cubic-bezier(0.4,0,0.2,1);
             --shadow:      0 2px 16px rgba(168,85,247,0.08);
@@ -454,8 +455,13 @@
         .task.search-highlight-active { background: rgba(192,132,252,0.05); border-color: rgba(192,132,252,0.25); }
         .task.stale-warning-active { border-color: rgba(251,191,36,0.3); }
 
-        /* FEATURE: Warning timestamp indicator color text toggle */
         .task-meta.warning-color-text { color: var(--high); font-weight: 500; }
+
+        /* FEATURE: Priority Text Tags design styles definitions */
+        .txt-badge-priority { font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; }
+        .task.high .txt-badge-priority   { background: rgba(248,113,113,0.1); color: #f87171; }
+        .task.medium .txt-badge-priority { background: rgba(251,191,36,0.1); color: #b45309; }
+        .task.low .txt-badge-priority    { background: rgba(52,211,153,0.1); color: #059669; }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -616,17 +622,17 @@
             </form>
 
             <div class="filter-row">
-                <a href="?filter=all&tag={{ selected_tag }}" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
-                <a href="?filter=high&tag={{ selected_tag }}" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">High</a>
-                <a href="?filter=pending&tag={{ selected_tag }}" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">Pending</a>
-                <a href="?filter=completed&tag={{ selected_tag }}" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">Done</a>
+                <a href="?filter=all&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
+                <a href="?filter=high&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">High</a>
+                <a href="?filter=pending&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">Pending</a>
+                <a href="?filter=completed&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">Done</a>
             </div>
 
             <div class="tag-shortcut-toolbar">
-                <a href="?filter={{ filter_type }}&tag=all" class="tag-badge-btn {% if selected_tag == 'all' or not selected_tag %}tag-badge-active{% endif %}">🏷️ All Tags</a>
+                <a href="?filter={{ filter_type }}&tag=all&sort={{ sort_by }}" class="tag-badge-btn {% if selected_tag == 'all' or not selected_tag %}tag-badge-active{% endif %}">🏷️ All Tags</a>
                 {% for tag, emoji in tag_emojis.items %}
                     {% if tag != 'General' %}
-                        <a href="?filter={{ filter_type }}&tag={{ tag }}" class="tag-badge-btn {% if selected_tag == tag %}tag-badge-active{% endif %}">
+                        <a href="?filter={{ filter_type }}&tag={{ tag }}&sort={{ sort_by }}" class="tag-badge-btn {% if selected_tag == tag %}tag-badge-active{% endif %}">
                             {{ emoji }} {{ tag }}
                         </a>
                     {% endif %}
@@ -674,6 +680,8 @@
                         <div style="flex: 1; min-width: 0;">
                             <div class="task-content">
                                 <span class="priority-dot dot-{{ task.priority }}"></span>
+
+                                <span class="txt-badge-priority">{{ task.display_priority }}</span>
 
                                 {% if "[" in task.title and "]" in task.title %}
                                     <span class="task-tag">{{ task.title|slice:"1:"|cut:"]" }}</span>
