@@ -110,7 +110,7 @@ def index(request):
     search_query = request.GET.get('search', '').strip()
     filter_type  = request.GET.get('filter', 'all')
     sort_by      = request.GET.get('sort', 'default')
-    selected_tag = request.GET.get('tag', 'all') # New tag parameter capture
+    selected_tag = request.GET.get('tag', 'all')
 
     tasks = Task.objects.all()
 
@@ -124,7 +124,6 @@ def index(request):
     elif filter_type == 'completed':
         tasks = tasks.filter(is_completed=True)
 
-    # FEATURE: Category Tag query sorting wrapper
     if selected_tag and selected_tag != 'all':
         tasks = tasks.filter(title__startswith=f"[{selected_tag}")
 
@@ -145,6 +144,7 @@ def index(request):
     now_time = timezone.now()
     overdue_threshold  = timedelta(hours=24)
     stale_threshold    = timedelta(hours=12)
+    warning_age_limit  = timedelta(hours=6) # FEATURE: 6-hour visual warning mark
     recent_threshold   = timedelta(minutes=15)
     detail_word_limit  = 6
 
@@ -156,6 +156,9 @@ def index(request):
         task.is_stale     = (now_time - task.created_at) > stale_threshold and not task.is_completed
         task.is_overdue   = (now_time - task.created_at) > overdue_threshold and not task.is_completed
         task.is_search_match = bool(search_query and search_query.lower() in task.title.lower())
+        
+        # FEATURE CONFIG: Flag task age alert for style injection
+        task.has_age_warning = (now_time - task.created_at) > warning_age_limit and not task.is_completed
         
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
@@ -191,7 +194,7 @@ def index(request):
         'search_query':        search_query,
         'filter_type':         filter_type,
         'sort_by':             sort_by,
-        'selected_tag':        selected_tag, # Sent active tag layout tracker
+        'selected_tag':        selected_tag,
         'now':                 timezone.now(),
         'high_pending_count':  high_pending_count,
         'critical_load':       critical_load,
@@ -199,5 +202,5 @@ def index(request):
         'total_pending_left':  total_pending_left,
         'current_list_count':  len(tasks),
         'milestone_celebration': milestone_celebration,
-        'tag_emojis':          TAG_EMOJIS, # Passed map dictionary to frontend loop
+        'tag_emojis':          TAG_EMOJIS,
     })
