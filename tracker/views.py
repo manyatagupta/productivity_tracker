@@ -160,7 +160,6 @@ def index(request):
         task.display_priority = task.priority.upper() if task.priority else "MED"
         task.title_char_length = len(clean)
         
-        # FEATURE CONFIG: Dynamic multi-tier word complexity tag assignment
         if task.word_count <= 2:
             task.density_label = "Quick"
         elif task.word_count <= 5:
@@ -184,6 +183,19 @@ def index(request):
     completion_pct = round((completed_count / total_tasks) * 100) if total_tasks > 0 else 0
     today_score    = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
     critical_load  = high_pending_count >= 3
+
+    # FEATURE CONFIG: Daily productivity loop ratio check formula
+    today_pct = round((tasks_done_today / tasks_created_today) * 100) if tasks_created_today > 0 else 0
+    if tasks_created_today == 0:
+        today_level_status = "Clean Slate"
+    elif today_pct == 100:
+        today_level_status = "⭐ Elite Mode"
+    elif today_pct >= 75:
+        today_level_status = "⚡ Supercharged"
+    elif today_pct >= 50:
+        today_level_status = "📈 On Track"
+    else:
+        today_level_status = "🌱 Warming Up"
 
     milestone_celebration = ""
     if total_tasks > 0 and completion_pct == 100:
@@ -211,4 +223,5 @@ def index(request):
         'current_list_count':  len(tasks),
         'milestone_celebration': milestone_celebration,
         'tag_emojis':          TAG_EMOJIS,
+        'today_level_status':  today_level_status, # Passed variable context to template layout
     })
