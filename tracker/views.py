@@ -158,9 +158,15 @@ def index(request):
         task.is_search_match = bool(search_query and search_query.lower() in task.title.lower())
         task.has_age_warning = (now_time - task.created_at) > warning_age_limit and not task.is_completed
         task.display_priority = task.priority.upper() if task.priority else "MED"
-        
-        # FEATURE CONFIG: Calculate the clean text dynamic character count length
         task.title_char_length = len(clean)
+        
+        # FEATURE CONFIG: Dynamic multi-tier word complexity tag assignment
+        if task.word_count <= 2:
+            task.density_label = "Quick"
+        elif task.word_count <= 5:
+            task.density_label = "Normal"
+        else:
+            task.density_label = "Complex"
         
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
