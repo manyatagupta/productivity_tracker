@@ -157,9 +157,10 @@ def index(request):
         task.is_overdue   = (now_time - task.created_at) > overdue_threshold and not task.is_completed
         task.is_search_match = bool(search_query and search_query.lower() in task.title.lower())
         task.has_age_warning = (now_time - task.created_at) > warning_age_limit and not task.is_completed
-        
-        # FEATURE CONFIG: Dynamic Uppercase Priority Text Tag for layout injection
         task.display_priority = task.priority.upper() if task.priority else "MED"
+        
+        # FEATURE CONFIG: Calculate the clean text dynamic character count length
+        task.title_char_length = len(clean)
         
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
