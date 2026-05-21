@@ -461,8 +461,11 @@
         .task.medium .txt-badge-priority { background: rgba(251,191,36,0.1); color: #b45309; }
         .task.low .txt-badge-priority    { background: rgba(52,211,153,0.1); color: #059669; }
 
-        /* FEATURE: Clean mono styling for text count length wrapper */
         .char-length-indicator { font-size: 11px; color: var(--text-muted); opacity: 0.65; font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 4px; }
+
+        /* FEATURE: Word Density dynamic progressive tag style definitions */
+        .density-tier-badge { background: var(--surface2); color: var(--accent-deep); }
+        .task.completed-style .density-tier-badge { opacity: 0.5; }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -692,6 +695,10 @@
                                     <span class="task-title {% if task.is_completed %}completed{% endif %}">
                                         {{ task.title }}
                                     </span>
+                                {% endif %}
+
+                                {% if not task.is_completed %}
+                                    <span class="badge density-tier-badge">{{ task.density_label }}</span>
                                 {% endif %}
 
                                 {% if task.estimated_minutes and not task.is_completed %}
