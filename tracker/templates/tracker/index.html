@@ -456,12 +456,13 @@
         .task.stale-warning-active { border-color: rgba(251,191,36,0.3); }
 
         .task-meta.warning-color-text { color: var(--high); font-weight: 500; }
-
-        /* FEATURE: Priority Text Tags design styles definitions */
         .txt-badge-priority { font-size: 9px; font-weight: 800; padding: 2px 5px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; }
         .task.high .txt-badge-priority   { background: rgba(248,113,113,0.1); color: #f87171; }
         .task.medium .txt-badge-priority { background: rgba(251,191,36,0.1); color: #b45309; }
         .task.low .txt-badge-priority    { background: rgba(52,211,153,0.1); color: #059669; }
+
+        /* FEATURE: Clean mono styling for text count length wrapper */
+        .char-length-indicator { font-size: 11px; color: var(--text-muted); opacity: 0.65; font-family: 'JetBrains Mono', monospace; margin-left: auto; margin-right: 4px; }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -680,7 +681,6 @@
                         <div style="flex: 1; min-width: 0;">
                             <div class="task-content">
                                 <span class="priority-dot dot-{{ task.priority }}"></span>
-
                                 <span class="txt-badge-priority">{{ task.display_priority }}</span>
 
                                 {% if "[" in task.title and "]" in task.title %}
@@ -714,7 +714,12 @@
                                     <span class="urgent-flash">OVERDUE</span>
                                 {% endif %}
                             </div>
-                            <div class="task-meta {% if task.has_age_warning %}warning-color-text{% endif %}">{{ task.created_at|timesince }} ago</div>
+                            
+                            <div style="display: flex; align-items: center; width: 100%;">
+                                <span class="char-length-indicator">{{ task.title_char_length }} chars</span>
+                                <div class="task-meta {% if task.has_age_warning %}warning-color-text{% endif %}" style="margin-top: 0;">{{ task.created_at|timesince }} ago</div>
+                            </div>
+
                         </div>
 
                         <div class="actions">
