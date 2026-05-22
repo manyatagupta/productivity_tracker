@@ -182,6 +182,8 @@ def index(request):
         
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
+        # FEATURE CONFIG: Check if timer feature can trigger layout render
+        task.has_timer_support = bool(task.estimated_minutes and not task.is_completed)
 
     # 6. STATISTICS
     total_tasks         = Task.objects.exclude(title__icontains="[ARCHIVED]").count()
@@ -217,14 +219,11 @@ def index(request):
 
     motivation_quote = get_motivation_quote(tasks_created_today, tasks_done_today, completion_pct)
 
-    # ─── FEATURE STREAK & RANK ENGINE ───
-    # Sabhi unique completed dates nikaal kar current streak calculate karenge
     completed_dates = Task.objects.filter(is_completed=True, completed_at__isnull=False).values_list('completed_at__date', flat=True).distinct().order_by('-completed_at__date')
     
     current_streak = 0
     check_date = today
     
-    # Agar aaj koi task complete nahi hua, toh kal se streak check shuru karenge
     if check_date not in completed_dates:
         check_date -= timedelta(days=1)
         
@@ -235,7 +234,6 @@ def index(request):
         else:
             break
 
-    # Total overall items complete hone par user level rank tags determine honge
     total_lifetime_done = Task.objects.filter(is_completed=True).count()
     if total_lifetime_done >= 50:
         productivity_rank = "Grandmaster 🏆"
