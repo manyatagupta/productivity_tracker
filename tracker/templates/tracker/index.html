@@ -26,7 +26,7 @@
             --low:         #34d399;
             --medium:      #fbbf24;
             --high:        #f87171;
-            --radius:      8px;
+            --radius:      #8px;
             --radius-sm:   4px;
             --radius-lg:   14px;
             --transition:  0.18s cubic-bezier(0.4,0,0.2,1);
@@ -199,7 +199,6 @@
             gap: 6px;
         }
         
-        /* FEATURE: Custom subtle design for score level badge component link */
         .live-status-level-badge { font-size: 9px; font-weight: 800; background: rgba(255,255,255,0.22); color: white; padding: 1px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
 
         .score-sub {
@@ -397,6 +396,15 @@
         }
         .master-clear-link:hover { opacity: 0.65; text-decoration: underline; }
 
+        .archive-action-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 12px;
+            transition: opacity var(--transition);
+        }
+        .archive-action-link:hover { opacity: 0.7; text-decoration: underline; }
+
         .filter-stats-badge {
             font-size: 11px;
             color: var(--text-muted);
@@ -543,7 +551,7 @@
             transition: all var(--transition);
             letter-spacing: 0.3px;
         }
-        .btn-done   { background: rgba(52,211,153,0.12); color: #065f46; }
+        .btn-done   { background: rgba(52,211,153,0.12); color: #065f46; }
         .btn-done:hover { background: rgba(52,211,153,0.22); transform: scale(1.04); }
         .btn-delete { background: rgba(248,113,113,0.1); color: #991b1b; }
         .btn-delete:hover { background: rgba(248,113,113,0.2); transform: scale(1.04); }
@@ -561,7 +569,7 @@
             justify-content: space-between;
             align-items: center;
         }
-        .sync-text  { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+        .sync-text  { font-size: 10px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
         .footer-text { font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; font-family: 'Syne', sans-serif; }
 
         @media (max-width: 480px) {
@@ -581,7 +589,7 @@
                     <div class="flash-msg {% if 'BOOM' in message.message %}celebrate-msg{% endif %}">
                         {{ message }}
                     </div>
-                {% endfor %}
+                ".   {% endfor %}
             {% endif %}
 
             <div class="header-info">
@@ -634,17 +642,21 @@
             </form>
 
             <div class="filter-row">
-                <a href="?filter=all&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
-                <a href="?filter=high&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">High</a>
-                <a href="?filter=pending&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">Pending</a>
-                <a href="?filter=completed&tag={{ selected_tag }}&sort={{ sort_by }}" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">Done</a>
+                <a href="?filter=all&tag={{ selected_tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="filter-btn {% if not request.GET.filter or request.GET.filter == 'all' %}filter-active{% endif %}">All</a>
+                <a href="?filter=high&tag={{ selected_tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="filter-btn {% if request.GET.filter == 'high' %}filter-active{% endif %}">High</a>
+                <a href="?filter=pending&tag={{ selected_tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="filter-btn {% if request.GET.filter == 'pending' %}filter-active{% endif %}">Pending</a>
+                <a href="?filter=completed&tag={{ selected_tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="filter-btn {% if request.GET.filter == 'completed' %}filter-active{% endif %}">Done</a>
+                
+                <a href="?view_archived={% if view_archived %}0{% else %}1{% endif %}" class="filter-btn {% if view_archived %}filter-active{% endif %}" style="margin-left: auto;">
+                    {% if view_archived %}📂 Active View{% else %}📦 Archive View{% endif %}
+                </a>
             </div>
 
             <div class="tag-shortcut-toolbar">
-                <a href="?filter={{ filter_type }}&tag=all&sort={{ sort_by }}" class="tag-badge-btn {% if selected_tag == 'all' or not selected_tag %}tag-badge-active{% endif %}">🏷️ All Tags</a>
+                <a href="?filter={{ filter_type }}&tag=all&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="tag-badge-btn {% if selected_tag == 'all' or not selected_tag %}tag-badge-active{% endif %}">🏷️ All Tags</a>
                 {% for tag, emoji in tag_emojis.items %}
                     {% if tag != 'General' %}
-                        <a href="?filter={{ filter_type }}&tag={{ tag }}&sort={{ sort_by }}" class="tag-badge-btn {% if selected_tag == tag %}tag-badge-active{% endif %}">
+                        <a href="?filter={{ filter_type }}&tag={{ tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="tag-badge-btn {% if selected_tag == tag %}tag-badge-active{% endif %}">
                             {{ emoji }} {{ tag }}
                         </a>
                     {% endif %}
@@ -658,10 +670,16 @@
 
                 <div class="sorting-meta-wrapper">
                     <span>Sort:</span>
-                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=default" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
+                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=default&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
                     <span>|</span>
-                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=latest" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
+                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=latest&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
                 </div>
+
+                {% if not view_archived %}
+                <a href="?archive_completed=1" class="archive-action-link" onclick="return confirm('Archive all completed tasks?')">
+                    Archive done
+                </a>
+                {% endif %}
 
                 <a href="?clear_all_tasks_master=1" class="master-clear-link"
                    onclick="return confirm('This will permanently delete ALL tasks. Continue?')">
@@ -684,7 +702,7 @@
                 </div>
             {% endif %}
 
-            <div class="section-label">Tasks</div>
+            <div class="section-label">{% if view_archived %}Archived Tasks Container{% else %}Tasks Container{% endif %}</div>
 
             <div class="task-list">
                 {% for task in tasks %}
@@ -697,11 +715,11 @@
                                 {% if "[" in task.title and "]" in task.title %}
                                     <span class="task-tag">{{ task.title|slice:"1:"|cut:"]" }}</span>
                                     <span class="task-title {% if task.is_completed %}completed{% endif %}">
-                                        {{ task.title|add:""|cut:"[Work 💻] "|cut:"[Study 📚] "|cut:"[Meet 🤝] "|cut:"[Food 🍕] "|cut:"[Health 💪] "|cut:"[Shop 🛒] "|cut:"[Finance 💸] "|cut:"[General] " }}
+                                        {{ task.title|cut:" [ARCHIVED]"|cut:"[Work 💻] "|cut:"[Study 📚] "|cut:"[Meet 🤝] "|cut:"[Food 🍕] "|cut:"[Health 💪] "|cut:"[Shop 🛒] "|cut:"[Finance 💸] "|cut:"[General] " }}
                                     </span>
                                 {% else %}
                                     <span class="task-title {% if task.is_completed %}completed{% endif %}">
-                                        {{ task.title }}
+                                        {{ task.title|cut:" [ARCHIVED]" }}
                                     </span>
                                 {% endif %}
 
@@ -739,9 +757,9 @@
 
                         <div class="actions">
                             {% if not task.is_completed %}
-                                <a href="?complete={{ task.id }}&filter={{ filter_type }}&tag={{ selected_tag }}&sort={{ sort_by }}" class="btn-done">Done</a>
+                                <a href="?complete={{ task.id }}&filter={{ filter_type }}&tag={{ selected_tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="btn-done">Done</a>
                             {% endif %}
-                            <a href="?delete={{ task.id }}&filter={{ filter_type }}&tag={{ selected_tag }}&sort={{ sort_by }}" class="btn-delete"
+                            <a href="?delete={{ task.id }}&filter={{ filter_type }}&tag={{ selected_tag }}&sort={{ sort_by }}&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="btn-delete"
                                onclick="return confirm('Delete this task?')">Del</a>
                         </div>
                     </div>
@@ -749,7 +767,7 @@
                     <div class="empty-msg">
                         <span class="empty-icon">○</span>
                         <h3>Nothing here</h3>
-                        <p>Add a task above to get started.</p>
+                        <p>No tasks matches this query or view mode.</p>
                     </div>
                 {% endfor %}
             </div>
