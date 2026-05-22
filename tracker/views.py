@@ -96,10 +96,7 @@ def index(request):
             messages.warning(request, "Task removed.")
         return redirect('index')
 
-    # FEATURE: Archive completed tasks instead of deleting them hard
     if request.GET.get('archive_completed'):
-        # Assuming your model has an 'is_archived' field or handling it dynamically via sessions/titles
-        # For a clean approach without migrations, we append an internal tag string
         completed_tasks = Task.objects.filter(is_completed=True)
         count = 0
         for t in completed_tasks:
@@ -124,7 +121,6 @@ def index(request):
 
     tasks = Task.objects.all()
 
-    # Dynamic separation of archived vs active items
     if view_archived:
         tasks = tasks.filter(title__icontains="[ARCHIVED]")
     else:
@@ -143,7 +139,6 @@ def index(request):
     if selected_tag and selected_tag != 'all':
         tasks = tasks.filter(title__startswith=f"[{selected_tag}")
 
-    # Smart Conditional Sorting Engine
     if sort_by == 'latest':
         tasks = tasks.order_by('-created_at')
     else:
@@ -165,7 +160,6 @@ def index(request):
     detail_word_limit  = 6
 
     for task in tasks:
-        # Strip archive flag for display clean text string
         display_title = task.title.replace(" [ARCHIVED]", "")
         clean = display_title.split('] ')[-1].strip() if ']' in display_title else display_title
         
@@ -223,6 +217,35 @@ def index(request):
 
     motivation_quote = get_motivation_quote(tasks_created_today, tasks_done_today, completion_pct)
 
+    # ─── FEATURE STREAK & RANK ENGINE ───
+    # Sabhi unique completed dates nikaal kar current streak calculate karenge
+    completed_dates = Task.objects.filter(is_completed=True, completed_at__isnull=False).values_list('completed_at__date', flat=True).distinct().order_by('-completed_at__date')
+    
+    current_streak = 0
+    check_date = today
+    
+    # Agar aaj koi task complete nahi hua, toh kal se streak check shuru karenge
+    if check_date not in completed_dates:
+        check_date -= timedelta(days=1)
+        
+    for _ in range(len(completed_dates) + 1):
+        if check_date in completed_dates:
+            current_streak += 1
+            check_date -= timedelta(days=1)
+        else:
+            break
+
+    # Total overall items complete hone par user level rank tags determine honge
+    total_lifetime_done = Task.objects.filter(is_completed=True).count()
+    if total_lifetime_done >= 50:
+        productivity_rank = "Grandmaster 🏆"
+    elif total_lifetime_done >= 20:
+        productivity_rank = "Expert ⚔️"
+    elif total_lifetime_done >= 5:
+        productivity_rank = "Performer 🚀"
+    else:
+        productivity_rank = "Rookie 🎯"
+
     return render(request, 'tracker/index.html', {
         'tasks':               tasks,
         'dark_mode':           dark_mode,
@@ -243,4 +266,6 @@ def index(request):
         'milestone_celebration': milestone_celebration,
         'tag_emojis':          TAG_EMOJIS,
         'today_level_status':  today_level_status,
+        'current_streak':      current_streak,
+        'productivity_rank':   productivity_rank,
     })
