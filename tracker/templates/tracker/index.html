@@ -159,7 +159,6 @@
         }
         .dark-toggle:hover { color: var(--text); border-color: var(--text-muted); }
 
-        /* FEATURE: Streak Banner Elements styles */
         .streak-intelligence-bar {
             display: flex;
             justify-content: space-between;
@@ -173,6 +172,22 @@
         }
         .streak-fire-count { color: var(--warn); font-weight: 700; }
         .rank-tier-text { color: var(--accent-deep); font-weight: 600; }
+
+        /* FEATURE: Focus Player Box Widget Styles */
+        .live-focus-player-panel {
+            background: var(--surface2);
+            border: 1px solid var(--accent);
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideDown 0.3s ease;
+        }
+        .focus-timer-digits { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; color: var(--accent-deep); }
+        .focus-timer-label { font-size: 13px; font-weight: 500; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 240px; }
+        .abort-timer-link { font-size: 11px; color: var(--danger); text-decoration: none; font-weight: 700; cursor: pointer; }
 
         .score-card {
             background: linear-gradient(135deg, #c084fc 0%, #818cf8 55%, #60a5fa 100%);
@@ -495,6 +510,10 @@
         .density-tier-badge { background: var(--surface2); color: var(--accent-deep); }
         .task.completed-style .density-tier-badge { opacity: 0.5; }
 
+        /* FEATURE: Clickable Focus Interactive Item Badge */
+        .estimation-badge.clickable-timer-badge { cursor: pointer; transition: all 0.2s; }
+        .estimation-badge.clickable-timer-badge:hover { background: var(--accent-soft); border-color: var(--accent-deep); transform: translateY(-0.5px); }
+
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
         .task-content { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; min-width: 0; flex: 1; }
@@ -528,7 +547,6 @@
         .stale-badge   { background: rgba(251,191,36,0.12);  color: #92400e; }
         .density-badge { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
         .match-badge   { background: rgba(96,165,250,0.15);  color: #1e40af; }
-        .estimation-badge { background: rgba(192, 132, 252, 0.06); color: var(--accent-deep); border: 1.5px dotted rgba(192, 132, 252, 0.25); }
 
         .task-title {
             font-size: 14px;
@@ -617,10 +635,18 @@
                 </a>
             </div>
 
-            <!-- FEATURE: Dynamic Streak Intelligence Panel Linked -->
             <div class="streak-intelligence-bar">
                 <span>🔥 Streak: <strong class="streak-fire-count">{{ current_streak }} Days</strong></span>
                 <span>Rank: <strong class="rank-tier-text">{{ productivity_rank }}</strong></span>
+            </div>
+
+            <!-- FEATURE: Live Active Pomodoro Player Box Context Layout Link -->
+            <div id="pomodoroPlayerBox" class="live-focus-player-panel">
+                <div>
+                    <div id="timerTaskTitleDisplay" class="focus-timer-label">Focus Session Active</div>
+                    <a onclick="abortLiveFocusSession()" class="abort-timer-link">✕ Abort Timer</a>
+                </div>
+                <div id="timerDigitsDisplay" class="focus-timer-digits">00:00</div>
             </div>
 
             <div class="score-card">
@@ -748,8 +774,11 @@
                                     <span class="badge density-tier-badge">{{ task.density_label }}</span>
                                 {% endif %}
 
-                                {% if task.estimated_minutes and not task.is_completed %}
-                                    <span class="badge estimation-badge">⏳ {{ task.estimated_minutes }}m focus</span>
+                                <!-- FEATURE OPTIMIZATION: Modified estimation badge to be link trigger -->
+                                {% if task.has_timer_support %}
+                                    <span class="badge estimation-badge clickable-timer-badge" onclick="triggerFocusTimer('{{ task.title|escapejs }}', {{ task.estimated_minutes }})">⏳ {{ task.estimated_minutes }}m focus (Start)</span>
+                                {% elif task.estimated_minutes and task.is_completed %}
+                                    <span class="badge estimation-badge" style="opacity: 0.5;">⏳ {{ task.estimated_minutes }}m focus</span>
                                 {% endif %}
 
                                 {% if task.is_recent and not task.is_completed %}
@@ -800,5 +829,51 @@
 
         </div>
     </div>
+
+    <!-- FEATURE SCRIPT: Vanilla JavaScript workflow control engine for local countdown tracker state -->
+    <script>
+        let liveTimerInterval = null;
+
+        function triggerFocusTimer(taskTitle, durationMinutes) {
+            // Reset potential active runs
+            clearInterval(liveTimerInterval);
+            
+            const playerBox = document.getElementById('pomodoroPlayerBox');
+            const titleDisplay = document.getElementById('timerTaskTitleDisplay');
+            const digitsDisplay = document.getElementById('timerDigitsDisplay');
+
+            // Set clean display title text layout
+            let dynamicCleanName = taskTitle.replace(" [ARCHIVED]", "").split('] ').pop();
+            titleDisplay.innerHTML = `🎯 Focusing: <strong>${dynamicCleanName}</strong>`;
+            playerBox.style.display = 'flex';
+
+            let totalSecondsLeft = durationMinutes * 60;
+            
+            function renderClockDigits() {
+                let minutes = Math.floor(totalSecondsLeft / 60);
+                let seconds = totalSecondsLeft % 60;
+                digitsDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            }
+
+            renderClockDigits();
+
+            liveTimerInterval = setInterval(() => {
+                if (totalSecondsLeft <= 0) {
+                    clearInterval(liveTimerInterval);
+                    digitsDisplay.textContent = "00:00";
+                    titleDisplay.innerHTML = "🎉 <strong>Session Complete!</strong> Good job.";
+                    alert(`Focus session for "${dynamicCleanName}" has successfully completed! Check it off.`);
+                } else {
+                    totalSecondsLeft--;
+                    renderClockDigits();
+                }
+            }, 1000);
+        }
+
+        function abortLiveFocusSession() {
+            clearInterval(liveTimerInterval);
+            document.getElementById('pomodoroPlayerBox').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
