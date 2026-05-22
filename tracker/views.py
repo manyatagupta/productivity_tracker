@@ -9,7 +9,7 @@ import re
 # ─── Smart Tag + Emoji Mapping ───────────────────────────────────────────────
 
 TAG_KEYWORDS = {
-    "Work":    ["code", "python", "django", "bug", "work", "assign", "deploy", "review", "pr", "task"],
+    "Work":     ["code", "python", "django", "bug", "work", "assign", "deploy", "review", "pr", "task"],
     "Study":   ["study", "exam", "read", "learn", "course", "notes", "chapter", "revise"],
     "Meet":    ["meet", "call", "zoom", "meeting", "standup", "sync", "discuss"],
     "Food":    ["food", "eat", "dinner", "pizza", "lunch", "breakfast", "cook", "order"],
@@ -96,9 +96,18 @@ def index(request):
             messages.warning(request, "Task removed.")
         return redirect('index')
 
-    if request.GET.get('clear_completed'):
-        count, _ = Task.objects.filter(is_completed=True).delete()
-        messages.info(request, f"Cleared {count} completed task(s).")
+    # FEATURE: Archive completed tasks instead of deleting them hard
+    if request.GET.get('archive_completed'):
+        # Assuming your model has an 'is_archived' field or handling it dynamically via sessions/titles
+        # For a clean approach without migrations, we append an internal tag string
+        completed_tasks = Task.objects.filter(is_completed=True)
+        count = 0
+        for t in completed_tasks:
+            if not t.title.endswith(" [ARCHIVED]"):
+                t.title = f"{t.title} [ARCHIVED]"
+                t.save()
+                count += 1
+        messages.info(request, f"Archived {count} completed task(s) successfully.")
         return redirect('index')
 
     if request.GET.get('clear_all_tasks_master'):
@@ -111,8 +120,15 @@ def index(request):
     filter_type  = request.GET.get('filter', 'all')
     sort_by      = request.GET.get('sort', 'default')
     selected_tag = request.GET.get('tag', 'all')
+    view_archived = request.GET.get('view_archived', '0') == '1'
 
     tasks = Task.objects.all()
+
+    # Dynamic separation of archived vs active items
+    if view_archived:
+        tasks = tasks.filter(title__icontains="[ARCHIVED]")
+    else:
+        tasks = tasks.exclude(title__icontains="[ARCHIVED]")
 
     if search_query:
         tasks = tasks.filter(title__icontains=search_query)
@@ -149,7 +165,10 @@ def index(request):
     detail_word_limit  = 6
 
     for task in tasks:
-        clean = task.title.split('] ')[-1].strip() if ']' in task.title else task.title
+        # Strip archive flag for display clean text string
+        display_title = task.title.replace(" [ARCHIVED]", "")
+        clean = display_title.split('] ')[-1].strip() if ']' in display_title else display_title
+        
         task.word_count   = len(clean.split())
         task.is_detailed  = task.word_count > detail_word_limit
         task.is_recent    = (now_time - task.created_at) < recent_threshold
@@ -171,10 +190,10 @@ def index(request):
         task.estimated_minutes = duration_match.group(1) if duration_match else None
 
     # 6. STATISTICS
-    total_tasks         = Task.objects.count()
-    completed_count     = Task.objects.filter(is_completed=True).count()
-    total_pending_left  = Task.objects.filter(is_completed=False).count()
-    high_pending_count  = Task.objects.filter(priority='high', is_completed=False).count()
+    total_tasks         = Task.objects.exclude(title__icontains="[ARCHIVED]").count()
+    completed_count     = Task.objects.filter(is_completed=True).exclude(title__icontains="[ARCHIVED]").count()
+    total_pending_left  = Task.objects.filter(is_completed=False).exclude(title__icontains="[ARCHIVED]").count()
+    high_pending_count  = Task.objects.filter(priority='high', is_completed=False).exclude(title__icontains="[ARCHIVED]").count()
 
     today = timezone.now().date()
     tasks_done_today    = Task.objects.filter(completed_at__date=today, is_completed=True).count()
@@ -184,7 +203,6 @@ def index(request):
     today_score    = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
     critical_load  = high_pending_count >= 3
 
-    # FEATURE CONFIG: Daily productivity loop ratio check formula
     today_pct = round((tasks_done_today / tasks_created_today) * 100) if tasks_created_today > 0 else 0
     if tasks_created_today == 0:
         today_level_status = "Clean Slate"
@@ -215,6 +233,7 @@ def index(request):
         'filter_type':         filter_type,
         'sort_by':             sort_by,
         'selected_tag':        selected_tag,
+        'view_archived':       view_archived,
         'now':                 timezone.now(),
         'high_pending_count':  high_pending_count,
         'critical_load':       critical_load,
@@ -223,5 +242,5 @@ def index(request):
         'current_list_count':  len(tasks),
         'milestone_celebration': milestone_celebration,
         'tag_emojis':          TAG_EMOJIS,
-        'today_level_status':  today_level_status, # Passed variable context to template layout
+        'today_level_status':  today_level_status,
     })
