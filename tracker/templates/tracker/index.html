@@ -173,7 +173,6 @@
         .streak-fire-count { color: var(--warn); font-weight: 700; }
         .rank-tier-text { color: var(--accent-deep); font-weight: 600; }
 
-        /* FEATURE: Focus Player Box Widget Styles */
         .live-focus-player-panel {
             background: var(--surface2);
             border: 1px solid var(--accent);
@@ -292,7 +291,8 @@
             transition: width 0.8s cubic-bezier(0.16,1,0.3,1);
         }
 
-        .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+        .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
+        .form-block-container { margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
 
         input[type="text"] {
             flex: 1;
@@ -510,9 +510,21 @@
         .density-tier-badge { background: var(--surface2); color: var(--accent-deep); }
         .task.completed-style .density-tier-badge { opacity: 0.5; }
 
-        /* FEATURE: Clickable Focus Interactive Item Badge */
         .estimation-badge.clickable-timer-badge { cursor: pointer; transition: all 0.2s; }
         .estimation-badge.clickable-timer-badge:hover { background: var(--accent-soft); border-color: var(--accent-deep); transform: translateY(-0.5px); }
+
+        /* FEATURE: Task Description notes card layout style */
+        .task-notes-block {
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--surface2);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            margin-top: 6px;
+            border-left: 2px solid var(--border);
+            font-style: italic;
+            width: 100%;
+        }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -640,7 +652,6 @@
                 <span>Rank: <strong class="rank-tier-text">{{ productivity_rank }}</strong></span>
             </div>
 
-            <!-- FEATURE: Live Active Pomodoro Player Box Context Layout Link -->
             <div id="pomodoroPlayerBox" class="live-focus-player-panel">
                 <div>
                     <div id="timerTaskTitleDisplay" class="focus-timer-label">Focus Session Active</div>
@@ -672,15 +683,19 @@
             </div>
             {% endif %}
 
-            <form method="POST" class="input-group">
+            <!-- FEATURE LAYOUT OPTIMIZATION: Updated form block layout to hold description notes text fields -->
+            <form method="POST" class="form-block-container">
                 {% csrf_token %}
-                <input type="text" name="title" placeholder="Add a new task…" required>
-                <select name="priority">
-                    <option value="low">Low</option>
-                    <option value="medium" selected>Med</option>
-                    <option value="high">High</option>
-                </select>
-                <button type="submit">+ Add</button>
+                <div class="input-group">
+                    <input type="text" name="title" placeholder="Add a new task…" required>
+                    <select name="priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Med</option>
+                        <option value="high">High</option>
+                    </select>
+                    <button type="submit">+ Add</button>
+                </div>
+                <input type="text" name="description" placeholder="Add optional details/notes for this task…" style="padding: 8px 12px; font-size: 13px;">
             </form>
 
             <form method="GET" class="input-group" style="margin-bottom: 16px;">
@@ -774,7 +789,6 @@
                                     <span class="badge density-tier-badge">{{ task.density_label }}</span>
                                 {% endif %}
 
-                                <!-- FEATURE OPTIMIZATION: Modified estimation badge to be link trigger -->
                                 {% if task.has_timer_support %}
                                     <span class="badge estimation-badge clickable-timer-badge" onclick="triggerFocusTimer('{{ task.title|escapejs }}', {{ task.estimated_minutes }})">⏳ {{ task.estimated_minutes }}m focus (Start)</span>
                                 {% elif task.estimated_minutes and task.is_completed %}
@@ -795,6 +809,11 @@
                                 {% endif %}
                                 {% if not task.is_completed and task.is_overdue %}
                                     <span class="urgent-flash">OVERDUE</span>
+                                {% endif %}
+
+                                <!-- FEATURE INTERACTION: Render task details text notes box if present inside loop container -->
+                                {% if task.description %}
+                                    <div class="task-notes-block">📝 {{ task.description }}</div>
                                 {% endif %}
                             </div>
                             
@@ -830,19 +849,16 @@
         </div>
     </div>
 
-    <!-- FEATURE SCRIPT: Vanilla JavaScript workflow control engine for local countdown tracker state -->
     <script>
         let liveTimerInterval = null;
 
         function triggerFocusTimer(taskTitle, durationMinutes) {
-            // Reset potential active runs
             clearInterval(liveTimerInterval);
             
             const playerBox = document.getElementById('pomodoroPlayerBox');
             const titleDisplay = document.getElementById('timerTaskTitleDisplay');
             const digitsDisplay = document.getElementById('timerDigitsDisplay');
 
-            // Set clean display title text layout
             let dynamicCleanName = taskTitle.replace(" [ARCHIVED]", "").split('] ').pop();
             titleDisplay.innerHTML = `🎯 Focusing: <strong>${dynamicCleanName}</strong>`;
             playerBox.style.display = 'flex';
