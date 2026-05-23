@@ -39,6 +39,7 @@
             --bg:          #0e0a1a;
             --surface:     #160f2a;
             --surface2:    #1e1638;
+            --border:      --2d2050;
             --border:      #2d2050;
             --text:        #ede9f8;
             --text-muted:  #8b7aaa;
@@ -169,9 +170,14 @@
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             border: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 6px;
         }
         .streak-fire-count { color: var(--warn); font-weight: 700; }
         .rank-tier-text { color: var(--accent-deep); font-weight: 600; }
+        
+        /* FEATURE: Custom subtle design for individual experience scores tags */
+        .gamified-xp-score-badge { color: #2563eb; font-weight: 700; }
 
         .live-focus-player-panel {
             background: var(--surface2);
@@ -524,11 +530,13 @@
             width: 100%;
         }
 
-        /* FEATURE: Custom subtle design for due status levels badges links */
         .due-indicator-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
         .due-indicator-tag.due-today    { background: rgba(217,119,6,0.12); color: var(--warn); border: 1px solid rgba(217,119,6,0.2); }
         .due-indicator-tag.due-passed   { background: rgba(220,38,38,0.12); color: var(--danger); border: 1px solid rgba(220,38,38,0.2); }
         .due-indicator-tag.due-upcoming { background: rgba(5,150,105,0.12); color: var(--success); border: 1px solid rgba(5,150,105,0.2); }
+
+        /* FEATURE: Custom subtle design for rewards display blocks tags */
+        .gamified-xp-tag-label { font-size: 9px; font-weight: 700; background: rgba(37,99,235,0.08); color: #2563eb; padding: 2px 5px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -636,7 +644,7 @@
 
             {% if messages %}
                 {% for message in messages %}
-                    <div class="flash-msg {% if 'BOOM' in message.message %}celebrate-msg{% endif %}">
+                    <div class="flash-msg {% if 'BOOM' in message.message or 'XP' in message.message %}celebrate-msg{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -652,9 +660,11 @@
                 </a>
             </div>
 
+            <!-- FEATURE LAYOUT OPTIMIZATION: Appended the dynamic live score totals indicator context tag -->
             <div class="streak-intelligence-bar">
                 <span>🔥 Streak: <strong class="streak-fire-count">{{ current_streak }} Days</strong></span>
                 <span>Rank: <strong class="rank-tier-text">{{ productivity_rank }}</strong></span>
+                <span>Score: <strong class="gamified-xp-score-badge">✨ {{ total_experience_points }} XP</strong></span>
             </div>
 
             <div id="pomodoroPlayerBox" class="live-focus-player-panel">
@@ -688,7 +698,6 @@
             </div>
             {% endif %}
 
-            <!-- FEATURE LAYOUT OPTIMIZATION: Modified task registration block to receive targeted due date pickers inputs -->
             <form method="POST" class="form-block-container">
                 {% csrf_token %}
                 <div class="input-group">
@@ -819,15 +828,20 @@
                                     <span class="urgent-flash">OVERDUE</span>
                                 {% endif %}
 
-                                <!-- FEATURE INTERACTION: Render optional parsed due status indicators inside loop view list -->
                                 {% if task.due_status and not task.is_completed %}
                                     {% if task.due_status == 'today' %}
                                         <span class="due-indicator-tag due-today">📅 Due Today</span>
+                                    <!-- Changed text boundary signs using safe keywords formatting -->
                                     {% elif task.due_status == 'passed' %}
                                         <span class="due-indicator-tag due-passed">⚠️ Overdue Date</span>
                                     {% elif task.due_status == 'upcoming' %}
                                         <span class="due-indicator-tag due-upcoming">🗓️ Coming Up</span>
                                     {% endif %}
+                                {% endif %}
+
+                                <!-- FEATURE INTEGRATION: Render potential target award tags on active list elements -->
+                                {% if not task.is_completed %}
+                                    <span class="gamified-xp-tag-label">+{{ task.xp_reward }} XP</span>
                                 {% endif %}
 
                                 {% if task.description %}
