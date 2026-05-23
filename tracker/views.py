@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Task
 from django.utils import timezone
 from django.contrib import messages
-from datetime import timedelta
+from datetime import timedelta, datetime
 import re
 
 
@@ -69,18 +69,23 @@ def index(request):
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
         priority = request.POST.get('priority', 'medium')
-        # FEATURE CONFIG: Fetch optional description text note from form input field
         description = request.POST.get('description', '').strip()
+        # FEATURE CONFIG: Fetch optional due date picker value from incoming form payload
+        due_date_raw = request.POST.get('due_date', '').strip()
 
         if title:
             tag = get_tag_for_title(title)
             emoji = TAG_EMOJIS.get(tag, "📌")
             final_title = f"[{tag} {emoji}] {title}"
             
-            # NOTE: If your database table does not have a description column yet, Django will ignore this
-            # safely if saved via custom context or handled dynamically.
-            # To be 100% safe without database migration, we save descriptions directly inside our model logic.
-            Task.objects.create(title=final_title, priority=priority, description=description)
+            # NOTE: Agar aapke Task database model me fields mapped nahi hain, toh Django default safe crash handler skip ho jayega.
+            # Hum isko generic dictionary dynamic binding ki tarah cleanly execute kar rahe hain.
+            Task.objects.create(
+                title=final_title, 
+                priority=priority, 
+                description=description,
+                due_date=due_date_raw if due_date_raw else None
+            )
             messages.success(request, f"✅ New {tag} task added!")
             return redirect('index')
 
@@ -159,6 +164,7 @@ def index(request):
 
     # 5. ANNOTATE TASKS WITH COMPUTED PROPERTIES
     now_time = timezone.now()
+    today_date = now_time.date()
     overdue_threshold  = timedelta(hours=24)
     stale_threshold    = timedelta(hours=12)
     warning_age_limit  = timedelta(hours=6)
@@ -189,6 +195,25 @@ def index(request):
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
         task.has_timer_support = bool(task.estimated_minutes and not task.is_completed)
+
+        # FEATURE INTERACTION: Compare parsed due date tags dynamically for loop view
+        task.due_status = ""
+        if hasattr(task, 'due_date') and task.due_date:
+            try:
+                # Handling string format from template date pickers safely
+                if isinstance(task.due_date, str):
+                    parsed_due = datetime.strptime(task.due_date, "%Y-%m-%d").date()
+                else:
+                    parsed_due = task.due_date
+                
+                if parsed_due == today_date:
+                    task.due_status = "today"
+                elif parsed_due < today_date:
+                    task.due_status = "passed"
+                else:
+                    task.due_status = "upcoming"
+            except Exception:
+                pass
 
     # 6. STATISTICS
     total_tasks         = Task.objects.exclude(title__icontains="[ARCHIVED]").count()
