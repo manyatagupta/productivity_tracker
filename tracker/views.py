@@ -30,6 +30,8 @@ TAG_EMOJIS = {
 }
 
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
+# FEATURE CONFIG: XP matrix rewards map allocations based on task weight difficulty
+XP_MATRIX = {"high": 30, "medium": 15, "low": 5}
 
 
 def get_tag_for_title(title: str) -> str:
@@ -70,7 +72,6 @@ def index(request):
         title = request.POST.get('title', '').strip()
         priority = request.POST.get('priority', 'medium')
         description = request.POST.get('description', '').strip()
-        # FEATURE CONFIG: Fetch optional due date picker value from incoming form payload
         due_date_raw = request.POST.get('due_date', '').strip()
 
         if title:
@@ -78,8 +79,6 @@ def index(request):
             emoji = TAG_EMOJIS.get(tag, "📌")
             final_title = f"[{tag} {emoji}] {title}"
             
-            # NOTE: Agar aapke Task database model me fields mapped nahi hain, toh Django default safe crash handler skip ho jayega.
-            # Hum isko generic dictionary dynamic binding ki tarah cleanly execute kar rahe hain.
             Task.objects.create(
                 title=final_title, 
                 priority=priority, 
@@ -98,7 +97,10 @@ def index(request):
             task.is_completed = True
             task.completed_at = timezone.now()
             task.save()
-            messages.success(request, "BOOM! Task completed! 🎉")
+            
+            # Show a customized success banner with dynamic point score rewards earned
+            gained_xp = XP_MATRIX.get(task.priority, 15)
+            messages.success(request, f"BOOM! Task completed! +{gained_xp} XP earned 🎉")
         return redirect('index')
 
     if request.GET.get('delete'):
@@ -185,6 +187,9 @@ def index(request):
         task.display_priority = task.priority.upper() if task.priority else "MED"
         task.title_char_length = len(clean)
         
+        # Attach static individual rewards metrics based on difficulty map
+        task.xp_reward = XP_MATRIX.get(task.priority, 15)
+
         if task.word_count <= 2:
             task.density_label = "Quick"
         elif task.word_count <= 5:
@@ -196,11 +201,9 @@ def index(request):
         task.estimated_minutes = duration_match.group(1) if duration_match else None
         task.has_timer_support = bool(task.estimated_minutes and not task.is_completed)
 
-        # FEATURE INTERACTION: Compare parsed due date tags dynamically for loop view
         task.due_status = ""
         if hasattr(task, 'due_date') and task.due_date:
             try:
-                # Handling string format from template date pickers safely
                 if isinstance(task.due_date, str):
                     parsed_due = datetime.strptime(task.due_date, "%Y-%m-%d").date()
                 else:
@@ -274,6 +277,10 @@ def index(request):
     else:
         productivity_rank = "Rookie 🎯"
 
+    # FEATURE ALGORITHM: Calculate overall lifetime aggregated experience score accumulated
+    lifetime_completed_set = Task.objects.filter(is_completed=True)
+    total_experience_points = sum(XP_MATRIX.get(t.priority, 15) for t in lifetime_completed_set)
+
     return render(request, 'tracker/index.html', {
         'tasks':               tasks,
         'dark_mode':           dark_mode,
@@ -296,4 +303,5 @@ def index(request):
         'today_level_status':  today_level_status,
         'current_streak':      current_streak,
         'productivity_rank':   productivity_rank,
+        'total_experience_points': total_experience_points,
     })
