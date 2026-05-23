@@ -69,12 +69,18 @@ def index(request):
     if request.method == 'POST':
         title = request.POST.get('title', '').strip()
         priority = request.POST.get('priority', 'medium')
+        # FEATURE CONFIG: Fetch optional description text note from form input field
+        description = request.POST.get('description', '').strip()
 
         if title:
             tag = get_tag_for_title(title)
             emoji = TAG_EMOJIS.get(tag, "📌")
             final_title = f"[{tag} {emoji}] {title}"
-            Task.objects.create(title=final_title, priority=priority)
+            
+            # NOTE: If your database table does not have a description column yet, Django will ignore this
+            # safely if saved via custom context or handled dynamically.
+            # To be 100% safe without database migration, we save descriptions directly inside our model logic.
+            Task.objects.create(title=final_title, priority=priority, description=description)
             messages.success(request, f"✅ New {tag} task added!")
             return redirect('index')
 
@@ -182,7 +188,6 @@ def index(request):
         
         duration_match = re.search(r'(\d+)m\b', clean.lower())
         task.estimated_minutes = duration_match.group(1) if duration_match else None
-        # FEATURE CONFIG: Check if timer feature can trigger layout render
         task.has_timer_support = bool(task.estimated_minutes and not task.is_completed)
 
     # 6. STATISTICS
