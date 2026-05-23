@@ -294,8 +294,7 @@
         .input-group { display: flex; gap: 8px; margin-bottom: 8px; }
         .form-block-container { margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
 
-        input[type="text"] {
-            flex: 1;
+        input[type="text"], input[type="date"] {
             padding: 11px 14px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -306,7 +305,7 @@
             color: var(--text);
             transition: border-color var(--transition), box-shadow var(--transition);
         }
-        input[type="text"]:focus {
+        input[type="text"]:focus, input[type="date"]:focus {
             border-color: var(--accent);
             background: var(--surface);
             box-shadow: 0 0 0 3px rgba(192,132,252,0.15);
@@ -513,7 +512,6 @@
         .estimation-badge.clickable-timer-badge { cursor: pointer; transition: all 0.2s; }
         .estimation-badge.clickable-timer-badge:hover { background: var(--accent-soft); border-color: var(--accent-deep); transform: translateY(-0.5px); }
 
-        /* FEATURE: Task Description notes card layout style */
         .task-notes-block {
             font-size: 12px;
             color: var(--text-muted);
@@ -525,6 +523,12 @@
             font-style: italic;
             width: 100%;
         }
+
+        /* FEATURE: Custom subtle design for due status levels badges links */
+        .due-indicator-tag { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; }
+        .due-indicator-tag.due-today    { background: rgba(217,119,6,0.12); color: var(--warn); border: 1px solid rgba(217,119,6,0.2); }
+        .due-indicator-tag.due-passed   { background: rgba(220,38,38,0.12); color: var(--danger); border: 1px solid rgba(220,38,38,0.2); }
+        .due-indicator-tag.due-upcoming { background: rgba(5,150,105,0.12); color: var(--success); border: 1px solid rgba(5,150,105,0.2); }
 
         @keyframes taskIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -621,6 +625,7 @@
             .wrapper-inner { padding: 22px 18px; }
             .score-value { font-size: 32px; }
             .header-info h1 { font-size: 21px; }
+            .input-group.multi-fields-group { flex-direction: column; gap: 6px; }
         }
     </style>
 </head>
@@ -683,7 +688,7 @@
             </div>
             {% endif %}
 
-            <!-- FEATURE LAYOUT OPTIMIZATION: Updated form block layout to hold description notes text fields -->
+            <!-- FEATURE LAYOUT OPTIMIZATION: Modified task registration block to receive targeted due date pickers inputs -->
             <form method="POST" class="form-block-container">
                 {% csrf_token %}
                 <div class="input-group">
@@ -695,7 +700,10 @@
                     </select>
                     <button type="submit">+ Add</button>
                 </div>
-                <input type="text" name="description" placeholder="Add optional details/notes for this task…" style="padding: 8px 12px; font-size: 13px;">
+                <div class="input-group multi-fields-group">
+                    <input type="text" name="description" placeholder="Add optional details/notes…" style="flex: 1; padding: 8px 12px; font-size: 13px;">
+                    <input type="date" name="due_date" style="padding: 6px 10px; font-size: 12px; cursor: pointer;" title="Set optional due date">
+                </div>
             </form>
 
             <form method="GET" class="input-group" style="margin-bottom: 16px;">
@@ -811,7 +819,17 @@
                                     <span class="urgent-flash">OVERDUE</span>
                                 {% endif %}
 
-                                <!-- FEATURE INTERACTION: Render task details text notes box if present inside loop container -->
+                                <!-- FEATURE INTERACTION: Render optional parsed due status indicators inside loop view list -->
+                                {% if task.due_status and not task.is_completed %}
+                                    {% if task.due_status == 'today' %}
+                                        <span class="due-indicator-tag due-today">📅 Due Today</span>
+                                    {% elif task.due_status == 'passed' %}
+                                        <span class="due-indicator-tag due-passed">⚠️ Overdue Date</span>
+                                    {% elif task.due_status == 'upcoming' %}
+                                        <span class="due-indicator-tag due-upcoming">🗓️ Coming Up</span>
+                                    {% endif %}
+                                {% endif %}
+
                                 {% if task.description %}
                                     <div class="task-notes-block">📝 {{ task.description }}</div>
                                 {% endif %}
