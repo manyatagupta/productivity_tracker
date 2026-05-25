@@ -1,13 +1,12 @@
-
 # Daily Productivity Tracker 🚀
 
 A simple, premium, and feature-rich Daily Productivity Tracker built with Python and Django. This project showcases structured CRUD operations, dynamic state management, automated data transformation, and custom SaaS-style minimalist UI dashboard design.
 
-## 🌟 Features (Updated & Advanced)
+## 🌐 Features (Updated & Advanced)
 - **Add Tasks:** Quickly add new tasks to your daily to-do list.
 - **Smart Auto-Tagging:** Automatically detects keywords (like 'code', 'study', 'meet', 'gym') to assign appropriate emojis and category tags instantly.
 - **Priority Management:** Assign High, Medium, or Low priority to stay focused with color-coded structural left borders.
-- **Interactive Tags Shortcuts Toolbar:** Filter your dashboard view dynamically by departments (💻 Work, 📚 Study, 🤝 Meet, etc.) with a single click.
+- **Interactive Tasks Shortcuts Toolbar:** Filter your dashboard view dynamically by departments (💻 Work, 📚 Study, 🤝 Meet, etc.) with a single click.
 - **Dual-Mode Sorting Switch:** Toggle your workspace view instantly between **Default Smart Sort** (Incomplete first + Priority) and **Latest First** viewports.
 - **Smart Focus Duration Parser:** Built-in regex engine automatically extracts time frames (e.g., `45m`, `60m`) from titles to display standalone ⏳ focus badges.
 - **Task Word-Density Progression Labels:** Dynamically analyzes word lengths on the backend to flag cards as `Quick`, `Normal`, or `Complex` structures.
@@ -42,9 +41,9 @@ productivity_tracker/
 │
 ├── healthcare_dashboard/     # Project configuration directory
 │   ├── __init__.py
-│   ├── settings.py           # Core configurations (Session cookies & App registrations)
+│   ├── settings.py           # Core configurations (WSGI, WhiteNoise & Production flags)
 │   ├── urls.py               # Main project URL routing mappings
-│   └── wsgi.py               # WSGI application entry-point for servers
+│   └── wsgi.py               # WSGI application entry-point for web servers
 │
 ├── tracker/                  # Main Application directory
 │   ├── migrations/           # Database schema migration tracking records
