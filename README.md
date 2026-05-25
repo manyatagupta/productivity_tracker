@@ -14,6 +14,7 @@ A simple and easy-to-use Daily Productivity Tracker built with Python and Django
 - **Real-time Data Metrics:** Processes runtime string length calculation directly from the backend to map analytical character/word counts onto user tasks.
 - **Critical Workload Insights:** Features an integrated system workload monitor that triggers real-time optimization and safety warnings when task density spikes.
 
+
 ## 🛠️ Tech Stack
 - **Backend:** Python, Django
 - **Frontend:** HTML5, CSS3 (Premium SaaS-style UI with DM Sans)
