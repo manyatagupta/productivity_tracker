@@ -55,6 +55,8 @@ productivity_tracker/
 ├── requirements.txt          # Python dependency packages map frozen for live servers
 └── README.md                 # System project documentation & developer logs
 
+
+
 ## 📝 Future Scope
 - User Authentication for multiple accounts.
 - Integration of a Data Science dashboard to track productivity trends over time.
