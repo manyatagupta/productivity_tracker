@@ -72,5 +72,6 @@ If you want to run this project on your computer, follow these steps:
 3. Install Django: 
    pip install django
 
+
 4. Run the server: 
    python manage.py runserver
