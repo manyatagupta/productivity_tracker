@@ -1,4 +1,7 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 from .models import Task
 from django.utils import timezone
 from django.contrib import messages
@@ -58,7 +61,9 @@ def get_motivation_quote(tasks_created: int, tasks_done: int, pct: int) -> str:
 
 # ─── Main View ───────────────────────────────────────────────────────────────
 
+@login_required
 def index(request):
+    user = request.user
 
     # 1. DARK MODE TOGGLE
     if request.GET.get('toggle_dark'):
@@ -79,7 +84,7 @@ def index(request):
             emoji = TAG_EMOJIS.get(tag, "📌")
             final_title = f"[{tag} {emoji}] {title}"
             
-            Task.objects.create(
+            Task.objects.create(user=user, 
                 title=final_title, 
                 priority=priority, 
                 description=description,
@@ -92,7 +97,7 @@ def index(request):
     action_id = request.GET.get('complete') or request.GET.get('delete')
 
     if request.GET.get('complete'):
-        task = Task.objects.filter(id=request.GET['complete']).first()
+        task = Task.objects.filter(user=user, id=request.GET['complete']).first()
         if task and not task.is_completed:
             task.is_completed = True
             task.completed_at = timezone.now()
@@ -104,13 +109,13 @@ def index(request):
         return redirect('index')
 
     if request.GET.get('delete'):
-        deleted, _ = Task.objects.filter(id=request.GET['delete']).delete()
+        deleted, _ = Task.objects.filter(user=user, id=request.GET['delete']).delete()
         if deleted:
             messages.warning(request, "Task removed.")
         return redirect('index')
 
     if request.GET.get('archive_completed'):
-        completed_tasks = Task.objects.filter(is_completed=True)
+        completed_tasks = Task.objects.filter(user=user, is_completed=True)
         count = 0
         for t in completed_tasks:
             if not t.title.endswith(" [ARCHIVED]"):
@@ -121,7 +126,7 @@ def index(request):
         return redirect('index')
 
     if request.GET.get('clear_all_tasks_master'):
-        Task.objects.all().delete()
+        Task.objects.filter(user=user).delete()
         messages.error(request, "All tasks cleared! 🧹")
         return redirect('index')
 
@@ -132,7 +137,7 @@ def index(request):
     selected_tag = request.GET.get('tag', 'all')
     view_archived = request.GET.get('view_archived', '0') == '1'
 
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(user=user)
 
     if view_archived:
         tasks = tasks.filter(title__icontains="[ARCHIVED]")
@@ -219,14 +224,14 @@ def index(request):
                 pass
 
     # 6. STATISTICS
-    total_tasks         = Task.objects.exclude(title__icontains="[ARCHIVED]").count()
-    completed_count     = Task.objects.filter(is_completed=True).exclude(title__icontains="[ARCHIVED]").count()
-    total_pending_left  = Task.objects.filter(is_completed=False).exclude(title__icontains="[ARCHIVED]").count()
-    high_pending_count  = Task.objects.filter(priority='high', is_completed=False).exclude(title__icontains="[ARCHIVED]").count()
+    total_tasks         = Task.objects.filter(user=user).exclude(title__icontains="[ARCHIVED]").count()
+    completed_count     = Task.objects.filter(user=user, is_completed=True).exclude(title__icontains="[ARCHIVED]").count()
+    total_pending_left  = Task.objects.filter(user=user, is_completed=False).exclude(title__icontains="[ARCHIVED]").count()
+    high_pending_count  = Task.objects.filter(user=user, priority='high', is_completed=False).exclude(title__icontains="[ARCHIVED]").count()
 
     today = timezone.now().date()
-    tasks_done_today    = Task.objects.filter(completed_at__date=today, is_completed=True).count()
-    tasks_created_today = Task.objects.filter(created_at__date=today).count()
+    tasks_done_today    = Task.objects.filter(user=user, completed_at__date=today, is_completed=True).count()
+    tasks_created_today = Task.objects.filter(user=user, created_at__date=today).count()
 
     completion_pct = round((completed_count / total_tasks) * 100) if total_tasks > 0 else 0
     today_score    = f"{tasks_done_today}/{tasks_created_today}" if tasks_created_today > 0 else "0/0"
@@ -252,7 +257,7 @@ def index(request):
 
     motivation_quote = get_motivation_quote(tasks_created_today, tasks_done_today, completion_pct)
 
-    completed_dates = Task.objects.filter(is_completed=True, completed_at__isnull=False).values_list('completed_at__date', flat=True).distinct().order_by('-completed_at__date')
+    completed_dates = Task.objects.filter(user=user, is_completed=True, completed_at__isnull=False).values_list('completed_at__date', flat=True).distinct().order_by('-completed_at__date')
     
     current_streak = 0
     check_date = today
@@ -267,7 +272,7 @@ def index(request):
         else:
             break
 
-    total_lifetime_done = Task.objects.filter(is_completed=True).count()
+    total_lifetime_done = Task.objects.filter(user=user, is_completed=True).count()
     if total_lifetime_done >= 50:
         productivity_rank = "Grandmaster 🏆"
     elif total_lifetime_done >= 20:
@@ -278,7 +283,7 @@ def index(request):
         productivity_rank = "Rookie 🎯"
 
     # FEATURE ALGORITHM: Calculate overall lifetime aggregated experience score accumulated
-    lifetime_completed_set = Task.objects.filter(is_completed=True)
+    lifetime_completed_set = Task.objects.filter(user=user, is_completed=True)
     total_experience_points = sum(XP_MATRIX.get(t.priority, 15) for t in lifetime_completed_set)
 
     return render(request, 'tracker/index.html', {
@@ -305,3 +310,14 @@ def index(request):
         'productivity_rank':   productivity_rank,
         'total_experience_points': total_experience_points,
     })
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('index')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
