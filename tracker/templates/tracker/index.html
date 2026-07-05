@@ -655,9 +655,16 @@
                     <h1>My Tasks</h1>
                     <div class="header-tagline">{{ now|date:"l, d F Y" }}</div>
                 </div>
-                <a href="?toggle_dark=1" class="dark-toggle">
-                    {% if dark_mode %}☀ Light{% else %}◑ Dark{% endif %}
-                </a>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <span style="font-size: 12px; color: var(--text-muted); font-weight: bold;">{{ user.username }}</span>
+                    <form method="post" action="{% url 'logout' %}" style="margin: 0; display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="dark-toggle" style="background: transparent; padding: 4px 10px; cursor: pointer;">Logout</button>
+                    </form>
+                    <a href="?toggle_dark=1" class="dark-toggle">
+                        {% if dark_mode %}☀ Light{% else %}◑ Dark{% endif %}
+                    </a>
+                </div>
             </div>
 
             <!-- FEATURE LAYOUT OPTIMIZATION: Appended the dynamic live score totals indicator context tag -->
