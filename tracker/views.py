@@ -65,12 +65,12 @@ def get_motivation_quote(tasks_created: int, tasks_done: int, pct: int) -> str:
 def index(request):
     user = request.user
 
-    # 1. DARK MODE TOGGLE
+    # 1. LIGHT MODE TOGGLE (dark is default)
     if request.GET.get('toggle_dark'):
-        request.session['dark_mode'] = not request.session.get('dark_mode', False)
+        request.session['light_mode'] = not request.session.get('light_mode', False)
         return redirect('index')
 
-    dark_mode = request.session.get('dark_mode', False)
+    light_mode = request.session.get('light_mode', False)
 
     # 2. ADD TASK (POST)
     if request.method == 'POST':
@@ -288,7 +288,7 @@ def index(request):
 
     return render(request, 'tracker/index.html', {
         'tasks':               tasks,
-        'dark_mode':           dark_mode,
+        'light_mode':          light_mode,
         'today_score':         today_score,
         'completion_pct':      completion_pct,
         'total_tasks':         total_tasks,
