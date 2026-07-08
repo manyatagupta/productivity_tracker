@@ -123,6 +123,7 @@
         body.light-mode .flash-msg.celebrate-msg { background: #fdf4ff; color: #7c3aed; border-color: #e9d5ff; }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
@@ -130,40 +131,79 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: stretch;
-            padding: 0;
             color: var(--text);
             transition: color var(--transition);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-
         body::before { display: none; }
 
+        /* Animated Mesh Gradient Background */
+        .mesh-bg {
+            position: fixed; inset: 0; z-index: -2;
+            background: var(--bg);
+        }
+        .mesh-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(129,140,248,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(103,232,249,0.06) 0%, transparent 50%);
+            animation: meshFloat 25s ease-in-out infinite alternate;
+        }
+        @keyframes meshFloat {
+            0%   { transform: translate(0, 0) rotate(0deg); }
+            33%  { transform: translate(-3%, 2%) rotate(2deg); }
+            66%  { transform: translate(2%, -3%) rotate(-1deg); }
+            100% { transform: translate(-1%, 1%) rotate(1.5deg); }
+        }
+
+        /* Noise Texture Overlay */
+        .noise-overlay {
+            position: fixed; inset: 0; z-index: -1;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            pointer-events: none;
+        }
+
         .main-wrapper {
-            background: rgba(11, 8, 22, 0.72);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            background: rgba(6, 5, 14, 0.68);
+            backdrop-filter: blur(40px) saturate(1.3);
+            -webkit-backdrop-filter: blur(40px) saturate(1.3);
             width: 100%;
             max-width: 100%;
             min-height: 100vh;
             position: relative;
             z-index: 1;
-            transition: background var(--transition), box-shadow var(--transition);
-            animation: wrapperIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+            transition: background var(--transition);
+            animation: wrapperIn 0.6s var(--ease-out-expo) both;
         }
 
         @keyframes wrapperIn {
-            from { opacity: 0; transform: translateY(16px); }
+            from { opacity: 0; transform: translateY(12px); }
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        .wrapper-top-bar {
+        .wrapper-top-bar, .top-accent-bar {
             height: 3px;
-            background: linear-gradient(90deg, #c084fc 0%, #818cf8 50%, #60a5fa 100%);
+            background: linear-gradient(90deg, #7c3aed, #818cf8, #67e8f9, #a78bfa);
+            background-size: 300% 100%;
+            animation: barSlide 6s linear infinite;
+        }
+        @keyframes barSlide {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
         }
 
         .wrapper-inner {
             width: 100%;
-            padding: 40px 48px 32px;
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 40px 48px 36px;
         }
 
         .flash-msg {
@@ -749,6 +789,8 @@
     </style>
 </head>
 <body class="{% if light_mode %}light-mode{% endif %}">
+    <div class="mesh-bg"></div>
+    <div class="noise-overlay"></div>
     <div id="vanta-bg" style="position: fixed; z-index: -1; top: 0; left: 0; width: 100vw; height: 100vh;"></div>
     <div class="main-wrapper">
         <div class="wrapper-top-bar"></div>
