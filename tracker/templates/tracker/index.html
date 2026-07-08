@@ -303,37 +303,106 @@
         .focus-timer-label { font-size: 13px; font-weight: 500; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 240px; }
         .abort-timer-link { font-size: 11px; color: var(--danger); text-decoration: none; font-weight: 700; cursor: pointer; }
 
-        .score-card {
-            background: linear-gradient(135deg, rgba(168,85,247,0.35) 0%, rgba(96,165,250,0.2) 100%);
-            backdrop-filter: blur(12px);
-            color: white;
-            padding: 24px 28px;
+        /* Stat Cards Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .stat-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            margin-bottom: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 22px 24px;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(168,85,247,0.2);
+            transition: all var(--transition);
+            animation: fadeInUp 0.5s var(--ease-out-expo) both;
         }
-        .score-card::before {
+        .stat-card:nth-child(1) { animation-delay: 0.15s; }
+        .stat-card:nth-child(2) { animation-delay: 0.25s; }
+        .stat-card:nth-child(3) { animation-delay: 0.35s; }
+        .stat-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-3px);
+        }
+        .stat-card::before {
             content: '';
             position: absolute;
-            right: -30px; top: -40px;
-            width: 150px; height: 150px;
-            background: rgba(168,85,247,0.15);
-            border-radius: 50%;
-            filter: blur(40px);
+            inset: 0;
+            border-radius: var(--radius-lg);
+            background: linear-gradient(135deg, transparent 40%, var(--accent-glow-md) 100%);
+            pointer-events: none;
         }
-        .score-card::after {
+        .stat-card-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stat-card-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            color: var(--text);
+            line-height: 1;
+        }
+        .stat-card-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 500;
+            font-style: italic;
+        }
+        .stat-card-badge {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 800;
+            background: var(--accent-glow);
+            color: var(--accent-bright);
+            padding: 3px 10px;
+            border-radius: var(--radius-sm);
+            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            border: 1px solid rgba(167,139,250,0.15);
+            margin-top: 8px;
+        }
+        .stat-card.score-card {
+            background: linear-gradient(135deg, rgba(124,58,237,0.4) 0%, rgba(129,140,248,0.25) 50%, rgba(103,232,249,0.15) 100%);
+            border: 1px solid rgba(167,139,250,0.2);
+            animation: glowPulse 5s ease-in-out infinite, fadeInUp 0.5s var(--ease-out-expo) 0.15s both;
+        }
+        .stat-card.score-card .stat-card-value { color: #fff; text-shadow: 0 0 30px rgba(167,139,250,0.35); }
+        .stat-card.score-card .stat-card-label { color: rgba(255,255,255,0.75); }
+        .stat-card.score-card .stat-card-sub { color: rgba(255,255,255,0.7); }
+        .stat-card.score-card .stat-card-badge { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.15); }
+        .stat-card.score-card::after {
             content: '';
             position: absolute;
-            left: -15px; bottom: -30px;
-            width: 100px; height: 100px;
-            background: rgba(96,165,250,0.1);
+            right: -20px; top: -30px;
+            width: 120px; height: 120px;
+            background: rgba(167,139,250,0.12);
             border-radius: 50%;
-            filter: blur(30px);
+            filter: blur(35px);
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        /* Keep old score-card and score-label/score-sub/score-value for backward compat */
+        .score-card {
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
         }
         .score-label {
             font-size: 10px;
@@ -346,9 +415,7 @@
             align-items: center;
             gap: 6px;
         }
-        
         .live-status-level-badge { font-size: 9px; font-weight: 800; background: rgba(255,255,255,0.15); color: white; padding: 2px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1); }
-
         .score-sub {
             font-size: 13px;
             opacity: 0.85;
@@ -357,7 +424,7 @@
             font-weight: 300;
         }
         .score-value {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Outfit', sans-serif;
             font-size: 44px;
             font-weight: 800;
             letter-spacing: -2px;
@@ -836,25 +903,36 @@
                 <div id="timerDigitsDisplay" class="focus-timer-digits">00:00</div>
             </div>
 
-            <div class="score-card">
-                <div>
-                    <div class="score-label">
+            <!-- Premium Stat Cards -->
+            <div class="stats-grid">
+                <div class="stat-card score-card">
+                    <div class="stat-card-label">
                         <span>Today's Score</span>
-                        <span class="live-status-level-badge">{{ today_level_status }}</span>
                     </div>
-                    <div class="score-sub">{{ motivation_quote }}</div>
+                    <div class="stat-card-value">{{ today_score }}</div>
+                    <div class="stat-card-sub">{{ motivation_quote }}</div>
+                    <div class="stat-card-badge">{{ today_level_status }}</div>
                 </div>
-                <div class="score-value">{{ today_score }}</div>
+                <div class="stat-card">
+                    <div class="stat-card-label">🔥 Streak</div>
+                    <div class="stat-card-value">{{ current_streak }}<span style="font-size: 16px; font-weight: 500; color: var(--text-muted); letter-spacing: 0;">d</span></div>
+                    <div class="stat-card-sub">Consecutive productive days</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-label">✨ Total XP</div>
+                    <div class="stat-card-value">{{ total_experience_points }}</div>
+                    <div class="stat-card-sub">{{ productivity_rank }}</div>
+                </div>
             </div>
 
             {% if total_tasks > 0 %}
             <div class="progress-wrap">
                 <div class="progress-header">
-                    <span class="progress-label">Completion</span>
+                    <span class="progress-label">Overall Completion</span>
                     <span class="progress-pct">{{ completion_pct|default:"0" }}%</span>
                 </div>
                 <div class="progress-track">
-                    <div class="progress-fill" style="width: {{ completion_pct|default:"0" }}%;"></div>
+                    <div class="progress-fill" style="width: {{ completion_pct|default:'0' }}%;"></div>
                 </div>
             </div>
             {% endif %}
