@@ -1302,15 +1302,7 @@
                                 {% if task.is_recent and not task.is_completed %}
                                     <span class="badge recent-badge">NEW</span>
                                 {% endif %}
-                                {% if task.is_detailed %}
-                                    <span class="badge density-badge">DETAILED</span>
-                                {% endif %}
-                                {% if task.is_stale %}
-                                    <span class="badge stale-badge">OLD</span>
-                                {% endif %}
-                                {% if task.is_search_match %}
-                                    <span class="badge match-badge">MATCH</span>
-                                {% endif %}
+                                
                                 {% if not task.is_completed and task.is_overdue %}
                                     <span class="urgent-flash">OVERDUE</span>
                                 {% endif %}
@@ -1325,9 +1317,7 @@
                                     {% endif %}
                                 {% endif %}
 
-                                {% if not task.is_completed %}
-                                    <span class="gamified-xp-tag-label">+{{ task.xp_reward }} XP</span>
-                                {% endif %}
+                                
 
                                 {% if task.description %}
                                     <div class="task-notes-block">📝 {{ task.description }}</div>
