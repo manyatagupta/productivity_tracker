@@ -908,7 +908,22 @@
             flex: 1;
             line-height: 1.5;
         }
-        .task-title.completed { text-decoration: line-through; color: var(--text-muted); }
+        .task-title { position: relative; transition: color 0.3s ease; }
+        .task-title.completed { color: var(--text-muted); text-decoration: none; }
+        .task-title.completed::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1.5px;
+            background: var(--text-muted);
+            animation: strike 0.4s var(--ease-out-expo) forwards;
+        }
+        @keyframes strike {
+            from { width: 0; }
+            to { width: 100%; }
+        }
 
         .badge {
             font-size: 9px;
