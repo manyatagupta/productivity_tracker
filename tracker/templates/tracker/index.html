@@ -1102,6 +1102,46 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: var(--accent-glow); border-radius: 100px; }
         ::-webkit-scrollbar-thumb:hover { background: rgba(167,139,250,0.3); }
+    
+        /* ═══ Expandable Form ═══ */
+        .expandable-form {
+            background: var(--surface-glass);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 4px;
+            backdrop-filter: blur(12px);
+            transition: all 0.4s var(--ease-spring);
+        }
+        .expandable-form:focus-within {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow), 0 0 0 3px var(--accent-glow);
+            background: var(--surface2);
+        }
+        .expandable-form .main-input input[type="text"] {
+            border: none;
+            background: transparent !important;
+            box-shadow: none !important;
+            padding: 16px 20px;
+            font-size: 15px;
+            outline: none;
+        }
+        .expandable-form .form-options {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s var(--ease-spring);
+        }
+        .expandable-form:focus-within .form-options {
+            max-height: 120px;
+            opacity: 1;
+            padding: 4px 12px 12px;
+        }
+        .expandable-form .btn-primary {
+            border-radius: var(--radius-sm);
+            padding: 12px 24px;
+            margin: 4px;
+        }
+
     </style>
 </head>
 <body class="{% if light_mode %}light-mode{% endif %}">
