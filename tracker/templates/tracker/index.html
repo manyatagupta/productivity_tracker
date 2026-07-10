@@ -1191,20 +1191,22 @@
             {% endif %}
 
             <!-- Task Input Form -->
-            <form method="POST" class="form-block">
+            <form method="POST" class="form-block expandable-form">
                 {% csrf_token %}
-                <div class="input-row">
-                    <input type="text" name="title" placeholder="What needs to be done?" required>
-                    <select name="priority">
-                        <option value="low">Low</option>
-                        <option value="medium" selected>Med</option>
-                        <option value="high">High</option>
-                    </select>
+                <div class="input-row main-input">
+                    <input type="text" name="title" placeholder="What needs to be done?" required autocomplete="off">
                     <button type="submit" class="btn-primary">+ Add</button>
                 </div>
-                <div class="input-row multi">
-                    <input type="text" name="description" placeholder="Optional notes or details…" style="flex: 1; padding: 10px 14px; font-size: 13px;">
-                    <input type="date" name="due_date" style="padding: 8px 12px; font-size: 12px; cursor: pointer;" title="Set optional due date">
+                <div class="form-options">
+                    <div class="input-row multi">
+                        <input type="text" name="description" placeholder="Optional notes or details…" style="flex: 1; padding: 10px 14px; font-size: 13px; background: var(--surface2);">
+                        <input type="date" name="due_date" style="padding: 10px 14px; font-size: 13px; cursor: pointer; background: var(--surface2);" title="Set optional due date">
+                        <select name="priority" style="padding: 10px 14px; font-size: 13px; background: var(--surface2);">
+                            <option value="low">Low Priority</option>
+                            <option value="medium" selected>Med Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
                 </div>
             </form>
 
