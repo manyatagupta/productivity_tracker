@@ -446,16 +446,16 @@
         }
 
         /* ═══ Score card — hero gradient ═══ */
-        .stat-card.score-card {
+        .stat-card.color-card {
             background: linear-gradient(135deg, rgba(124,58,237,0.4) 0%, rgba(129,140,248,0.25) 50%, rgba(103,232,249,0.15) 100%);
             border: 1px solid rgba(167,139,250,0.2);
             animation: glowPulse 5s ease-in-out infinite, fadeInUp 0.5s var(--ease-out-expo) 0.15s both;
         }
-        .stat-card.score-card .stat-card-value { color: #fff; text-shadow: 0 0 30px rgba(167,139,250,0.35); }
-        .stat-card.score-card .stat-card-label { color: rgba(255,255,255,0.75); }
-        .stat-card.score-card .stat-card-sub { color: rgba(255,255,255,0.7); }
-        .stat-card.score-card .stat-card-badge { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.15); }
-        .stat-card.score-card::after {
+        .stat-card.color-card .stat-card-value { color: #fff; text-shadow: 0 0 30px rgba(167,139,250,0.35); }
+        .stat-card.color-card .stat-card-label { color: rgba(255,255,255,0.75); }
+        .stat-card.color-card .stat-card-sub { color: rgba(255,255,255,0.7); }
+        .stat-card.color-card .stat-card-badge { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.15); }
+        .stat-card.color-card::after {
             content: '';
             position: absolute;
             right: -20px; top: -30px;
@@ -1162,11 +1162,11 @@
             0% { transform: translateX(-150%) skewX(-15deg); }
             50%, 100% { transform: translateX(150%) skewX(-15deg); }
         }
-        .stat-card.score-card {
+        .stat-card.color-card {
             position: relative;
             overflow: hidden;
         }
-        .stat-card.score-card::before {
+        .stat-card.color-card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; bottom: 0; right: 0;
@@ -1175,6 +1175,16 @@
             transform: translateX(-150%) skewX(-15deg);
             animation: shimmer-sweep 4s infinite;
             pointer-events: none;
+        }
+
+    
+        /* Colorful Cards Backgrounds */
+        .stat-card.color-card { 
+            border: none; 
+            background: linear-gradient(135deg, #7c3aed 0%, #818cf8 100%); 
+        }
+        body.light-mode .stat-card.color-card {
+            background: linear-gradient(135deg, #a78bfa 0%, #818cf8 40%, #67e8f9 100%); 
         }
 
     </style>
@@ -1234,7 +1244,7 @@
 
             <!-- Premium Stat Cards -->
             <div class="stats-grid">
-                <div class="stat-card score-card">
+                <div class="stat-card color-card score-card">
                     <div class="stat-card-label">
                         <span>Today's Score</span>
                     </div>
@@ -1242,12 +1252,12 @@
                     <div class="stat-card-sub">{{ motivation_quote }}</div>
                     <div class="stat-card-badge">{{ today_level_status }}</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card color-card streak-card">
                     <div class="stat-card-label">🔥 Streak</div>
                     <div class="stat-card-value">{{ current_streak }}<span style="font-size: 16px; font-weight: 500; color: var(--text-muted); letter-spacing: 0;">d</span></div>
                     <div class="stat-card-sub">Consecutive productive days</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card color-card xp-card">
                     <div class="stat-card-label">✨ Total XP</div>
                     <div class="stat-card-value">{{ total_experience_points }}</div>
                     <div class="stat-card-sub">{{ productivity_rank }}</div>
