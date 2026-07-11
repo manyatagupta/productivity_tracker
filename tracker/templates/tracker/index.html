@@ -1157,6 +1157,26 @@
             margin: 4px;
         }
 
+    
+        @keyframes shimmer-sweep {
+            0% { transform: translateX(-150%) skewX(-15deg); }
+            50%, 100% { transform: translateX(150%) skewX(-15deg); }
+        }
+        .stat-card.score-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card.score-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            z-index: 10;
+            transform: translateX(-150%) skewX(-15deg);
+            animation: shimmer-sweep 4s infinite;
+            pointer-events: none;
+        }
+
     </style>
 </head>
 <body class="{% if light_mode %}light-mode{% endif %}">
