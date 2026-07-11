@@ -1182,11 +1182,13 @@
             <!-- Header -->
             <div class="header">
                 <div>
-                    <h1 class="header-title">My Tasks</h1>
+                    <h1 class="header-title">
+                        <span id="dynamic-greeting">My Tasks</span>, {{ user.username|title }}
+                    </h1>
                     <div class="header-tagline">{{ now|date:"l, d F Y" }}</div>
                 </div>
                 <div class="header-actions">
-                    <span class="header-username">{{ user.username }}</span>
+                    
                     <form method="post" action="{% url 'logout' %}" style="margin: 0; display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="pill-btn" style="background: transparent; cursor: pointer;">Logout</button>
