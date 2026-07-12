@@ -438,7 +438,7 @@
             background: var(--accent-glow);
             color: var(--accent-bright);
             padding: 3px 10px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             font-family: 'JetBrains Mono', monospace;
             text-transform: uppercase;
             border: 1px solid rgba(167,139,250,0.15);
@@ -668,10 +668,10 @@
             font-size: 10px;
             font-weight: 700;
             padding: 5px 12px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             background: var(--surface2);
             color: var(--text-muted);
-            border: 1.5px dashed var(--border);
+            border: none;
             font-family: 'JetBrains Mono', monospace;
             white-space: nowrap;
             transition: all var(--transition);
@@ -680,7 +680,7 @@
         .tag-chip-active {
             background: var(--accent-glow) !important;
             color: var(--accent) !important;
-            border: 1.5px solid var(--accent) !important;
+            border: none !important;
         }
 
         /* ═══ Sorting + Meta Row ═══ */
@@ -878,7 +878,7 @@
             font-size: 9px;
             font-weight: 800;
             padding: 3px 7px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             font-family: 'JetBrains Mono', monospace;
             letter-spacing: 0.5px;
         }
@@ -889,7 +889,7 @@
         .task-tag {
             font-size: 10px;
             padding: 3px 9px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             background: var(--accent-glow);
             color: var(--accent);
             font-weight: 700;
@@ -929,7 +929,7 @@
             font-size: 9px;
             font-weight: 700;
             padding: 3px 8px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             font-family: 'JetBrains Mono', monospace;
             white-space: nowrap;
             letter-spacing: 0.3px;
@@ -939,7 +939,7 @@
         .density-badge { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
         .match-badge   { background: var(--blue-soft);   color: var(--blue); }
 
-        .density-tier-badge { background: var(--surface2); color: var(--accent-deep); font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-sm); font-family: 'JetBrains Mono', monospace; }
+        .density-tier-badge { background: var(--surface2); color: var(--accent-deep); font-size: 9px; font-weight: 700; padding: 3px 8px; border-radius: var(--radius-pill); font-family: 'JetBrains Mono', monospace; }
         .task.completed-style .density-tier-badge { opacity: 0.5; }
 
         .estimation-badge.clickable-timer-badge {
@@ -965,7 +965,7 @@
             color: var(--text-muted);
             background: var(--surface2);
             padding: 8px 12px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             margin-top: 8px;
             border-left: 2px solid var(--border-hover);
             font-style: italic;
@@ -977,7 +977,7 @@
             font-size: 9px;
             font-weight: 700;
             padding: 3px 8px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             font-family: 'JetBrains Mono', monospace;
         }
         .due-indicator-tag.due-today    { background: var(--warn-soft); color: var(--warn); border: 1px solid rgba(251,191,36,0.2); }
@@ -990,7 +990,7 @@
             background: var(--blue-soft);
             color: var(--blue);
             padding: 3px 7px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             font-family: 'JetBrains Mono', monospace;
         }
 
@@ -1000,7 +1000,7 @@
             color: var(--danger);
             border: 1px solid rgba(248,113,113,0.25);
             padding: 3px 8px;
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             font-weight: 700;
             animation: flashPulse 2s ease-in-out infinite;
             font-family: 'JetBrains Mono', monospace;
@@ -1152,7 +1152,7 @@
             padding: 4px 12px 12px;
         }
         .expandable-form .btn-primary {
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-pill);
             padding: 12px 24px;
             margin: 4px;
         }
