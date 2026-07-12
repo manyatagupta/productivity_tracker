@@ -1386,7 +1386,6 @@
                     <div class="task {{ task.priority }} {% if task.is_completed %}completed-style{% endif %} {% if task.is_search_match %}search-highlight-active{% endif %} {% if task.is_stale %}stale-warning-active{% endif %}">
                         <div style="flex: 1; min-width: 0;">
                             <div class="task-content">
-                                <span class="priority-dot dot-{{ task.priority }}"></span>
                                 <span class="txt-badge-priority">{{ task.display_priority }}</span>
 
                                 {% if "[" in task.title and "]" in task.title %}
@@ -1436,7 +1435,6 @@
                             </div>
 
                             <div style="display: flex; align-items: center; width: 100%; margin-top: 4px;">
-                                <span class="char-length-indicator">{{ task.title_char_length }} chars</span>
                                 <div class="task-meta {% if task.has_age_warning %}warning-color-text{% endif %}" style="margin-top: 0;">{{ task.created_at|timesince }} ago</div>
                             </div>
                         </div>
