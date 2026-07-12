@@ -1333,28 +1333,32 @@
             <!-- Meta Row -->
             </div>
             <!-- Meta Row -->
-            <div class="meta-row">
-                <div class="pending-tag">
-                    <strong>{{ total_pending_left }}</strong> tasks remaining
+            <div class="meta-row" style="padding: 12px 16px; background: rgba(255, 255, 255, 0.02); border-radius: var(--radius-lg); margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    <div class="pending-tag">
+                        <strong>{{ total_pending_left }}</strong> remaining
+                    </div>
+
+                    <div class="sort-group">
+                        <span>Sort:</span>
+                        <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=default&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
+                        <span>·</span>
+                        <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=latest&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
+                    </div>
                 </div>
 
-                <div class="sort-group">
-                    <span>Sort:</span>
-                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=default&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="{% if sort_by == 'default' or not sort_by %}sort-active{% endif %}">Default</a>
-                    <span>·</span>
-                    <a href="?filter={{ filter_type }}&tag={{ selected_tag }}&sort=latest&view_archived={% if view_archived %}1{% else %}0{% endif %}" class="{% if sort_by == 'latest' %}sort-active{% endif %}">Latest</a>
+                <div style="display: flex; gap: 16px; align-items: center;">
+                    {% if not view_archived %}
+                    <a href="?archive_completed=1" class="action-link archive" onclick="return confirm('Archive all completed tasks?')">
+                        Archive done
+                    </a>
+                    {% endif %}
+
+                    <a href="?clear_all_tasks_master=1" class="action-link danger"
+                       onclick="return confirm('This will permanently delete ALL tasks. Continue?')">
+                        Clear all
+                    </a>
                 </div>
-
-                {% if not view_archived %}
-                <a href="?archive_completed=1" class="action-link archive" onclick="return confirm('Archive all completed tasks?')">
-                    Archive done
-                </a>
-                {% endif %}
-
-                <a href="?clear_all_tasks_master=1" class="action-link danger"
-                   onclick="return confirm('This will permanently delete ALL tasks. Continue?')">
-                    Clear all
-                </a>
             </div>
 
             <span class="list-count">{{ current_list_count }} items in view</span>
