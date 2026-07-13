@@ -150,27 +150,38 @@
             box-shadow: 0 0 0 3px var(--focus-ring);
         }
 
+        /* ═══ Animated Button ═══ */
         .submit-btn {
-            margin-top: 8px;
+            margin-top: 12px;
             width: 100%;
             padding: 14px 20px;
-            background: linear-gradient(135deg, #c084fc, #818cf8);
+            background: linear-gradient(90deg, #7c3aed, #818cf8, #67e8f9, #a78bfa);
+            background-size: 300% 100%;
+            animation: barSlide 6s linear infinite;
             color: #ffffff;
             border: none;
             border-radius: var(--radius-sm);
             font-family: 'Inter', sans-serif;
-            font-weight: 700;
+            font-weight: 600;
             font-size: 15px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 14px rgba(192,132,252,0.25);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
         }
+
+        @keyframes barSlide {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
         .submit-btn:hover {
             opacity: 0.9;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
         }
+
         .submit-btn:active {
-            transform: translateY(1px);
+            transform: translateY(0);
         }
 
         .links {
