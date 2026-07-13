@@ -33,8 +33,33 @@
             position: relative;
         }
 
-        
-                                            100% { transform: translate(30px, 50px); }
+        /* ═══ Background Orbs ═══ */
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            z-index: -1;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: rgba(124, 58, 237, 0.3);
+            top: -100px;
+            left: -100px;
+        }
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: rgba(103, 232, 249, 0.2);
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
         }
 
         .auth-container {
@@ -182,7 +207,8 @@
     </style>
 </head>
 <body>
-    
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
     
     <div class="auth-container">
         <div class="auth-card">
