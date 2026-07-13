@@ -8,43 +8,43 @@
     <style>
         :root {
             --bg:          #0b0816;
-            --surface:     #130e24;
-            --surface2:    #1a1431;
-            --border:      #2b1f4c;
-            --text-main:   #e0d8f0;
+            --text-main:   #ffffff;
             --text-muted:  #8b7aaa;
             --accent:      #a855f7;
-            --accent-hover:#c084fc;
-            --focus-ring:  rgba(168,85,247,0.2);
+            --focus-ring:  rgba(168,85,247,0.3);
+            --radius-lg:   24px;
             --radius-md:   16px;
             --radius-sm:   12px;
-            --shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.4);
-            --shadow-md:   0 4px 16px rgba(0, 0, 0, 0.5);
-            --shadow-lg:   0 8px 32px rgba(0, 0, 0, 0.6);
+            --shadow-lg:   0 20px 40px rgba(0, 0, 0, 0.4);
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: transparent;
+            background-color: var(--bg);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        
+                                            100% { transform: translate(30px, 50px); }
         }
 
         .auth-container {
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
+            z-index: 10;
         }
 
         .auth-card {
-            background-color: rgba(19, 14, 36, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background-color: rgba(19, 14, 36, 1);
             border: 1px solid rgba(168, 85, 247, 0.15);
             border-radius: var(--radius-md);
             padding: 40px;
@@ -67,13 +67,13 @@
             border-radius: var(--radius-md);
             font-size: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 14px rgba(192,132,252,0.35);
+            box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
         }
 
         h2 {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.02em;
             margin-bottom: 8px;
         }
 
@@ -88,18 +88,19 @@
             gap: 20px;
         }
         
-        /* Django form rendering overrides */
+        /* ═══ Sleek Form Fields ═══ */
         form p {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
             margin: 0;
         }
 
         form p label {
             font-size: 13px;
-            font-weight: 600;
-            color: var(--text-main);
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            margin-left: 2px;
         }
 
         form p input {
@@ -114,7 +115,6 @@
             transition: all 0.2s ease;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
-
         form p input:focus {
             outline: none;
             border-color: var(--accent);
@@ -136,12 +136,10 @@
             transition: all 0.2s ease;
             box-shadow: 0 4px 14px rgba(192,132,252,0.25);
         }
-
         .submit-btn:hover {
             opacity: 0.9;
             transform: translateY(-1px);
         }
-
         .submit-btn:active {
             transform: translateY(1px);
         }
@@ -157,10 +155,11 @@
             color: var(--accent);
             text-decoration: none;
             font-weight: 600;
+            transition: color 0.2s;
         }
 
         .links a:hover {
-            text-decoration: underline;
+            color: #c084fc;
         }
         
         .errorlist {
@@ -183,7 +182,8 @@
     </style>
 </head>
 <body>
-    <div id="vanta-bg" style="position: fixed; z-index: -1; top: 0; left: 0; width: 100vw; height: 100vh;"></div>
+    
+    
     <div class="auth-container">
         <div class="auth-card">
             <div class="header">
@@ -203,27 +203,5 @@
             <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
         </div>
     </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            VANTA.NET({
-                el: "#vanta-bg",
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.00,
-                scaleMobile: 1.00,
-                color: 0xa855f7,
-                backgroundColor: 0x0b0816,
-                points: 11.00,
-                maxDistance: 21.00,
-                spacing: 17.00
-            })
-        });
-    </script>
 </body>
 </html>
