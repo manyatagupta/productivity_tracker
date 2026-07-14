@@ -445,24 +445,32 @@
             margin-top: 8px;
         }
 
-        /* ═══ Score card — hero gradient ═══ */
+        /* ═══ Score card — Glassmorphism ═══ */
         .stat-card.color-card {
-            background: linear-gradient(135deg, rgba(124,58,237,0.4) 0%, rgba(129,140,248,0.25) 50%, rgba(103,232,249,0.15) 100%);
-            border: 1px solid rgba(167,139,250,0.2);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             animation: glowPulse 5s ease-in-out infinite, fadeInUp 0.5s var(--ease-out-expo) 0.15s both;
         }
-        .stat-card.color-card .stat-card-value { color: #fff; text-shadow: 0 0 30px rgba(167,139,250,0.35); }
-        .stat-card.color-card .stat-card-label { color: rgba(255,255,255,0.75); }
-        .stat-card.color-card .stat-card-sub { color: rgba(255,255,255,0.7); }
-        .stat-card.color-card .stat-card-badge { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.15); }
+        .stat-card.color-card .stat-card-value { 
+            background: linear-gradient(135deg, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: none; 
+        }
+        .stat-card.color-card .stat-card-label { color: var(--text-muted); }
+        .stat-card.color-card .stat-card-sub { color: var(--text-dim); }
+        .stat-card.color-card .stat-card-badge { background: rgba(124, 58, 237, 0.1); color: #a855f7; border-color: rgba(124, 58, 237, 0.2); }
         .stat-card.color-card::after {
             content: '';
             position: absolute;
             right: -20px; top: -30px;
             width: 120px; height: 120px;
-            background: rgba(167,139,250,0.12);
+            background: rgba(167,139,250,0.05);
             border-radius: 50%;
             filter: blur(35px);
+            pointer-events: none;
         }
 
         @keyframes glowPulse {
