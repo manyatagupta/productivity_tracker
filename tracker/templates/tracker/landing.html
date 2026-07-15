@@ -416,7 +416,68 @@
         </div>
         <div class="install-caption">pip install requirements.txt - Deploy locally or in the cloud</div>
 
-        
-</main>
+        <!-- 5. Command-Bar Mockup -->
+        <div class="cmd-palette">
+            <div class="cmd-input-row">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <div class="cmd-query">Finish Django deploy<span class="caret"></span></div>
+                <div class="cmd-mode-pill">Task</div>
+            </div>
+            
+            <div class="cmd-list">
+                <!-- Active Row -->
+                <div class="cmd-item active">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                    <div class="cmd-label">Add task: "Finish Django deploy" <span class="cmd-arg">[Work 💻]</span></div>
+                    <div class="cmd-shortcut">Enter</div>
+                </div>
+                
+                <div class="cmd-item">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <div class="cmd-label">View Project Analytics <span class="cmd-arg">/stats</span></div>
+                    <div class="cmd-shortcut">Cmd+S</div>
+                </div>
+
+                <div class="cmd-item">
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    <div class="cmd-label">Go to Dashboard <span class="cmd-arg">~/home</span></div>
+                    <div class="cmd-shortcut">Cmd+D</div>
+                </div>
+            </div>
+            
+            <div class="cmd-footer">
+                <div class="cmd-hints">up/down navigate - enter create - esc dismiss</div>
+                <div class="nav-wordmark" style="opacity: 0.5;">Antigravity</div>
+            </div>
+        </div>
+
+        <!-- 6. Ghost Pill -->
+        <a href="https://github.com/manyatagupta/productivity_tracker" class="ghost-pill">
+            View Source Code ->
+        </a>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            VANTA.FOG({
+                el: "#vanta-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                highlightColor: 0x8b5cf6, /* Bright Purple */
+                midtoneColor: 0x312e81,   /* Indigo */
+                lowlightColor: 0x4f46e5,  /* Indigo Accent */
+                baseColor: 0x07080a,      /* Deep Dark Ground (#07080a) */
+                blurFactor: 0.70,
+                speed: 1.30,
+                zoom: 1.50
+            })
+        });
+    </script>
 </body>
 </html>
