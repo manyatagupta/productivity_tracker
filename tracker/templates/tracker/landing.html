@@ -370,5 +370,53 @@
     </style>
 </head>
 <body>
+    
+    <!-- 1. Vanta Live Purple FOG Background -->
+    <div id="vanta-bg"></div>
+
+    <!-- 2. Floating Pill Nav -->
+    <nav class="pill-nav">
+        <div class="nav-left">
+            <div class="nav-logo-glyph"></div>
+            <span class="nav-wordmark">Productivity Tracker</span>
+        </div>
+        <div class="nav-center">
+            <a href="#" class="nav-link">About</a>
+            <a href="#" class="nav-link">Contact</a>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'login' %}" class="nav-btn-muted">Log in</a>
+            <a href="{% url 'register' %}" class="nav-btn-primary">Sign up</a>
+        </div>
+    </nav>
+
+    <!-- 3. Main Hero -->
+    <main class="hero">
+        <div class="eyebrow">v2.0 — Now with Smart Auto-Tagging</div>
+        
+        <h1 class="headline">
+            Master your day,<br>
+            one <span class="gradient-text">task</span> at a time.
+        </h1>
+        
+        <p class="subtitle">
+            The ultimate productivity command center. Track your tasks, earn XP, build massive streaks, and level up your life with an ultra-fast interface.
+        </p>
+
+        <!-- 4. Tactile Keycap Buttons -->
+        <div class="button-row">
+            <a href="{% url 'register' %}" class="keycap-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/></svg>
+                Get Started for Free
+            </a>
+            <a href="{% url 'login' %}" class="keycap-btn">
+                <svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5v10z"/><path d="M0 24V0h24v24H0z" fill="none"/></svg>
+                Go to Dashboard
+            </a>
+        </div>
+        <div class="install-caption">pip install requirements.txt - Deploy locally or in the cloud</div>
+
+        
+</main>
 </body>
 </html>
