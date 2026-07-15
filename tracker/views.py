@@ -61,6 +61,11 @@ def get_motivation_quote(tasks_created: int, tasks_done: int, pct: int) -> str:
 
 # ─── Main View ───────────────────────────────────────────────────────────────
 
+def landing(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+    return render(request, 'tracker/landing.html')
+
 @login_required
 def index(request):
     user = request.user
