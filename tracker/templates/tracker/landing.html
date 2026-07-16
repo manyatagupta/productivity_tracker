@@ -65,7 +65,7 @@
         .delay-3 { animation-delay: 0.3s; }
         .delay-4 { animation-delay: 0.4s; }
         .delay-5 { animation-delay: 0.5s; }
-
+        
         .gradient-text {
             animation: gradientShift 6s ease-in-out infinite alternate;
         }
@@ -505,6 +505,43 @@
                 zoom: 1.50
             })
         });
+    
+        // Typewriter Effect
+        const phrases = ["Finish Django deploy", "Review pull requests", "Schedule team sync", "Buy groceries"];
+        let currentPhrase = 0;
+        let isDeleting = false;
+        let charIndex = 0;
+        const typeTarget = document.getElementById("typewriter-text");
+
+        function typeLoop() {
+            const currentText = phrases[currentPhrase];
+            
+            if (isDeleting) {
+                typeTarget.innerText = currentText.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typeTarget.innerText = currentText.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 30 : 70;
+
+            if (!isDeleting && charIndex === currentText.length) {
+                typeSpeed = 2000; // pause at end
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                currentPhrase = (currentPhrase + 1) % phrases.length;
+                typeSpeed = 500; // pause before typing new
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+        
+        if (typeTarget) {
+            setTimeout(typeLoop, 1500); // Wait for entry animation to finish
+        }
+
     </script>
 </body>
 </html>
