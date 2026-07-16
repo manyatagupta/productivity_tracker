@@ -66,6 +66,14 @@
         .delay-4 { animation-delay: 0.4s; }
         .delay-5 { animation-delay: 0.5s; }
 
+        .gradient-text {
+            animation: gradientShift 6s ease-in-out infinite alternate;
+        }
+        @keyframes gradientShift {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(20deg); }
+        }
+
         /* ═══ Floating Pill Nav ═══ */
         .pill-nav {
             position: fixed;
